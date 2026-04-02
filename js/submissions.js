@@ -271,7 +271,7 @@ function getAllSubmissions() {
  * Get Groq API key from localStorage
  */
 function getGroqApiKey() {
-    return localStorage.getItem('groq_api_key') || '';
+    return (window.ENV && window.ENV.VITE_GROQ_API_KEY) || localStorage.getItem('groq_api_key') || '';
 }
 
 /**

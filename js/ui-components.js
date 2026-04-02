@@ -1264,21 +1264,15 @@ async function requestCodeReview(username, challengeId, buttonElement) {
     let apiKey = window.getGroqApiKey();
     
     if (!apiKey) {
-        // Try to prompt user if key not found in .env.local
-        showNotification('⏳ Checking for Groq API key...', 'info');
+        showNotification('⏳ Checking for AI system configuration...', 'info');
         
         // Wait a moment in case env is still loading
         await new Promise(resolve => setTimeout(resolve, 500));
         apiKey = window.getGroqApiKey();
         
         if (!apiKey) {
-            const userKey = prompt('Groq API key not found in .env.local.\n\nEnter your Groq API key:');
-            if (!userKey) {
-                showNotification('❌ API key required for AI review', 'error');
-                return;
-            }
-            window.setGroqApiKey(userKey);
-            apiKey = userKey;
+            showNotification('❌ AI Review system is currently unavailable (missing configuration)', 'error');
+            return;
         }
     }
 
