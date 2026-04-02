@@ -590,7 +590,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
     const formId = `uploadForm_${challengeId}`;
 
     const user = window.getCurrentUser();
-    const submission = user ? await window.getSubmission(challengeId) : null;
+    const submission = user ? await window.getSubmission(challengeId, user.username) : null;
     // Check if submission is actually an object with properties (not empty array)
     const hasSubmitted = submission && typeof submission === 'object' && !Array.isArray(submission) && submission.status;
 
@@ -1391,7 +1391,10 @@ async function updateChallengeSubmissionUI(challengeId) {
     const statusEl = document.getElementById(`status_${challengeId}`);
     if (!statusEl) return;
 
-    const submission = await window.getSubmission(challengeId);
+    const user = window.getCurrentUser();
+    if (!user) return;
+
+    const submission = await window.getSubmission(challengeId, user.username);
     if (submission) {
         const statusText = submission.status.toUpperCase();
         const statusColor = submission.status === 'pending' ? '#FFA500' : 
