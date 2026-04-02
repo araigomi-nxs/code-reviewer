@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Study Reviewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #eeeff1;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --border-color: #e0e0e0;
+            --accent: #2d2d2d;
+            --accent-hover: #404040;
+        }
+
+        body.dark-mode {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --border-color: #404040;
+            --accent: #e0e0e0;
+            --accent-hover: #d0d0d0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        header p {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--border-color);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 20px;
+            min-height: 70vh;
+        }
+
+        .sidebar {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .menu-items {
+            list-style: none;
+        }
+
+        .menu-items li {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-items li:last-child {
+            border-bottom: none;
+        }
+
+        .menu-items button {
+            width: 100%;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+
+        .menu-items button:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding-left: 20px;
+        }
+
+        .menu-items button.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+            font-weight: 500;
+        }
+
+        .content-area {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .content-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 24px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h2 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+        .concepts {
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .concepts h3 {
+            color: var(--text-primary);
+            margin-top: 18px;
+            margin-bottom: 10px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .concepts ul,
+        .concepts ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .concepts li {
+            margin-bottom: 6px;
+        }
+
+        .code-block {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent);
+            padding: 14px;
+            margin: 16px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', 'Courier', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre;
+            word-wrap: break-word;
+            white-space: break-spaces;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Java syntax highlighting - explicit colors override parent */
+        .code-block .java-keyword {
+            color: #4a9eff !important;
+        }
+
+        .code-block .java-string {
+            color: #22cc22 !important;
+        }
+
+        .code-block .java-number {
+            color: #ff9933 !important;
+        }
+
+        .code-block .java-comment {
+            color: #888888 !important;
+        }
+
+        .code-block .java-method {
+            color: #ffaa55 !important;
+        }
+
+        .code-block .java-operator {
+            color: #ff5555 !important;
+        }
+
+        /* Java Syntax Highlighting */
+        .java-keyword {
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        .java-string {
+            color: #22cc22;
+        }
+
+        .java-number {
+            color: #ff9933;
+        }
+
+        .java-comment {
+            color: #888888;
+            font-style: italic;
+        }
+
+        .java-method {
+            color: #ffaa55;
+        }
+
+        .java-class {
+            color: #ff99ff;
+            font-weight: bold;
+        }
+
+        .java-operator {
+            color: #ff5555;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .code-editor {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0;
+            margin: 16px 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-header {
+            background: var(--bg-secondary);
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9em;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-header-title {
+            flex: 1;
+        }
+
+        .preview-button {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .preview-button:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        .code-preview {
+            display: none;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 14px;
+            font-family: 'Courier New', 'Courier', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            white-space: pre;
+            word-wrap: break-word;
+            white-space: break-spaces;
+            border-bottom: 1px solid var(--border-color);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .code-preview.active {
+            display: block;
+        }
+
+        .editor-input.preview-mode {
+            display: none;
+        }
+
+        .editor-input {
+            font-family: 'Courier New', 'Courier', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            padding: 14px;
+            resize: none;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: none;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 0;
+        }
+
+        .editor-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .expected-output {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 12px 14px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre;
+            word-wrap: break-word;
+            white-space: break-spaces;
+        }
+
+        .expected-output-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .run-button {
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .run-button:hover {
+            background: var(--accent-hover);
+        }
+
+        .run-button:active {
+            transform: scale(0.98);
+        }
+
+        .output-box {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 12px 14px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+            border: 1px solid var(--border-color);
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre;
+            word-wrap: break-word;
+            white-space: break-spaces;
+        }
+
+        .output-header {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+
+        .compiler-section {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .compiler-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin: 4px 0;
+        }
+
+        .warning-message {
+            color: #ffa500;
+            margin: 4px 0;
+        }
+
+        .success-message {
+            color: #51cf66;
+            margin: 4px 0;
+        }
+
+        .debug-info {
+            color: var(--text-secondary);
+            font-size: 0.8em;
+            margin: 2px 0;
+        }
+
+        .challenge-item {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent);
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .challenge-item strong {
+            color: var(--text-primary);
+            font-size: 0.95em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .challenge-description {
+            color: var(--text-secondary);
+            margin: 10px 0;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+            color: var(--text-tertiary);
+        }
+
+        .home-screen {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            padding: 0;
+        }
+
+        .topic-card {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .topic-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .topic-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .topic-card p {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        .topic-number {
+            font-size: 2em;
+            margin-bottom: 12px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+            grid-column: 1 / -1;
+        }
+
+        .stat-box {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-box .number {
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .stat-box .label {
+            margin-top: 8px;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 24px;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .back-button {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .back-button:hover {
+            background: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .home-screen {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topic-card {
+                padding: 16px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+    </style>
+
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+    <!-- Load Environment Variables -->
+    <script>
+        window.ENV = {
+            VITE_SUPABASE_URL: '',
+            VITE_SUPABASE_ANON_KEY: '',
+            VITE_GROQ_API_KEY: ''
+        };
+    </script>
+
+    <!-- Load environment variables -->
+    <script defer src="js/env-loader.js"></script>
+    <script defer src="js/config.js"></script>
+    <script defer src="js/supabase-client.js"></script>
+
+    <!-- Simple Authentication (Supabase-based) -->
+    <script defer src="js/simple-auth.js"></script>
+    <script defer src="js/submissions.js"></script>
+    <script defer src="js/ui-components.js"></script>
+    <script defer src="js/admin-panel.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div>
+                    <h1>Coding Study Reviewer</h1>
+                    <p>Learn & Practice Coding Fundamentals</p>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()" style="display: none;">🌙 Dark Mode</button>
+            </div>
+        </header>
+
+        <div id="homeScreen" class="home-screen">
+            <!-- Latest Submissions Dashboard -->
+            <div
+                style="grid-column: 1 / -1; background: var(--bg-secondary); padding: 20px; margin-bottom: 20px; border-radius: 8px; border: 2px solid #2196F3;">
+                <h2
+                    style="margin: 0 0 15px 0; color: #2196F3; font-size: 1.3em; display: flex; align-items: center; gap: 10px;">
+                    <span>📊</span> Latest Submissions
+                </h2>
+                <div id="latestSubmissionsDashboard" style="min-height: 200px;">
+                    <div style="text-align: center; padding: 20px; color: #999;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">⏳</div>
+                        <div>Loading submissions...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="grid-column: 1 / -1; background: var(--bg-tertiary); padding: 16px; margin-bottom: 20px; border-left: 4px solid #90EE90; border-radius: 4px;">
+                <h2 style="margin: 0; color: #90EE90; font-size: 1.3em;">📚 EASY LEVEL - Fundamentals</h2>
+                <p style="margin: 8px 0 0 0; color: var(--text-secondary); font-size: 0.95em;">Master the core
+                    programming concepts with these 6 foundational topics</p>
+            </div>
+            <div class="topic-card" onclick="selectTopic('loops')">
+                <div class="topic-number">1️⃣</div>
+                <h3>Loop Structures</h3>
+                <p>for, while, do-while, nested loops, break/continue</p>
+            </div>
+            <div class="topic-card" onclick="selectTopic('foreach')">
+                <div class="topic-number">2️⃣</div>
+                <h3>For-Each Loop</h3>
+                <p>Enhanced loops, arrays & collections iteration</p>
+            </div>
+            <div class="topic-card" onclick="selectTopic('recursion')">
+                <div class="topic-number">3️⃣</div>
+                <h3>Recursion</h3>
+                <p>Base cases, factorial, Fibonacci & algorithms</p>
+            </div>
+            <div class="topic-card" onclick="selectTopic('arrays2d')">
+                <div class="topic-number">4️⃣</div>
+                <h3>2D Arrays</h3>
+                <p>Matrix operations, traversal & transformations</p>
+            </div>
+            <div class="topic-card" onclick="selectTopic('arraylist')">
+                <div class="topic-number">5️⃣</div>
+                <h3>ArrayList</h3>
+                <p>Dynamic arrays, collections & common operations</p>
+            </div>
+            <div class="topic-card" onclick="selectTopic('oop')">
+                <div class="topic-number">6️⃣</div>
+                <h3>OOP Basics</h3>
+                <p>Encapsulation, Inheritance, Polymorphism & Interfaces</p>
+            </div>
+
+            <div class="stats" style="grid-column: 1 / -1;">
+                <div class="stat-box">
+                    <div class="number">6</div>
+                    <div class="label">Topics</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">45+</div>
+                    <div class="label">Code Examples</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">40+</div>
+                    <div class="label">Challenges</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mainContent" class="main-content" style="display: none;">
+            <div class="sidebar">
+                <button class="back-button" onclick="backToHome()" style="width: 100%; margin: 0; border-radius: 0;">←
+                    Back</button>
+                <ul class="menu-items" id="menuItems"></ul>
+            </div>
+
+            <div class="content-area">
+                <div class="content-tabs" id="contentTabs"></div>
+                <div id="tabContents"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>💡 Learn, practice, and master Java fundamentals through interactive coding challenges</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentTopic = null;
+
+        function toggleTheme() {
+            console.log('Toggle theme clicked');
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-toggle');
+            const emojiBtn = document.getElementById('themeToggleBtn');
+            if (document.body.classList.contains('dark-mode')) {
+                if (btn) btn.textContent = '☀️ Light Mode';
+                if (emojiBtn) emojiBtn.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                if (btn) btn.textContent = '🌙 Dark Mode';
+                if (emojiBtn) emojiBtn.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Page loaded');
+
+            // Initialize home screen display
+            document.getElementById('homeScreen').style.display = 'grid';
+            document.getElementById('mainContent').style.display = 'none';
+
+            // Check for saved theme
+            console.log('Checking saved theme');
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                console.log('Applying dark mode');
+                document.body.classList.add('dark-mode');
+                const btn = document.querySelector('.theme-toggle');
+                if (btn) btn.textContent = '☀️ Light Mode';
+                const emojiBtn = document.getElementById('themeToggleBtn');
+                if (emojiBtn) emojiBtn.textContent = '☀️';
+            }
+
+            // Apply Java syntax highlighting
+            initJavaSyntaxHighlighting();
+            console.log('Page initialization complete');
+        });
+
+        const topicsData = {
+            loops: {
+                name: 'Loop Structures',
+                icon: '🔄',
+                concepts: `
+                    <h3>1. FOR LOOP</h3>
+                    <p>Used when you know the exact number of iterations</p>
+                    <p><strong>Best for:</strong> Iterating with index, known repetitions</p>
+                    <div class="code-block">for (int i = 1; i <= 5; i++) {
+    System.out.println(i);
+}</div>
+
+                    <h3>2. WHILE LOOP</h3>
+                    <p>Used when the number of iterations is unknown</p>
+                    <p><strong>Best for:</strong> Conditional iteration, user input loops</p>
+                    <div class="code-block">int x = 1;
+while (x <= 5) {
+    System.out.println(x);
+    x++;
+}</div>
+
+                    <h3>3. DO-WHILE LOOP</h3>
+                    <p>Executes at least once before checking condition</p>
+                    <p><strong>Best for:</strong> Menu-driven programs</p>
+                    <div class="code-block">int x = 1;
+do {
+    System.out.println(x);
+    x++;
+} while (x <= 5);</div>
+
+                    <h3>4. NESTED LOOPS</h3>
+                    <p>Loops within loops - used for 2D patterns and matrix operations</p>
+                    <div class="code-block">for (int i = 1; i <= 3; i++) {
+    for (int j = 1; j <= 3; j++) {
+        System.out.print("* ");
+    }
+    System.out.println();
+}</div>
+
+                    <h3>5. BREAK & CONTINUE</h3>
+                    <p><strong>break:</strong> Exits the loop immediately</p>
+                    <p><strong>continue:</strong> Skips current iteration, continues with next</p>
+                    <div class="code-block">for (int i = 1; i <= 10; i++) {
+    if (i == 5) break;       // Exit loop
+    if (i % 2 == 0) continue; // Skip even
+    System.out.println(i);
+}</div>
+                `,
+                samples: `
+                    <h3>FOR LOOP Example</h3>
+                    <div class="code-block">for (int i = 1; i <= 5; i++) {
+    System.out.print(i + " ");
+}</div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary);"><strong>Output:</strong> 1 2 3 4 5</p>
+
+                    <h3>NESTED LOOP - Print 5x5 Grid</h3>
+                    <div class="code-block">for (int i = 1; i <= 5; i++) {
+    for (int j = 1; j <= 5; j++) {
+        System.out.print("* ");
+    }
+    System.out.println();
+}</div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary);"><strong>Output:</strong> Prints 5 rows of 5 asterisks</p>
+
+                    <h3>WHILE LOOP - Countdown</h3>
+                    <div class="code-block">int count = 5;
+while (count > 0) {
+    System.out.print(count + " ");
+    count--;
+}
+System.out.println("Blastoff!");</div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary);"><strong>Output:</strong> 5 4 3 2 1 Blastoff!</p>
+
+                    <h3>BREAK & CONTINUE</h3>
+                    <div class="code-block">for (int i = 1; i <= 5; i++) {
+    if (i % 2 == 0) continue;  // Skip even numbers
+    System.out.print(i + " ");
+}</div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary);"><strong>Output:</strong> 1 3 5</p>
+
+                    <button class="run-button" onclick="runLoops()">▶ Run All Samples</button>
+                    <div id="loopsOutput" class="output-box" style="display:none; margin-top: 16px;">
+                        <div class="output-header">Program Output:</div>
+                        <div id="loopsOutputContent"></div>
+                    </div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #90EE90; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #90EE90; font-size: 1.1em;">📚 EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: Print a Triangle</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="challenge-description">Write a program that prints a pyramid pattern using nested loops. Each row should have increasing number of asterisks.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">*
+* *
+* * *
+* * * *
+* * * * *</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solution1').style.display = document.getElementById('solution1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution1" class="code-block" style="display:none; margin-top: 12px;">for (int i = 1; i <= 5; i++) {
+    // Print i asterisks
+    for (int j = 0; j < i; j++) {
+        System.out.print("* ");
+    }
+    System.out.println();
+}</div>
+                    </div>
+
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Sum Until Zero</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="challenge-description">Write a while loop that continuously sums numbers. The simulated input sequence is: 5, 10, 3, 0. Stop when 0 is entered and print the sum.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">Sum: 18</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solution2').style.display = document.getElementById('solution2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution2" class="code-block" style="display:none; margin-top: 12px;">int[] numbers = {5, 10, 3, 0};
+int sum = 0;
+int index = 0;
+while (numbers[index] != 0) {
+    sum += numbers[index];
+    index++;
+}
+System.out.println("Sum: " + sum);</div>
+                    </div>
+
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Find First Multiple</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="challenge-description">Find and print the first number divisible by both 3 and 5 in the range from 1 to 100.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">First multiple of 3 and 5: 15</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solution3').style.display = document.getElementById('solution3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution3" class="code-block" style="display:none; margin-top: 12px;">for (int i = 1; i <= 100; i++) {
+    if (i % 3 == 0 && i % 5 == 0) {
+        System.out.println("First multiple of 3 and 5: " + i);
+        break;
+    }
+}</div>
+                    </div>
+
+                    <div class="challenge-item">
+                        <strong>Challenge 4: Skip Multiples</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <div class="challenge-description">Print all numbers from 1 to 20, but skip any that are multiples of 3. Use the continue statement.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">1 2 4 5 7 8 10 11 13 14 16 17 19 20</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solution4').style.display = document.getElementById('solution4').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution4" class="code-block" style="display:none; margin-top: 12px;">for (int i = 1; i <= 20; i++) {
+    if (i % 3 == 0) continue;
+    System.out.print(i + " ");
+}</div>
+                    </div>
+
+                    <div class="challenge-item">
+                        <strong>Challenge 5: Multiplication Table</strong>
+                        <span class="difficulty hard">Hard</span>
+                        <div class="challenge-description">Generate a 10×10 multiplication table (1-10) with proper formatting. Display table headers and align numbers in columns.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output (first 3 rows):</div>
+                            <div class="expected-output">       1   2   3   4   5   6   7   8   9  10
+   1   1   2   3   4   5   6   7   8   9  10
+   2   2   4   6   8  10  12  14  16  18  20
+   3   3   6   9  12  15  18  21  24  27  30</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solution5').style.display = document.getElementById('solution5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution5" class="code-block" style="display:none; margin-top: 12px;">// Print header
+System.out.print("    ");
+for (int i = 1; i <= 10; i++) {
+    System.out.printf("%4d", i);
+}
+System.out.println();
+
+// Print rows
+for (int i = 1; i <= 10; i++) {
+    System.out.printf("%4d", i);
+    for (int j = 1; j <= 10; j++) {
+        System.out.printf("%4d", i * j);
+    }
+    System.out.println();
+}</div>
+                    </div>
+
+                    <div class="challenge-item">
+                        <strong>Challenge 6: Reverse Array</strong>
+                        <span class="difficulty hard">Hard</span>
+                        <div class="challenge-description">Create an array of 5 numbers (10, 20, 30, 40, 50) and reverse it using index traversal without using built-in reverse functions.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">Original: 10 20 30 40 50
+Reversed: 50 40 30 20 10</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solution6').style.display = document.getElementById('solution6').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution6" class="code-block" style="display:none; margin-top: 12px;">int[] arr = {10, 20, 30, 40, 50};
+
+// Print original
+System.out.print("Original: ");
+for (int num : arr) System.out.print(num + " ");
+System.out.println();
+
+// Reverse in-place
+for (int i = 0; i < arr.length / 2; i++) {
+    int temp = arr[i];
+    arr[i] = arr[arr.length - 1 - i];
+    arr[arr.length - 1 - i] = temp;
+}
+
+// Print reversed
+System.out.print("Reversed: ");
+for (int num : arr) System.out.print(num + " ");</div>
+                    </div>
+
+                    <div class="challenge-item">
+                        <strong>Challenge 7: Bubble Sort Characters</strong>
+                        <span class="difficulty hard">Hard</span>
+                        <div class="challenge-description">Sort 10 letters alphabetically using manual bubble sort algorithm. Input: Z A M B Q P L O T R. Expected: A B L M O P Q R T Z</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">Original: Z A M B Q P L O T R
+Sorted: A B L M O P Q R T Z</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solution7').style.display = document.getElementById('solution7').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution7" class="code-block" style="display:none; margin-top: 12px;">char[] letters = {'Z', 'A', 'M', 'B', 'Q', 'P', 'L', 'O', 'T', 'R'};
+
+// Print original
+System.out.print("Original: ");
+for (char c : letters) System.out.print(c + " ");
+System.out.println();
+
+// Bubble sort
+for (int i = 0; i < letters.length; i++) {
+    for (int j = 0; j < letters.length - 1 - i; j++) {
+        if (Character.toLowerCase(letters[j]) > Character.toLowerCase(letters[j + 1])) {
+            char temp = letters[j];
+            letters[j] = letters[j + 1];
+            letters[j + 1] = temp;
+        }
+    }
+}
+
+// Print sorted
+System.out.print("Sorted: ");
+for (char c : letters) System.out.print(c + " ");</div>
+                    </div>
+                `
+            },
+            foreach: {
+                name: 'For-Each Loop',
+                icon: '➡️',
+                concepts: `
+                    <h3>1. WHAT IS FOR-EACH LOOP?</h3>
+                    <p>Enhanced for loop introduced in Java 5</p>
+                    <p>Simplified way to iterate through arrays and collections</p>
+                    <div class="code-block">for (DataType item : collection) {
+    // Use item
+}</div>
+
+                    <h3>2. ADVANTAGES</h3>
+                    <ul>
+                        <li>Cleaner code and easier to read</li>
+                        <li>No index management needed</li>
+                        <li>Works with arrays and any Iterable</li>
+                    </ul>
+
+                    <h3>3. WITH ARRAYS</h3>
+                    <div class="code-block">int[] numbers = {10, 20, 30};
+for (int num : numbers) {
+    System.out.println(num);
+}</div>
+
+                    <h3>4. WITH ARRAYLIST</h3>
+                    <div class="code-block">ArrayList<String> names = new ArrayList<>();
+names.add("Alice");
+names.add("Bob");
+for (String name : names) {
+    System.out.println(name);
+}</div>
+
+                    <h3>5. LIMITATIONS</h3>
+                    <ul>
+                        <li>Cannot access index directly</li>
+                        <li>Cannot modify collection while iterating</li>
+                        <li>Can only iterate forward</li>
+                    </ul>
+                `,
+                samples: `
+                    <h3>FOR-EACH with ARRAY</h3>
+                    <div class="code-block">int[] numbers = {10, 20, 30, 40, 50};
+for (int num : numbers) {
+    System.out.print(num + " ");  // Output: 10 20 30 40 50
+}</div>
+
+                    <h3>Finding values</h3>
+                    <div class="code-block">int[] ages = {18, 25, 30, 22};
+for (int age : ages) {
+    if (age > 20) {
+        System.out.print(age + " ");  // Output: 25 30 22
+    }
+}</div>
+
+                    <h3>Nested FOR-EACH (2D array)</h3>
+                    <div class="code-block">int[][] matrix = {{1, 2}, {3, 4}};
+for (int[] row : matrix) {
+    for (int val : row) {
+        System.out.print(val + " ");
+    }
+    System.out.println();
+}</div>
+
+                    <button class="run-button" onclick="runForEach()">▶ Run Sample Code</button>
+                    <div id="foreachOutput"></div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #90EE90; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #90EE90; font-size: 1.1em;">📚 EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: Sum All Elements</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Given array {5, 10, 15, 20, 25}, calculate sum using for-each. Expected: 75</p>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Find Average</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Given scores {88, 92, 76, 85}, calculate average. Expected: 85.25</p>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Count matches</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Count names starting with 'A' in {"Alice", "Bob", "Anna", "Amy"}. Expected: 3</p>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 4: ArrayList Operations</strong>
+                        <span class="difficulty medium">Medium</span>
+                        <p style="margin-top: 10px;">Create ArrayList with 5 numbers. Print, find largest, count > 50</p>
+                    </div>
+                `
+            },
+            recursion: {
+                name: 'Recursion',
+                icon: '🔁',
+                concepts: `
+                    <h3>1. WHAT IS RECURSION?</h3>
+                    <p>A method calling itself with a base case and recursive case</p>
+                    <div class="code-block">public static void countDown(int n) {
+    if (n <= 0) return;  // Base case
+    System.out.println(n);
+    countDown(n - 1);     // Recursive call
+}</div>
+
+                    <h3>2. THREE RULES OF RECURSION</h3>
+                    <p><strong>Rule 1 - Base Case:</strong> Stop condition (when to stop recursing)</p>
+                    <p><strong>Rule 2 - Recursive Case:</strong> Method calls itself with modified input</p>
+                    <p><strong>Rule 3 - Progress:</strong> Each call must progress toward base case</p>
+
+                    <h3>3. FACTORIAL EXAMPLE</h3>
+                    <p><strong>Formula:</strong> n! = n * (n-1)! &nbsp; with base case &nbsp; 0! = 1</p>
+                    <div class="code-block">public static int factorial(int n) {
+    if (n == 0) return 1;        // Base case
+    return n * factorial(n - 1); // Recursive case
+}</div>
+
+                    <h3>4. FIBONACCI EXAMPLE</h3>
+                    <p><strong>Formula:</strong> fib(n) = fib(n-1) + fib(n-2)</p>
+                    <div class="code-block">public static int fibonacci(int n) {
+    if (n <= 1) return n;              // Base case
+    return fibonacci(n-1) + fibonacci(n-2); // Recursive
+}</div>
+
+                    <h3>5. SUM OF DIGITS EXAMPLE</h3>
+                    <div class="code-block">public static int sumOfDigits(int n) {
+    if (n < 10) return n;        // Base case
+    return (n % 10) + sumOfDigits(n / 10); // Recursive
+}</div>
+                `,
+                samples: `
+                    <h3>FACTORIAL Example</h3>
+                    <div class="code-block">public static int factorial(int n) {
+    if (n == 0) return 1;  // Base case
+    return n * factorial(n - 1);  // Recursive
+}
+// factorial(5) = 120</div>
+
+                    <h3>SUM OF DIGITS</h3>
+                    <div class="code-block">public static int sumOfDigits(int n) {
+    if (n < 10) return n;  // Base case
+    return (n % 10) + sumOfDigits(n / 10);  // Recursive
+}
+// sumOfDigits(123) = 6</div>
+
+                    <h3>FIBONACCI</h3>
+                    <div class="code-block">public static int fibonacci(int n) {
+    if (n <= 1) return n;  // Base case
+    return fibonacci(n - 1) + fibonacci(n - 2);  // Recursive
+}
+// fibonacci(6) = 8</div>
+
+                    <button class="run-button" onclick="runRecursion()">▶ Run Sample Code</button>
+                    <div id="recursionOutput"></div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #90EE90; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #90EE90; font-size: 1.1em;">📚 EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: Calculate Factorial</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Recursive method for n! - Test: 5! = 120</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionREC1').style.display = document.getElementById('solutionREC1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionREC1" class="code-block" style="display:none; margin-top: 12px;">public static int factorial(int n) {
+    if (n == 0) return 1;  // Base case
+    return n * factorial(n - 1);  // Recursive
+}
+System.out.println(factorial(5));  // Output: 120</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Sum of Digits</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Recursive sum - Example: 345 → 12</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionREC2').style.display = document.getElementById('solutionREC2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionREC2" class="code-block" style="display:none; margin-top: 12px;">public static int sumOfDigits(int n) {
+    if (n < 10) return n;  // Base case
+    return (n % 10) + sumOfDigits(n / 10);  // Recursive
+}
+System.out.println(sumOfDigits(345));  // Output: 12</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Power Function</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Calculate a^b recursively - Example: power(2,4) = 16</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionREC3').style.display = document.getElementById('solutionREC3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionREC3" class="code-block" style="display:none; margin-top: 12px;">public static int power(int a, int b) {
+    if (b == 0) return 1;  // Base case
+    return a * power(a, b - 1);  // Recursive
+}
+System.out.println(power(2, 4));  // Output: 16</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 5: Fibonacci Sequence</strong>
+                        <span class="difficulty medium">Medium</span>
+                        <p style="margin-top: 10px;">Find nth Fibonacci - Example: fib(6) = 8</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionREC5').style.display = document.getElementById('solutionREC5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionREC5" class="code-block" style="display:none; margin-top: 12px;">public static int fibonacci(int n) {
+    if (n <= 1) return n;  // Base case
+    return fibonacci(n - 1) + fibonacci(n - 2);  // Recursive
+}
+System.out.println(fibonacci(6));  // Output: 8</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 7: Binary Search</strong>
+                        <span class="difficulty hard">Hard</span>
+                        <p style="margin-top: 10px;">Implement binary search recursively</p>
+                    </div>
+                `
+            },
+            arrays2d: {
+                name: '2D Arrays',
+                icon: '📊',
+                concepts: `
+                    <h3>1. WHAT IS A 2D ARRAY?</h3>
+                    <p>Array of arrays (grid structure) with rows and columns</p>
+                    <div class="code-block">int[][] matrix = new int[3][3];  // 3x3 grid</div>
+
+                    <h3>2. DECLARATION & INITIALIZATION</h3>
+                    <div class="code-block">// Empty
+int[][] arr1 = new int[2][3];
+
+// With values
+int[][] arr2 = {{1,2,3}, {4,5,6}};
+
+// Different row lengths
+int[][] arr3 = {{1}, {2,3}, {4,5,6}};</div>
+
+                    <h3>3. ACCESSING ELEMENTS</h3>
+                    <div class="code-block">int[][] matrix = {{1,2,3}, {4,5,6}};
+int value = matrix[0][1];  // Row 0, Column 1 = 2
+matrix[1][2] = 10;         // Set value at row 1, col 2</div>
+
+                    <h3>4. ROW-MAJOR TRAVERSAL</h3>
+                    <p>Iterate through rows first, then columns</p>
+                    <div class="code-block">for (int i = 0; i < matrix.length; i++) {
+    for (int j = 0; j < matrix[i].length; j++) {
+        System.out.print(matrix[i][j] + " ");
+    }
+}</div>
+
+                    <h3>5. DIAGONAL ACCESS</h3>
+                    <p>Access elements where row index equals column index</p>
+                    <div class="code-block">int[][] matrix = {{1,2,3}, {4,5,6}, {7,8,9}};
+for (int i = 0; i < matrix.length; i++) {
+    System.out.println(matrix[i][i]);  // 1, 5, 9
+}</div>
+                `,
+                samples: `
+                    <h3>ROW-MAJOR TRAVERSAL</h3>
+                    <div class="code-block">int[][] matrix = {{1, 2, 3}, {4, 5, 6}};
+for (int i = 0; i < matrix.length; i++) {
+    for (int j = 0; j < matrix[i].length; j++) {
+        System.out.print(matrix[i][j] + " ");
+    }
+    System.out.println();
+}</div>
+
+                    <h3>FOR-EACH LOOP WITH 2D ARRAY</h3>
+                    <div class="code-block">for (int[] row : matrix) {
+    for (int val : row) {
+        System.out.print(val + " ");
+    }
+    System.out.println();
+}</div>
+
+                    <h3>DIAGONAL SUM</h3>
+                    <div class="code-block">int diagonalSum = 0;
+for (int i = 0; i < matrix.length; i++) {
+    diagonalSum += matrix[i][i];
+}</div>
+
+                    <button class="run-button" onclick="run2DArrays()">▶ Run Sample Code</button>
+                    <div id="arrays2dOutput"></div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #90EE90; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #90EE90; font-size: 1.1em;">📚 EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: Sum All Elements</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Create 3x3 matrix, calculate total sum. Expected: 45</p>
+                        <button class="preview-button" onclick="document.getElementById('solution2D1').style.display = document.getElementById('solution2D1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution2D1" class="code-block" style="display:none; margin-top: 12px;">int[][] matrix = {{1,2,3}, {4,5,6}, {7,8,9}};
+int sum = 0;
+for (int i = 0; i < matrix.length; i++) {
+    for (int j = 0; j < matrix[i].length; j++) {
+        sum += matrix[i][j];
+    }
+}
+System.out.println("Sum: " + sum);  // Output: 45</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Find Maximum</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Find max value in 2x4 matrix and its position</p>
+                        <button class="preview-button" onclick="document.getElementById('solution2D2').style.display = document.getElementById('solution2D2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution2D2" class="code-block" style="display:none; margin-top: 12px;">int[][] matrix = {{5,10,15,20}, {25,30,35,40}};
+int max = matrix[0][0], maxRow = 0, maxCol = 0;
+for (int i = 0; i < matrix.length; i++) {
+    for (int j = 0; j < matrix[i].length; j++) {
+        if (matrix[i][j] > max) {
+            max = matrix[i][j];
+            maxRow = i; maxCol = j;
+        }
+    }
+}
+System.out.println("Max: " + max + " at [" + maxRow + "][" + maxCol + "]");</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Matrix Transpose</strong>
+                        <span class="difficulty medium">Medium</span>
+                        <p style="margin-top: 10px;">Transpose a 2x3 matrix to 3x2</p>
+                        <button class="preview-button" onclick="document.getElementById('solution2D3').style.display = document.getElementById('solution2D3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution2D3" class="code-block" style="display:none; margin-top: 12px;">int[][] original = {{1,2,3}, {4,5,6}};
+int[][] transpose = new int[3][2];
+for (int i = 0; i < original.length; i++) {
+    for (int j = 0; j < original[i].length; j++) {
+        transpose[j][i] = original[i][j];
+    }
+}</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 4: Diagonal Sum</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Sum only diagonal elements in 4x4 matrix</p>
+                        <button class="preview-button" onclick="document.getElementById('solution2D4').style.display = document.getElementById('solution2D4').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solution2D4" class="code-block" style="display:none; margin-top: 12px;">int[][] matrix = {{1,2,3,4}, {5,6,7,8}, {9,10,11,12}, {13,14,15,16}};
+int diagonalSum = 0;
+for (int i = 0; i < matrix.length; i++) {
+    diagonalSum += matrix[i][i];
+}
+System.out.println("Diagonal Sum: " + diagonalSum);  // Output: 34</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 6: Matrix Rotation</strong>
+                        <span class="difficulty hard">Hard</span>
+                        <p style="margin-top: 10px;">Rotate 3x3 matrix 90 degrees clockwise</p>
+                    </div>
+                `
+            },
+            arraylist: {
+                name: 'ArrayList',
+                icon: '📝',
+                concepts: `
+                    <h3>1. WHAT IS ARRAYLIST?</h3>
+                    <p>Dynamic array that grows/shrinks at runtime</p>
+                    <div class="code-block">ArrayList<Integer> list = new ArrayList<>();
+ArrayList<String> names = new ArrayList<>();</div>
+
+                    <h3>2. ADDING ELEMENTS</h3>
+                    <div class="code-block">ArrayList<Integer> nums = new ArrayList<>();
+nums.add(10);        // [10]
+nums.add(20);        // [10, 20]
+nums.add(1, 15);     // [10, 15, 20] - insert at index 1</div>
+
+                    <h3>3. ACCESSING & REMOVING</h3>
+                    <div class="code-block">int value = nums.get(0);      // Get element at index 0
+nums.remove(1);                 // Remove element at index 1
+nums.remove(Integer.valueOf(10)); // Remove value 10</div>
+
+                    <h3>4. COMMON METHODS</h3>
+                    <div class="code-block">int size = nums.size();           // Get size
+boolean has15 = nums.contains(15); // Check if contains
+nums.clear();                      // Remove all elements
+boolean isEmpty = nums.isEmpty(); // Check if empty</div>
+
+                    <h3>5. ITERATION METHODS</h3>
+                    <div class="code-block">// For-each loop
+for (int num : nums) {
+    System.out.println(num);
+}
+
+// Traditional loop
+for (int i = 0; i < nums.size(); i++) {
+    System.out.println(nums.get(i));
+}</div>
+                `,
+                samples: `
+                    <h3>CREATE & ADD ELEMENTS</h3>
+                    <div class="code-block">ArrayList&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();
+numbers.add(10);
+numbers.add(20);
+numbers.add(1, 15);  // Add 15 at index 1
+// Result: [10, 15, 20]</div>
+
+                    <h3>ITERATION & OPERATIONS</h3>
+                    <div class="code-block">// For-each iteration
+for (int num : numbers) {
+    System.out.print(num + " ");
+}
+
+// Find maximum
+int max = numbers.get(0);
+for (int num : numbers) {
+    if (num > max) max = num;
+}</div>
+
+                    <h3>REMOVE & CHECK</h3>
+                    <div class="code-block">numbers.remove(1);  // Remove index 1
+boolean contains15 = numbers.contains(15);
+System.out.println(numbers.isEmpty());</div>
+
+                    <button class="run-button" onclick="runArrayList()">▶ Run Sample Code</button>
+                    <div id="arraylistOutput"></div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #90EE90; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #90EE90; font-size: 1.1em;">📚 EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: ArrayList Operations</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Add: 5,10,15,20,25 - Remove index 2 - Add 12 at index 1</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionAL1').style.display = document.getElementById('solutionAL1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionAL1" class="code-block" style="display:none; margin-top: 12px;">ArrayList<Integer> list = new ArrayList<>();
+list.add(5); list.add(10); list.add(15); list.add(20); list.add(25);
+list.remove(2);  // Remove 15
+list.add(1, 12);  // Add 12 at index 1
+System.out.println(list);  // Output: [5, 12, 10, 20, 25]</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Find Average</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Calculate average of test scores</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionAL2').style.display = document.getElementById('solutionAL2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionAL2" class="code-block" style="display:none; margin-top: 12px;">ArrayList<Integer> scores = new ArrayList<>();
+scores.add(88); scores.add(92); scores.add(76); scores.add(85);
+int sum = 0;
+for (int score : scores) sum += score;
+double average = sum / (double) scores.size();
+System.out.println("Average: " + average);  // Output: 85.25</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Remove Even Numbers</strong>
+                        <span class="difficulty medium">Medium</span>
+                        <p style="margin-top: 10px;">Remove all even numbers, keep odds. (Be careful with iteration!)</p>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 7: Word Counter</strong>
+                        <span class="difficulty hard">Hard</span>
+                        <p style="margin-top: 10px;">Count frequency of each word in ArrayList</p>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 8: Remove Duplicates</strong>
+                        <span class="difficulty hard">Hard</span>
+                        <p style="margin-top: 10px;">Remove all duplicate values from ArrayList</p>
+                    </div>
+                `
+            },
+            oop: {
+                name: 'OOP Basics',
+                icon: '🏗️',
+                concepts: `
+                    <h3>1. ENCAPSULATION</h3>
+                    <p>Hide internal details, expose only what's needed using private fields + public methods</p>
+                    <div class="code-block">public class BankAccount {
+    private double balance;  // Private field
+    
+    public void deposit(double amount) {
+        if (amount > 0) balance += amount;
+    }
+    public double getBalance() { return balance; }
+}</div>
+
+                    <h3>2. INHERITANCE</h3>
+                    <p>Child class inherits properties and methods from parent class using <strong>extends</strong></p>
+                    <div class="code-block">public class Animal {
+    public void eat() { System.out.println("Eating..."); }
+}
+
+public class Dog extends Animal {
+    public void bark() { System.out.println("Woof!"); }
+}</div>
+
+                    <h3>3. METHOD OVERRIDING</h3>
+                    <p>Child class provides its own implementation of a parent method using <strong>@Override</strong></p>
+                    <div class="code-block">public class Animal {
+    public void sound() { System.out.println("Generic sound"); }
+}
+
+public class Dog extends Animal {
+    @Override
+    public void sound() { System.out.println("Woof!"); }
+}</div>
+
+                    <h3>4. METHOD OVERLOADING</h3>
+                    <p>Same method name with different parameters (same class)</p>
+                    <div class="code-block">public class Calculator {
+    public int add(int a, int b) { return a + b; }
+    public double add(double a, double b) { return a + b; }
+    public int add(int a, int b, int c) { return a + b + c; }
+}</div>
+
+                    <h3>5. ABSTRACTION & INTERFACES</h3>
+                    <p>Create blueprint that classes must implement using <strong>interface</strong></p>
+                    <div class="code-block">public interface Animal {
+    void sound();
+}
+
+public class Dog implements Animal {
+    public void sound() { System.out.println("Woof!"); }
+}</div>
+                `,
+                samples: `
+                    <h3>ENCAPSULATION</h3>
+                    <div class="code-block">public class Person {
+    private String name;
+    private int age;
+    
+    public String getName() { return name; }
+    public void setAge(int age) { 
+        if (age > 0) this.age = age; 
+    }
+}</div>
+
+                    <h3>INHERITANCE & POLYMORPHISM</h3>
+                    <div class="code-block">public class Animal {
+    public void makeSound() { 
+        System.out.println("Generic sound"); 
+    }
+}
+
+public class Dog extends Animal {
+    @Override
+    public void makeSound() { 
+        System.out.println("Woof!"); 
+    }
+}</div>
+
+                    <h3>METHOD OVERLOADING</h3>
+                    <div class="code-block">public class Calculator {
+    public int add(int a, int b) { return a + b; }
+    public double add(double a, double b) { return a + b; }
+    public int add(int a, int b, int c) { return a + b + c; }
+}</div>
+
+                    <button class="run-button" onclick="runOOP()">▶ Run Sample Code</button>
+                    <div id="oopOutput"></div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #90EE90; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #90EE90; font-size: 1.1em;">📚 EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: Bank Account (Encapsulation)</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Private balance, deposit(), withdraw(), getBalance()</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionOOP1').style.display = document.getElementById('solutionOOP1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionOOP1" class="code-block" style="display:none; margin-top: 12px;">public class BankAccount {
+    private double balance;
+    public BankAccount(double initial) { balance = initial; }
+    public void deposit(double amount) { balance += amount; }
+    public void withdraw(double amount) { 
+        if (amount <= balance) balance -= amount; 
+    }
+    public double getBalance() { return balance; }
+}</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Vehicle Hierarchy (Inheritance)</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Vehicle parent, Car and Motorcycle children</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionOOP2').style.display = document.getElementById('solutionOOP2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionOOP2" class="code-block" style="display:none; margin-top: 12px;">class Vehicle { 
+    public void start() { System.out.println("Starting vehicle"); }
+}
+class Car extends Vehicle {
+    public void openTrunk() { System.out.println("Trunk opened"); }
+}
+class Motorcycle extends Vehicle {
+    public void wheelie() { System.out.println("Performing wheelie"); }
+}</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Shape Classes (Polymorphism)</strong>
+                        <span class="difficulty medium">Medium</span>
+                        <p style="margin-top: 10py;">Abstract Shape, Circle, Rectangle, Triangle - calculate total area</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionOOP3').style.display = document.getElementById('solutionOOP3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionOOP3" class="code-block" style="display:none; margin-top: 12px;">abstract class Shape { abstract double area(); }
+class Circle extends Shape {
+    double r; Circle(double r) { this.r = r; }
+    double area() { return Math.PI * r * r; }
+}
+class Rectangle extends Shape {
+    double w, h; Rectangle(double w, double h) { this.w = w; this.h = h; }
+    double area() { return w * h; }
+}</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 4: Calculator Overloading</strong>
+                        <span class="difficulty easy">Easy</span>
+                        <p style="margin-top: 10px;">Multiple add() methods with different parameters</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionOOP4').style.display = document.getElementById('solutionOOP4').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionOOP4" class="code-block" style="display:none; margin-top: 12px;">class Calculator {
+    int add(int a, int b) { return a + b; }
+    double add(double a, double b) { return a + b; }
+    int add(int a, int b, int c) { return a + b + c; }
+}
+Calculator cal = new Calculator();
+System.out.println(cal.add(5, 10));  // 15
+System.out.println(cal.add(5.5, 10.5));  // 16.0</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 5: Employee Management</strong>
+                        <span class="difficulty medium">Medium</span>
+                        <p style="margin-top: 10px;">Combines all OOP concepts - Employee extending Person</p>
+                        <button class="preview-button" onclick="document.getElementById('solutionOOP5').style.display = document.getElementById('solutionOOP5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionOOP5" class="code-block" style="display:none; margin-top: 12px;">class Person {
+    protected String name;
+}
+class Employee extends Person {
+    private double salary;
+    void raiseSalary(double amount) { salary += amount; }
+    double getSalary() { return salary; }
+}
+Employee emp = new Employee();
+emp.name = "John"; emp.raiseSalary(5000);</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 8: Library System</strong>
+                        <span class="difficulty hard">Hard</span>
+                        <p style="margin-top: 10px;">Complete system with Book, Member, Library classes</p>
+                    </div>
+                `
+            }
+        };
+
+        function selectTopic(topicKey) {
+            try {
+                console.log('selectTopic called with:', topicKey);
+                currentTopic = topicKey;
+                const topic = topicsData[topicKey];
+
+                if (!topic) {
+                    console.error('Topic not found:', topicKey);
+                    alert('Error: Topic not found');
+                    return;
+                }
+
+                console.log('Found topic:', topic.name);
+
+                const homeScreen = document.getElementById('homeScreen');
+                const mainContent = document.getElementById('mainContent');
+
+                if (!homeScreen || !mainContent) {
+                    console.error('HTML elements not found');
+                    alert('Error: HTML elements not found');
+                    return;
+                }
+
+                homeScreen.style.display = 'none';
+                mainContent.style.display = 'grid';
+                console.log('Screen display changed');
+
+                // Build menu items
+                const menuItems = document.getElementById('menuItems');
+                if (!menuItems) {
+                    console.error('menuItems not found');
+                    return;
+                }
+                menuItems.innerHTML = '';
+
+                for (const [key, data] of Object.entries(topicsData)) {
+                    const li = document.createElement('li');
+                    const button = document.createElement('button');
+                    button.textContent = `${data.icon} ${data.name}`;
+                    button.onclick = () => selectTopic(key);
+                    if (key === topicKey) button.classList.add('active');
+                    li.appendChild(button);
+                    menuItems.appendChild(li);
+                }
+                console.log('Menu items built');
+
+                // Build content tabs
+                const contentTabs = document.getElementById('contentTabs');
+                if (!contentTabs) {
+                    console.error('contentTabs not found');
+                    return;
+                }
+                contentTabs.innerHTML = `
+                    <button class="tab-button active" onclick="switchTab('concepts')">📖 Concepts</button>
+                    <button class="tab-button" onclick="switchTab('samples')">💻 Sample Code</button>
+                    <button class="tab-button" onclick="switchTab('challenges')">🎯 Challenges</button>
+                `;
+                console.log('Content tabs built');
+
+                // Build tab contents
+                const tabContents = document.getElementById('tabContents');
+                if (!tabContents) {
+                    console.error('tabContents not found');
+                    return;
+                }
+                tabContents.innerHTML = `
+                    <div class="tab-content active" id="concepts">
+                        <h2>${topic.icon} ${topic.name} - Concepts</h2>
+                        <div class="concepts">${topic.concepts}</div>
+                    </div>
+                    <div class="tab-content" id="samples">
+                        <h2>${topic.icon} ${topic.name} - Sample Code</h2>
+                        <div class="concepts">${topic.samples}</div>
+                    </div>
+                    <div class="tab-content" id="challenges">
+                        <h2>${topic.icon} ${topic.name} - Challenges</h2>
+                        <div class="concepts">${topic.challenges}</div>
+                    </div>
+                `;
+                console.log('Tab contents built - Done!');
+
+                // Apply syntax highlighting to code blocks
+                initJavaSyntaxHighlighting();
+
+                // Note: upload forms are initialized in switchTab() when the challenges tab is opened
+            } catch (error) {
+                console.error('Error in selectTopic:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        function switchTab(tabName) {
+            console.log('switchTab called with:', tabName);
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+
+            const tabElement = document.getElementById(tabName);
+            if (tabElement) {
+                tabElement.classList.add('active');
+            } else {
+                console.error('Tab element not found:', tabName);
+            }
+
+            // Find and mark the clicked button as active
+            const buttons = document.querySelectorAll('.tab-button');
+            const tabIndex = Array.from(buttons).findIndex(btn =>
+                btn.textContent.includes(tabName === 'concepts' ? 'Concepts' :
+                    tabName === 'samples' ? 'Sample' : 'Challenges')
+            );
+            if (tabIndex >= 0) buttons[tabIndex].classList.add('active');
+
+            // Apply syntax highlighting to code blocks in this tab
+            initJavaSyntaxHighlighting();
+
+            // Initialize upload forms when switching to challenges tab
+            if (tabName === 'challenges' && typeof initializeUploadForms === 'function') {
+                console.log('🔄 Initializing upload forms for challenges tab');
+                initializeUploadForms();
+            }
+        }
+
+        function backToHome() {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('homeScreen').style.display = 'grid';
+            currentTopic = null;
+        }
+
+        // ========== JAVA SYNTAX HIGHLIGHTER ==========
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function highlightJavaCode(element) {
+            const code = element.textContent;
+            const lines = code.split('\n');
+
+            // Java keywords to highlight
+            const keywords = ['for', 'while', 'if', 'else', 'int', 'String', 'double', 'boolean', 'void', 'public', 'private', 'static', 'class', 'new', 'return', 'true', 'false', 'null', 'this', 'super', 'extends', 'implements', 'interface', 'abstract', 'final', 'try', 'catch', 'finally', 'throw', 'throws', 'break', 'continue', 'switch', 'case', 'default', 'do', 'package', 'import', 'System', 'println', 'print', 'out', 'Scanner', 'ArrayList', 'Array', 'List', 'Map', 'Set', 'HashMap', 'HashSet'];
+
+            const highlightedLines = lines.map(line => {
+                let result = '';
+                let i = 0;
+
+                while (i < line.length) {
+                    // Handle comments
+                    if (line.substring(i, i + 2) === '//') {
+                        const comment = line.substring(i);
+                        result += `<span class="java-comment">${escapeHtml(comment)}</span>`;
+                        break;
+                    }
+
+                    // Handle strings with double quotes
+                    if (line[i] === '"') {
+                        let j = i + 1;
+                        while (j < line.length && line[j] !== '"') {
+                            if (line[j] === '\\') j++; // Skip escaped character
+                            j++;
+                        }
+                        j++; // Include closing quote
+                        result += `<span class="java-string">${escapeHtml(line.substring(i, j))}</span>`;
+                        i = j;
+                        continue;
+                    }
+
+                    // Handle strings with single quotes
+                    if (line[i] === "'") {
+                        let j = i + 1;
+                        while (j < line.length && line[j] !== "'") {
+                            if (line[j] === '\\') j++; // Skip escaped character
+                            j++;
+                        }
+                        j++; // Include closing quote
+                        result += `<span class="java-string">${escapeHtml(line.substring(i, j))}</span>`;
+                        i = j;
+                        continue;
+                    }
+
+                    // Handle numbers
+                    if (/\d/.test(line[i])) {
+                        let j = i;
+                        while (j < line.length && /[\d.]/.test(line[j])) j++;
+                        result += `<span class="java-number">${line.substring(i, j)}</span>`;
+                        i = j;
+                        continue;
+                    }
+
+                    // Handle identifiers (keywords, methods, variables)
+                    if (/[a-zA-Z_]/.test(line[i])) {
+                        let j = i;
+                        while (j < line.length && /[a-zA-Z0-9_]/.test(line[j])) j++;
+                        const word = line.substring(i, j);
+
+                        // Check if followed by (
+                        let k = j;
+                        while (k < line.length && /\s/.test(line[k])) k++;
+
+                        if (k < line.length && line[k] === '(') {
+                            result += `<span class="java-method">${word}</span>`;
+                        } else if (keywords.includes(word)) {
+                            result += `<span class="java-keyword">${word}</span>`;
+                        } else {
+                            result += word;
+                        }
+                        i = j;
+                        continue;
+                    }
+
+                    // Handle operators
+                    if (/[+\-*/%=<>!&|^]/.test(line[i])) {
+                        result += `<span class="java-operator">${escapeHtml(line[i])}</span>`;
+                        i++;
+                        continue;
+                    }
+
+                    // Handle everything else
+                    result += escapeHtml(line[i]);
+                    i++;
+                }
+
+                return result;
+            });
+
+            element.innerHTML = highlightedLines.join('\n');
+        }
+
+        // Apply highlighting to all code blocks on page load
+        function initJavaSyntaxHighlighting() {
+            const codeBlocks = document.querySelectorAll('.code-block');
+            codeBlocks.forEach(block => {
+                // Only process if it still has text content (not already processed)
+                if (block.textContent && !block.dataset.highlighted) {
+                    // Only highlight if it looks like Java code
+                    if (block.textContent.includes('for') || block.textContent.includes('int') || block.textContent.includes('System') || block.textContent.includes('while')) {
+                        highlightJavaCode(block);
+                        block.dataset.highlighted = 'true';
+                    }
+                }
+            });
+            console.log('✨ Java syntax highlighting applied');
+        }
+
+        // Run functions for sample code
+        function runLoops() {
+            let output = "FOR LOOP OUTPUT:\n1 2 3 4 5\n\n";
+            output += "NESTED LOOP (5x5) OUTPUT:\n";
+            for (let i = 1; i <= 5; i++) {
+                for (let j = 1; j <= 5; j++) output += "* ";
+                output += "\n";
+            }
+            output += "\nWHILE LOOP (COUNTDOWN) OUTPUT:\n5 4 3 2 1 Blastoff!\n\n";
+            output += "BREAK & CONTINUE OUTPUT:\n1 3 5";
+
+            const outputDiv = document.getElementById('loopsOutputContent');
+            const outputBox = document.getElementById('loopsOutput');
+            if (outputDiv) {
+                outputDiv.textContent = output;
+                outputBox.style.display = 'block';
+            }
+        }
+
+        // ========== PREVIEW FUNCTION ==========
+
+        function togglePreview(textareaId) {
+            const textarea = document.getElementById(textareaId);
+            const previewId = textareaId.replace('Code', 'Preview');
+            const preview = document.getElementById(previewId);
+
+            if (!textarea || !preview) {
+                console.error('Preview elements not found');
+                return;
+            }
+
+            // Toggle between editor and preview
+            if (preview.style.display === 'block') {
+                // Hide preview, show textarea
+                preview.style.display = 'none';
+                textarea.style.display = 'block';
+            } else {
+                // Show preview, hide textarea
+                const code = textarea.value;
+                preview.textContent = code;
+                preview.style.display = 'block';
+                textarea.style.display = 'none';
+            }
+        }
+
+        // ========== COMPILER & DEBUGGER ==========
+
+        function compileCode(code) {
+            const errors = [];
+            const warnings = [];
+
+            // Check for unclosed brackets
+            const openBraces = (code.match(/{/g) || []).length;
+            const closeBraces = (code.match(/}/g) || []).length;
+            if (openBraces !== closeBraces) {
+                errors.push(`Syntax Error: Unmatched braces (${openBraces} open, ${closeBraces} closed)`);
+            }
+
+            // Check for unclosed parentheses
+            const openParens = (code.match(/\(/g) || []).length;
+            const closeParens = (code.match(/\)/g) || []).length;
+            if (openParens !== closeParens) {
+                errors.push(`Syntax Error: Unmatched parentheses (${openParens} open, ${closeParens} closed)`);
+            }
+
+            // Check for unclosed strings
+            const singleQuotes = (code.match(/'/g) || []).length;
+            const doubleQuotes = (code.match(/"/g) || []).length;
+            if (singleQuotes % 2 !== 0) warnings.push('Warning: Possible unclosed single quote');
+            if (doubleQuotes % 2 !== 0) warnings.push('Warning: Possible unclosed double quote');
+
+            // Check for required keywords
+            if (!code.includes('for') && !code.includes('while') && !code.includes('class')) {
+                warnings.push('Note: No loops detected');
+            }
+
+            // Check for System.out.println/print
+            if (!code.includes('System.out.println') && !code.includes('System.out.print')) {
+                warnings.push('Note: No output statements found');
+            }
+
+            return { errors, warnings, success: errors.length === 0 };
+        }
+
+        function executeSimulation(code, challengeNum) {
+            let output = '=== COMPILATION ===\n';
+            output += '✓ Compilation successful!\n\n';
+
+            output += '=== EXECUTION ===\n';
+
+            const debugInfo = {
+                loops: 0,
+                iterations: 0,
+                prints: [],
+                variables: {},
+                conditionals: 0
+            };
+
+            // Simulate challenge 1: Triangle pattern
+            if (challengeNum === '1') {
+                output += 'Executing triangle pattern...\n\n';
+                output += 'OUTPUT:\n';
+
+                try {
+                    // Check if code has nested loops
+                    if (code.includes('for') && code.match(/for.*for/s)) {
+                        debugInfo.loops = 2;
+                        for (let i = 1; i <= 5; i++) {
+                            for (let j = 0; j < i; j++) {
+                                output += '* ';
+                                debugInfo.iterations++;
+                            }
+                            output += '\n';
+                        }
+                    } else {
+                        output += 'Warning: Expected nested loops\n';
+                    }
+                } catch (e) {
+                    output += 'Runtime Error: ' + e.message + '\n';
+                }
+            }
+
+            // Simulate challenge 2: Sum until zero
+            else if (challengeNum === '2') {
+                output += 'Executing sum calculation...\n\n';
+                output += 'DEBUG INFO:\n';
+
+                const numbers = [5, 10, 3, 0];
+                let sum = 0;
+                let index = 0;
+
+                debugInfo.loops = 1;
+                debugInfo.variables = { sum: 0, index: 0, numbers: '[5, 10, 3, 0]' };
+
+                output += `Input: [${numbers.join(', ')}]\n`;
+                output += 'Step-by-step execution:\n';
+
+                while (numbers[index] !== 0) {
+                    output += `  Iteration ${index + 1}: sum = ${sum} + ${numbers[index]} = ${sum + numbers[index]}\n`;
+                    sum += numbers[index];
+                    index++;
+                    debugInfo.iterations++;
+                }
+
+                output += `\nOUTPUT:\n`;
+                output += `Sum: ${sum}\n`;
+                debugInfo.variables = { sum: sum, index: index };
+            }
+
+            // Simulate challenge 3: Find multiple
+            else if (challengeNum === '3') {
+                output += 'Finding first multiple of 3 and 5...\n\n';
+                output += 'DEBUG INFO:\n';
+
+                debugInfo.loops = 1;
+                debugInfo.conditionals = 1;
+                debugInfo.variables = { i: 0, found: false };
+
+                let found = false;
+                for (let i = 1; i <= 100; i++) {
+                    debugInfo.iterations++;
+                    if (i % 3 === 0 && i % 5 === 0) {
+                        output += `Loop stopped at i = ${i}\n`;
+                        output += `Condition: (${i} % 3 === 0) && (${i} % 5 === 0) = true\n`;
+                        output += `Break statement executed\n\n`;
+                        output += `OUTPUT:\n`;
+                        output += `First multiple of 3 and 5: ${i}\n`;
+                        found = true;
+                        debugInfo.variables = { i: i, found: true };
+                        break;
+                    }
+                }
+            }
+
+            // Simulate challenge 4: Skip multiples
+            else if (challengeNum === '4') {
+                output += 'Printing numbers excluding multiples of 3...\n\n';
+                output += 'DEBUG INFO:\n';
+
+                debugInfo.loops = 1;
+                debugInfo.conditionals = 1;
+                output += 'Loop range: 1 to 20\n';
+                output += 'Condition: Skip if (i % 3 === 0)\n\n';
+
+                output += 'OUTPUT:\n';
+                let result = '';
+                for (let i = 1; i <= 20; i++) {
+                    if (i % 3 === 0) {
+                        debugInfo.iterations++;
+                        continue;
+                    }
+                    result += i + ' ';
+                    debugInfo.iterations++;
+                }
+                output += result + '\n';
+            }
+
+            output += '\n=== DEBUG SUMMARY ===\n';
+            output += `Loops detected: ${debugInfo.loops}\n`;
+            output += `Total iterations: ${debugInfo.iterations}\n`;
+            output += `Conditionals: ${debugInfo.conditionals}\n`;
+            output += `Variables: ${JSON.stringify(debugInfo.variables)}\n`;
+
+            return output;
+        }
+
+        function runChallenge(codeElementId, description) {
+            const codeElement = document.getElementById(codeElementId);
+            if (!codeElement) {
+                alert('Code editor not found');
+                return;
+            }
+
+            const code = codeElement.value;
+            if (!code || code.trim() === '') {
+                alert('Please write some code first!');
+                codeElement.focus();
+                return;
+            }
+
+            const challengeNum = codeElementId.replace('challenge', '').replace('Code', '');
+            const outputDiv = document.getElementById('challenge' + challengeNum + 'Output');
+            const outputContent = document.getElementById('challenge' + challengeNum + 'OutputContent');
+
+            if (outputDiv && outputContent) {
+                // Compile code
+                const compilation = compileCode(code);
+
+                let output = '';
+
+                // Show compilation errors
+                if (compilation.errors.length > 0) {
+                    output += '❌ COMPILATION FAILED\n\n';
+                    output += 'ERRORS:\n';
+                    compilation.errors.forEach(err => {
+                        output += `  • ${err}\n`;
+                    });
+                    output += '\nFix the errors above and try again.\n';
+                } else {
+                    // Compile successful, now execute
+                    if (compilation.warnings.length > 0) {
+                        output += '⚠ COMPILATION WARNINGS:\n';
+                        compilation.warnings.forEach(warn => {
+                            output += `  • ${warn}\n`;
+                        });
+                        output += '\n';
+                    }
+
+                    // Execute simulation
+                    output += executeSimulation(code, challengeNum);
+                }
+
+                outputContent.textContent = output;
+                outputDiv.style.display = 'block';
+                outputDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function runForEach() {
+            let output = "Running sample code for For-Each Loop...\n\n";
+            output += "Array elements:\n10 20 30 40 50\n\n";
+            output += "Fruits:\n- Apple\n- Banana\n- Mango\n- Orange\n\n";
+            output += "Ages above 20:\n25 30 22\n\n";
+            output += "Sum of array: 150\n\n";
+            output += "Matrix (2D array):\n1 2 3\n4 5 6\n";
+            displayOutput(output, 'foreachOutput');
+        }
+
+        function runRecursion() {
+            let output = "Running sample code for Recursion...\n\n";
+            output += "FACTORIAL:\n5! = 120\n0! = 1\n\n";
+
+            function factorial(n) { return n === 0 ? 1 : n * factorial(n - 1); }
+            function sumOfDigits(n) { return n < 10 ? n : (n % 10) + sumOfDigits(Math.floor(n / 10)); }
+            function fibonacci(n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }
+            function power(a, b) { return b === 0 ? 1 : a * power(a, b - 1); }
+            function reverse(s) { return s.length === 0 ? "" : reverse(s.substring(1)) + s.charAt(0); }
+
+            output += "SUM OF DIGITS:\nsumOfDigits(123) = " + sumOfDigits(123) + "\n";
+            output += "sumOfDigits(9) = " + sumOfDigits(9) + "\n\n";
+            output += "FIBONACCI:\nfibonacci(0) = " + fibonacci(0) + "\n";
+            output += "fibonacci(6) = " + fibonacci(6) + "\n\n";
+            output += "POWER:\npower(2, 3) = " + power(2, 3) + "\n";
+            output += "power(3, 2) = " + power(3, 2) + "\n\n";
+            output += "REVERSE STRING:\nreverse('Hello') = " + reverse('Hello') + "\n";
+            output += "reverse('Java') = " + reverse('Java') + "\n";
+
+            displayOutput(output, 'recursionOutput');
+        }
+
+        function run2DArrays() {
+            let output = "Running sample code for 2D Arrays...\n\n";
+            let matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+
+            output += "ORIGINAL MATRIX:\n";
+            for (let row of matrix) {
+                for (let val of row) output += val + " ";
+                output += "\n";
+            }
+            output += "\nDimensions: 3 rows, 3 columns\n";
+
+            let sum = 0;
+            for (let row of matrix) for (let val of row) sum += val;
+            output += "Sum of all elements: " + sum + "\n";
+
+            let max = matrix[0][0];
+            for (let row of matrix) for (let val of row) if (val > max) max = val;
+            output += "Maximum value: " + max + "\n";
+
+            let diagonalSum = 0;
+            for (let i = 0; i < matrix.length; i++) diagonalSum += matrix[i][i];
+            output += "Diagonal sum: " + diagonalSum + "\n";
+
+            displayOutput(output, 'arrays2dOutput');
+        }
+
+        function runArrayList() {
+            let output = "Running sample code for ArrayList...\n\n";
+            output += "Creating ArrayList and adding elements...\n";
+            output += "ArrayList: [10, 15, 20, 30]\n\n";
+            output += "Size: 4\nElement at index 0: 10\nElement at index 2: 20\n\n";
+            output += "Removing element at index 1 (value: 15)\n";
+            output += "ArrayList after removal: [10, 20, 30]\n\n";
+            output += "Contains 30? true\nContains 15? false\n\n";
+            output += "String ArrayList: [Apple, Banana, Mango, Orange]\n";
+            output += "Size: 4\nContains 'Banana'? true\n\n";
+            output += "Removing 'Banana'...\n";
+            output += "Remaining fruits:\n- Apple\n- Mango\n- Orange\n";
+            displayOutput(output, 'arraylistOutput');
+        }
+
+        function runOOP() {
+            let output = "Running sample code for OOP Basics...\n\n";
+            output += "=== POLYMORPHISM (Method Overriding) ===\n";
+            output += "Woof! Woof!\nMeow!\n\n";
+            output += "=== METHOD OVERLOADING ===\n";
+            output += "add(5, 10) = 15\nadd(5.5, 10.5) = 16.0\nadd(5, 10, 15) = 30\n\n";
+            output += "=== POLYMORPHISM WITH SHAPES ===\n";
+            output += "Area: 78.54 (Circle - radius 5)\n";
+            output += "Area: 24.00 (Rectangle - 4x6)\n";
+            output += "Area: 6.00 (Triangle - base 3, height 4)\n";
+            output += "Total Area: 108.54\n";
+            displayOutput(output, 'oopOutput');
+        }
+
+        function displayOutput(text, elementId) {
+            const outputDiv = document.getElementById(elementId) || createOutputDiv(elementId);
+            outputDiv.innerHTML = '<div class="output-box">' + text.replace(/\n/g, '<br>') + '</div>';
+        }
+
+        function createOutputDiv(id) {
+            const div = document.createElement('div');
+            div.id = id;
+            document.currentScript.parentElement.appendChild(div);
+            return div;
+        }
+    </script>
+</body>
+
+</html>

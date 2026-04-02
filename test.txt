@@ -1,0 +1,2 @@
+// characters -> ascii value int  > ? 
+// String.compareTo()
