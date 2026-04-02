@@ -125,15 +125,32 @@ async function supabaseSaveSubmission(username, challengeId, submissionData) {
                 ai_review_status: submissionData.aiReviewStatus || 'pending',
                 ai_reviewed_at: submissionData.aiReviewedAt || null
             }], { onConflict: 'username,challenge_id' })
-            .select();
+            .select('*');
         
         if (error) {
             console.error('❌ Supabase submission error:', error.code, error.message);
+            console.error('   Full error object:', error);
             
             // Check for RLS policy errors
             if (error.message.includes('row-level security') || error.message.includes('policy')) {
-                console.error('🔒 RLS Policy Error: The submissions table has security policies blocking writes');
-                console.error('   Solution: Disable RLS on the submissions table in Supabase');
+                console.error('🔒 RLS POLICY ERROR DETECTED');
+                console.error('   This means Row-Level Security is blocking the write');
+                console.error('   ');
+                console.error('   SOLUTION:');
+                console.error('   1. Go to Supabase Dashboard');
+                console.error('   2. Select your project');
+                console.error('   3. Go to Authentication → Policies (in the "submissions" table)');
+                console.error('   4. If there are policies, you must either:');
+                console.error('      - Temporarily disable RLS: Remove all policies');
+                console.error('      - Create proper policies that allow inserts');
+                console.error('   5. Or disable RLS entirely for testing');
+            }
+            
+            // Check for column size limits
+            if (error.message.includes('too long') || error.message.includes('violates')) {
+                console.error('⚠️ DATA SIZE CONSTRAINT VIOLATED');
+                console.error('   The file_content column might have a text size limit');
+                console.error('   Check if the column is type "text" (unlimited) or "varchar(N)"');
             }
             
             throw error;
@@ -141,11 +158,34 @@ async function supabaseSaveSubmission(username, challengeId, submissionData) {
         
         console.log('✅ Submission saved to Supabase:', username, challengeId);
         
+        // Run diagnostic to verify data persisted correctly
+        console.log('🔍 Running diagnostic to verify persistence...');
+        await diagnosticCheckSubmissionInDB(username, challengeId);
+        
         // Verify what was actually saved
         if (data && data[0]) {
             console.log('📋 Verification - Data returned from save:', {
                 fileContentSavedLength: data[0].file_content?.length || 0,
                 fileContentSavedPreview: data[0].file_content ? data[0].file_content.substring(0, 100) : 'EMPTY'
+            });
+        }
+        
+        // CRITICAL: Verify the data actually persisted by fetching it back immediately
+        console.log('🔍 Double-checking saved data by fetching directly from DB...');
+        const { data: verifyData, error: verifyError } = await supabaseInstance
+            .from('submissions')
+            .select('file_content, file_name, username, challenge_id')
+            .eq('username', username)
+            .eq('challenge_id', challengeId)
+            .single();
+        
+        if (verifyError) {
+            console.error('❌ Failed to verify saved data:', verifyError);
+        } else {
+            console.log('✅ Verification successful - file_content persisted:', {
+                fileContentLength: verifyData?.file_content?.length || 0,
+                fileContentPreview: verifyData?.file_content ? verifyData.file_content.substring(0, 100) : 'EMPTY',
+                fileName: verifyData?.file_name
             });
         }
         
@@ -338,6 +378,62 @@ async function supabaseDeleteSubmission(username, challengeId) {
     }
 }
 
+/**
+ * DIAGNOSTIC: Inspect actual database content for a submission
+ * Use this to debug what's actually stored in Supabase
+ */
+async function diagnosticCheckSubmissionInDB(username, challengeId) {
+    if (!supabaseInstance) {
+        console.error('❌ Supabase not initialized');
+        return;
+    }
+    
+    try {
+        console.log('\n🔍 === DIAGNOSTIC CHECK ===');
+        console.log('Looking for submission:', { username, challengeId });
+        
+        // Get the raw submission record
+        const { data, error } = await supabaseInstance
+            .from('submissions')
+            .select('*')
+            .eq('username', username)
+            .eq('challenge_id', challengeId)
+            .single();
+        
+        if (error) {
+            console.error('❌ Query error:', error);
+            return;
+        }
+        
+        if (!data) {
+            console.warn('⚠️ No submission found in database');
+            return;
+        }
+        
+        console.log('✅ Found submission record in DB');
+        console.log('📊 ALL FIELDS:');
+        console.log('  username:', data.username);
+        console.log('  challenge_id:', data.challenge_id);
+        console.log('  file_name:', data.file_name);
+        console.log('  file_type:', data.file_type);
+        console.log('  file_size:', data.file_size);
+        console.log('  topic_id:', data.topic_id);
+        console.log('  status:', data.status);
+        console.log('  submitted_at:', data.submitted_at);
+        console.log('  ai_review_status:', data.ai_review_status);
+        console.log('  file_content type:', typeof data.file_content);
+        console.log('  file_content length:', data.file_content?.length || 0);
+        console.log('  file_content preview:', data.file_content ? data.file_content.substring(0, 200) : '❌ MISSING/NULL');
+        console.log('  file_content is null:', data.file_content === null);
+        console.log('  file_content is undefined:', data.file_content === undefined);
+        console.log('  file_content == "":', data.file_content === '');
+        console.log('🔍 === END DIAGNOSTIC ===\n');
+        
+    } catch (error) {
+        console.error('❌ Diagnostic error:', error);
+    }
+}
+
 // Export all functions to window (supabaseInstance will be updated once initialized)
 window.supabaseSaveSubmission = supabaseSaveSubmission;
 window.supabaseGetSubmission = supabaseGetSubmission;
@@ -346,6 +442,7 @@ window.supabaseGetChallengeSubmissions = supabaseGetChallengeSubmissions;
 window.supabaseGetLatestSubmissions = supabaseGetLatestSubmissions;
 window.supabaseUpdateSubmissionReview = supabaseUpdateSubmissionReview;
 window.supabaseDeleteSubmission = supabaseDeleteSubmission;
+window.diagnosticCheckSubmissionInDB = diagnosticCheckSubmissionInDB;
 window.initializeSupabase = initializeSupabase;
 window.waitForSupabase = waitForSupabase;
 
