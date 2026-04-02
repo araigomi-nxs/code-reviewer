@@ -659,7 +659,6 @@ async function createUploadForm(challengeId, topicId = 'default') {
                             <span>${sub.fileName}</span> | 
                             <span>${dateStr}${ratingDisplay}</span>
                         </div>
-                        <div style="font-size: 11px; color: #00a; margin-top: 5px;">👁️ Click to preview</div>
                     </div>
                     <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
                         <span style="color: ${statusColor}; font-weight: bold; font-size: 11px;">${sub.status.toUpperCase()}</span>
