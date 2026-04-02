@@ -30,6 +30,10 @@ function initializeSupabase() {
         supabaseInstance = window.supabase.createClient(config.URL, config.ANON_KEY);
         window.supabaseInstance = supabaseInstance; // Also set globally
         console.log('✅ Supabase initialized');
+        
+        // Setup real-time listener for instant updates
+        setupRealtimeSubmissionsListener();
+        
         return true;
     } catch (error) {
         console.error('❌ Failed to initialize Supabase:', error.message);
@@ -456,6 +460,100 @@ async function diagnosticCheckSubmissionInDB(username, challengeId) {
         console.error('❌ Diagnostic error:', error);
     }
 }
+
+/**
+ * Real-time subscription for instant dashboard updates
+ * Listens for INSERT, UPDATE, DELETE on submissions table
+ */
+let submissionsSubscription = null;
+
+async function setupRealtimeSubmissionsListener() {
+    if (!supabaseInstance) {
+        console.warn('⚠️ Supabase not initialized, cannot setup real-time listener');
+        return;
+    }
+    
+    try {
+        // Clean up any existing subscription
+        if (submissionsSubscription) {
+            console.log('🔄 Unsubscribing from previous listener...');
+            submissionsSubscription.unsubscribe();
+        }
+        
+        console.log('📡 Setting up real-time listener for submissions table...');
+        
+        submissionsSubscription = supabaseInstance
+            .channel('submissions-channel')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*', // Listen to INSERT, UPDATE, DELETE
+                    schema: 'public',
+                    table: 'submissions'
+                },
+                (payload) => {
+                    const eventType = payload.eventType; // INSERT, UPDATE, DELETE
+                    const record = payload.new || payload.old;
+                    
+                    console.log('🔔 Real-time change detected:', {
+                        type: eventType,
+                        challenge: record.challenge_id,
+                        username: record.username,
+                        status: record.status
+                    });
+                    
+                    // Show notification based on event type
+                    let message = '🔄 ';
+                    if (eventType === 'INSERT') {
+                        message += 'New submission submitted';
+                    } else if (eventType === 'UPDATE') {
+                        if (record.status === 'completed') {
+                            message += 'Submission approved!';
+                        } else if (record.status === 'rejected') {
+                            message += 'Submission rejected';
+                        } else if (record.ai_review) {
+                            message += 'AI review completed!';
+                        } else {
+                            message += 'Submission updated';
+                        }
+                    } else if (eventType === 'DELETE') {
+                        message += 'Submission deleted';
+                    }
+                    
+                    if (window.showNotification) {
+                        window.showNotification(message, 'info');
+                    }
+                    
+                    // Trigger instant dashboard refresh
+                    if (window.displayLatestSubmissionsDashboard) {
+                        console.log('🔄 Refreshing dashboard instantly...');
+                        window.displayLatestSubmissionsDashboard();
+                    }
+                    
+                    // Also refresh admin dashboard if open
+                    if (window.loadAdminDashboard) {
+                        console.log('🔄 Refreshing admin dashboard instantly...');
+                        window.loadAdminDashboard();
+                    }
+                }
+            )
+            .subscribe((status) => {
+                if (status === 'SUBSCRIBED') {
+                    console.log('✅ Real-time listener SUBSCRIBED - instant updates enabled');
+                } else if (status === 'CHANNEL_ERROR') {
+                    console.error('❌ Real-time channel error');
+                } else if (status === 'TIMED_OUT') {
+                    console.warn('⚠️ Real-time subscription timed out, retrying...');
+                    setTimeout(() => setupRealtimeSubmissionsListener(), 5000);
+                }
+            });
+    } catch (error) {
+        console.error('❌ Failed to setup real-time listener:', error);
+    }
+}
+
+// Export real-time functions
+window.setupRealtimeSubmissionsListener = setupRealtimeSubmissionsListener;
 
 // Export all functions to window (supabaseInstance will be updated once initialized)
 window.supabaseSaveSubmission = supabaseSaveSubmission;
