@@ -671,8 +671,8 @@ async function viewAdminSubmission(challengeId, username) {
         closeAdminSubmissionViewModal();
         
         console.log('📂 viewAdminSubmission called with:', { challengeId, username });
-        const submission = await getSubmission(challengeId, username);
-        console.log('📊 Returned submission from getSubmission:', submission);
+        const submission = await getSubmissionForAdmin(challengeId, username);
+        console.log('📊 Returned submission from getSubmissionForAdmin:', submission);
         if (!submission) {
             console.error('❌ CRITICAL: getSubmission returned null/undefined');
             showNotification('❌ Submission not found', 'error');
@@ -732,12 +732,12 @@ function closeAdminPanel() {
 /**
  * Get submission details from Supabase using challenge_id (gets most recent)
  */
-async function getSubmission(challengeId, username = null) {
+async function getSubmissionForAdmin(challengeId, username = null) {
     try {
         const supabase = window.supabaseInstance;
         if (!supabase) throw new Error('Supabase not initialized');
         
-        console.log('🔍 Fetching submission:', { challengeId, username });
+        console.log('🔍 Fetching submission (admin):', { challengeId, username });
         
         let query = supabase
             .from('submissions')
@@ -795,7 +795,7 @@ async function getSubmission(challengeId, username = null) {
         });
         return data;
     } catch (error) {
-        console.error('❌ Exception in getSubmission:', error);
+        console.error('❌ Exception in getSubmissionForAdmin:', error);
         return null;
     }
 }
@@ -1175,7 +1175,7 @@ window.rejectSubmission = rejectSubmission;
 window.rejectSubmissionDialog = rejectSubmissionDialog;
 window.viewAdminSubmission = viewAdminSubmission;
 window.applyAdminFilters = applyAdminFilters;
-window.getSubmission = getSubmission;
+window.getSubmissionForAdmin = getSubmissionForAdmin;
 window.updateSubmissionStatus = updateSubmissionStatus;
 window.markChallengeCompleted = markChallengeCompleted;
 window.displaySubmissionViewModal = displaySubmissionViewModal;

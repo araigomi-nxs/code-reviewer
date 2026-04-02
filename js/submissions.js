@@ -207,15 +207,16 @@ async function getSubmission(challengeId, username = null) {
 /**
  * Check if user has submitted a challenge
  */
-function hasUserSubmitted(challengeId, username = null) {
-    return getSubmission(challengeId, username) !== null;
+async function hasUserSubmitted(challengeId, username = null) {
+    const submission = await getSubmission(challengeId, username);
+    return submission !== null;
 }
 
 /**
  * Get submission status
  */
-function getSubmissionStatus(challengeId, username = null) {
-    const submission = getSubmission(challengeId, username);
+async function getSubmissionStatus(challengeId, username = null) {
+    const submission = await getSubmission(challengeId, username);
     if (!submission) return null;
     return {
         status: submission.status,
