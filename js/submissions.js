@@ -39,6 +39,26 @@ async function submitChallenge(challengeId, file, topicId = 'default') {
                 const username = user.username;
 
                 // Debug: Check file content before saving
+                console.log('📖 === FILE READ COMPLETE ===');
+                console.log('File name:', file.name);
+                console.log('File size (bytes):', file.size);
+                console.log('File type:', file.type);
+                console.log('Content read - type:', typeof reader.result);
+                console.log('Content read - length:', reader.result?.length || 0);
+                console.log('Content read - preview:', reader.result ? reader.result.substring(0, 200) : 'EMPTY');
+                
+                // CRITICAL CHECK
+                if (!reader.result || reader.result.length === 0) {
+                    console.error('❌ CRITICAL: FileReader returned empty content!');
+                    console.error('   reader.result:', reader.result);
+                    console.error('   reader.result === null:', reader.result === null);
+                    console.error('   reader.result === undefined:', reader.result === undefined);
+                    console.error('   reader.result === "":', reader.result === '');
+                    throw new Error('File content could not be read. Make sure the file is not empty.');
+                }
+                console.log('✅ Content read successfully, proceeding to save');
+                console.log('📖 === END FILE READ ===\n');
+                
                 console.log('📖 File read successfully:', {
                     fileName: file.name,
                     fileSize: file.size,
@@ -74,7 +94,10 @@ async function submitChallenge(challengeId, file, topicId = 'default') {
                 if (window.supabaseSaveSubmission) {
                     try {
                         const result = await window.supabaseSaveSubmission(username, challengeId, submissionData);
-                        console.log('✅ Submission saved to Supabase:', challengeId);
+                        console.log('\n✅ ===== SUBMISSION SAVE COMPLETE =====');
+                        console.log('Challenge ID:', challengeId);
+                        console.log('Content that was sent to Supabase (length):', submissionData.fileContent?.length || 0);
+                        console.log('✅ ===== END SUBMISSION SAVE =====\n');
                         resolve(submissionData);
                     } catch (error) {
                         console.error('❌ Supabase save failed:', error.message);
@@ -169,6 +192,19 @@ async function getSubmission(challengeId, username = null) {
         }
 
         const sub = data[0];
+        
+        // CRITICAL: Log ALL raw data from Supabase
+        console.log('📥 === RAW SUBMISSION FROM SUPABASE ===');
+        console.log('Full object:', sub);
+        console.log('file_name:', sub.file_name);
+        console.log('file_content:', sub.file_content);
+        console.log('file_content type:', typeof sub.file_content);
+        console.log('file_content is null:', sub.file_content === null);
+        console.log('file_content is undefined:', sub.file_content === undefined);
+        console.log('file_content length:', sub.file_content?.length || 0);
+        console.log('file_content preview:', sub.file_content ? sub.file_content.substring(0, 150) : 'MISSING/NULL/EMPTY');
+        console.log('File metadata - type:', sub.file_type, ', size:', sub.file_size);
+        console.log('📥 === END RAW DATA ===');
         
         // Debug logging
         console.log('📥 Raw submission from Supabase:', {
@@ -341,12 +377,25 @@ async function requestAiReview(challengeId, username = null) {
     }
 
     if (!submission.fileContent || submission.fileContent.trim().length === 0) {
-        console.error('❌ Cannot request AI review:', {
-            fileContentLength: submission.fileContent?.length || 0,
-            fileContentType: typeof submission.fileContent,
-            fileName: submission.fileName,
-            status: submission.status
-        });
+        console.error('❌ ===== CRITICAL: CANNOT REQUEST AI REVIEW =====');
+        console.error('File content is empty! Here is the submission state:');
+        console.error('Submission object:', submission);
+        console.error('fileContent:', submission.fileContent);
+        console.error('fileContent type:', typeof submission.fileContent);
+        console.error('fileContent length:', submission.fileContent?.length || 0);
+        console.error('fileContent is empty string:', submission.fileContent === '');
+        console.error('fileContent is null:', submission.fileContent === null);
+        console.error('fileContent is undefined:', submission.fileContent === undefined);
+        console.error('fileName:', submission.fileName);
+        console.error('status:', submission.status);
+        console.error('');
+        console.error('WHAT TO CHECK:');
+        console.error('1. ^ Look above at the console output from getSubmission()');
+        console.error('2. ^ The "file_content" field should NOT be NULL or empty');
+        console.error('3. ^ If it IS null/empty, the data was not saved to Supabase');
+        console.error('4. Run this in console: await window.diagnosticCheckSubmissionInDB(window.getCurrentUser().username, "' + challengeId + '")');
+        console.error('===== END CRITICAL ERROR =====');
+        
         throw new Error('No code content to review - the submission appears to be empty. Please check that your file was uploaded correctly.');
     }
 

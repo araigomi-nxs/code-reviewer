@@ -99,6 +99,22 @@ async function supabaseSaveSubmission(username, challengeId, submissionData) {
 
     try {
         // Debug: Log the data being saved
+        console.log('📝 === SUPABASE SAVE OPERATION STARTING ===');
+        console.log('Username:', username);
+        console.log('Challenge ID:', challengeId);
+        console.log('File name:', submissionData.fileName);
+        console.log('File content type:', typeof submissionData.fileContent);
+        console.log('File content length:', submissionData.fileContent?.length || 0);
+        console.log('File content preview:', submissionData.fileContent ? submissionData.fileContent.substring(0, 100) : 'EMPTY/NULL');
+        
+        // CRITICAL CHECK
+        if (!submissionData.fileContent || submissionData.fileContent.length === 0) {
+            console.error('❌ CRITICAL: Attempting to save with EMPTY file_content!');
+            console.error('   submissionData.fileContent:', submissionData.fileContent);
+            console.error('   This WILL result in NULL/empty data in Supabase');
+        }
+        console.log('📝 === SENDING UPSERT TO SUPABASE ===');
+        
         console.log('📝 Saving submission data:', {
             username,
             challengeId,
@@ -159,8 +175,10 @@ async function supabaseSaveSubmission(username, challengeId, submissionData) {
         console.log('✅ Submission saved to Supabase:', username, challengeId);
         
         // Run diagnostic to verify data persisted correctly
-        console.log('🔍 Running diagnostic to verify persistence...');
+        console.log('🔍 === IMMEDIATE VERIFICATION ===');
+        console.log('Fetching data back from Supabase to verify...');
         await diagnosticCheckSubmissionInDB(username, challengeId);
+        console.log('🔍 === END VERIFICATION ===\n');
         
         // Verify what was actually saved
         if (data && data[0]) {
