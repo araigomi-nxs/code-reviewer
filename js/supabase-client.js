@@ -3,11 +3,16 @@
  * Manages all Supabase interactions for users and submissions
  */
 
-// Configuration - from window.ENV (embedded in index.html or loaded from .env.local)
+// Configuration - from window.ENV (loaded via env-config.js)
+// env-config.js is loaded first in index.html
 const getSupabaseConfig = () => {
+    // window.ENV is set by env-config.js - update that file to change keys
+    if (!window.ENV || !window.ENV.VITE_SUPABASE_URL || !window.ENV.VITE_SUPABASE_ANON_KEY) {
+        throw new Error('❌ Supabase config missing! Check that env-config.js is loaded in index.html');
+    }
     return {
-        URL: window.ENV?.VITE_SUPABASE_URL || 'https://kptgqkgtzgxhbmyebqwy.supabase.co',
-        ANON_KEY: window.ENV?.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwdGdxa2d0emd4aGJteWVicXd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxMTEyNzQsImV4cCI6MjA5MDY4NzI3NH0.P-xCQEqWvpvw2lpEYEzxLi7KdU-OElv31JWQn0lRYQQ'
+        URL: window.ENV.VITE_SUPABASE_URL,
+        ANON_KEY: window.ENV.VITE_SUPABASE_ANON_KEY
     };
 };
 

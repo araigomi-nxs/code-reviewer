@@ -351,17 +351,23 @@ async function getAllSubmissions() {
 }
 
 /**
- * Get Groq API key from localStorage
+ * Get Groq API key from window.ENV (loaded via env-config.js)
  */
 function getGroqApiKey() {
-    return (window.ENV && window.ENV.VITE_GROQ_API_KEY) || localStorage.getItem('groq_api_key') || '';
+    // window.ENV is set by env-config.js - update that file to change keys
+    if (!window.ENV || !window.ENV.VITE_GROQ_API_KEY) {
+        throw new Error('❌ Groq API key missing! Check that env-config.js is loaded in index.html');
+    }
+    return window.ENV.VITE_GROQ_API_KEY;
 }
 
 /**
- * Set Groq API key to localStorage
+ * Set Groq API key in window.ENV
  */
 function setGroqApiKey(key) {
-    localStorage.setItem('groq_api_key', key);
+    if (!window.ENV) window.ENV = {};
+    window.ENV.VITE_GROQ_API_KEY = key;
+    console.log('✅ Groq API key updated in window.ENV');
 }
 
 /**
@@ -404,9 +410,7 @@ async function requestAiReview(challengeId, username = null) {
     
     // DEBUG: Log the API key being used
     console.log('🔑 === API KEY DEBUG ===');
-    console.log('API Key source - window.ENV:', window.ENV?.VITE_GROQ_API_KEY ? '✅ Set in window.ENV' : '❌ Not in window.ENV');
-    console.log('API Key source - localStorage:', localStorage.getItem('groq_api_key') ? '✅ Set in localStorage' : '❌ Not in localStorage');
-    console.log('API Key retrieved:', apiKey);
+    console.log('API Key source: ✅ window.ENV (from env-config.js)');
     console.log('API Key length:', apiKey?.length || 0);
     console.log('API Key starts with:', apiKey ? apiKey.substring(0, 10) : 'N/A');
     console.log('API Key ends with:', apiKey ? apiKey.substring(apiKey.length - 10) : 'N/A');
