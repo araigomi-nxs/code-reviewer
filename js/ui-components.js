@@ -661,7 +661,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
                         </div>
                     </div>
                     <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
-                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px;">${sub.status.toUpperCase()}</span>
+                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px;">${statusEmoji} ${sub.status.toUpperCase()}</span>
                     </div>
                 </div>
             `;
@@ -2017,7 +2017,7 @@ async function displayLatestSubmissionsDashboard() {
                     </div>
                 </div>
                 <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
-                    <span style="color: ${statusColor}; font-weight: bold; font-size: 12px;">${sub.status.toUpperCase()}</span>
+                    <span style="color: ${statusColor}; font-weight: bold; font-size: 12px;">${statusEmoji} ${sub.status.toUpperCase()}</span>
                 </div>
             </div>
         `;
