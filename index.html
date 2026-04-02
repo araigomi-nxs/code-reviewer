@@ -661,13 +661,10 @@
     <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
 
-    <!-- Load Environment Variables -->
+    <!-- Load Environment Variables (Injected during Vercel Build or fallback loader) -->
+    <script src="js/env-config.js"></script>
     <script>
-        window.ENV = {
-            VITE_SUPABASE_URL: '',
-            VITE_SUPABASE_ANON_KEY: '',
-            VITE_GROQ_API_KEY: ''
-        };
+        window.ENV = window.ENV || {};
     </script>
 
     <!-- Load environment variables -->
