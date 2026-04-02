@@ -1778,6 +1778,11 @@ async function updateUserProfileMenu() {
         }
         document.getElementById('userCompleted').textContent = '0';
         document.getElementById('userPending').textContent = '0';
+        
+        // Fetch and set true counts
+        if (typeof updateUserStats === 'function') {
+            updateUserStats();
+        }
 
         if (isAdmin) {
             document.getElementById('adminBtn').style.display = 'block';
@@ -1885,12 +1890,14 @@ async function _doInitializeUploadForms() {
  * Update user stats in profile menu
  */
 function updateUserStats() {
-    const stats = window.getUserStats();
-    const completedEl = document.getElementById('userCompleted');
-    const pendingEl = document.getElementById('userPending');
-    
-    if (completedEl) completedEl.textContent = stats.approved;
-    if (pendingEl) pendingEl.textContent = stats.pending;
+    if (!window.getUserStats) return;
+    window.getUserStats().then(stats => {
+        const completedEl = document.getElementById('userCompleted');
+        const pendingEl = document.getElementById('userPending');
+        
+        if (completedEl && stats) completedEl.textContent = stats.approved || 0;
+        if (pendingEl && stats) pendingEl.textContent = stats.pending || 0;
+    }).catch(console.error);
 }
 
 /**

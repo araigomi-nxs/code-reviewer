@@ -205,12 +205,12 @@ function getUserCompletedChallenges(username = null) {
 /**
  * Get user submission statistics
  */
-function getUserStats(username = null) {
-    const submissions = getUserSubmissions(username);
+async function getUserStats(username = null) {
+    const submissions = await getUserSubmissions(username);
     return {
         total: Object.keys(submissions).length,
         pending: Object.values(submissions).filter(s => s.status === 'pending').length,
-        approved: Object.values(submissions).filter(s => s.status === 'approved').length,
+        approved: Object.values(submissions).filter(s => s.status === 'approved' || s.status === 'completed').length,
         rejected: Object.values(submissions).filter(s => s.status === 'rejected').length
     };
 }
