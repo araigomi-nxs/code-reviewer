@@ -98,6 +98,17 @@ async function supabaseSaveSubmission(username, challengeId, submissionData) {
     }
 
     try {
+        // Debug: Log the data being saved
+        console.log('📝 Saving submission data:', {
+            username,
+            challengeId,
+            fileContentLength: submissionData.fileContent?.length || 0,
+            fileContentPreview: submissionData.fileContent ? submissionData.fileContent.substring(0, 100) : 'EMPTY',
+            fileName: submissionData.fileName,
+            fileType: submissionData.fileType,
+            fileSize: submissionData.fileSize
+        });
+
         const { data, error } = await supabaseInstance
             .from('submissions')
             .upsert([{
@@ -129,6 +140,15 @@ async function supabaseSaveSubmission(username, challengeId, submissionData) {
         }
         
         console.log('✅ Submission saved to Supabase:', username, challengeId);
+        
+        // Verify what was actually saved
+        if (data && data[0]) {
+            console.log('📋 Verification - Data returned from save:', {
+                fileContentSavedLength: data[0].file_content?.length || 0,
+                fileContentSavedPreview: data[0].file_content ? data[0].file_content.substring(0, 100) : 'EMPTY'
+            });
+        }
+        
         return data[0];
     } catch (error) {
         console.error('❌ Failed to save submission:', error.message);

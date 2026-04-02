@@ -38,6 +38,16 @@ async function submitChallenge(challengeId, file, topicId = 'default') {
             try {
                 const username = user.username;
 
+                // Debug: Check file content before saving
+                console.log('📖 File read successfully:', {
+                    fileName: file.name,
+                    fileSize: file.size,
+                    fileType: file.type,
+                    contentLength: reader.result?.length || 0,
+                    contentPreview: reader.result ? reader.result.substring(0, 200) : 'EMPTY',
+                    contentType: typeof reader.result
+                });
+
                 // Store submission
                 const submissionData = {
                     fileName: file.name,
@@ -52,6 +62,13 @@ async function submitChallenge(challengeId, file, topicId = 'default') {
                     aiReviewStatus: 'pending',
                     aiReviewedAt: null
                 };
+
+                console.log('💾 About to save submission:', {
+                    username,
+                    challengeId,
+                    fileContentLength: submissionData.fileContent?.length || 0,
+                    fileContentPreview: submissionData.fileContent ? submissionData.fileContent.substring(0, 100) : 'EMPTY'
+                });
 
                 // Save to Supabase only (no localStorage backup)
                 if (window.supabaseSaveSubmission) {
@@ -152,8 +169,19 @@ async function getSubmission(challengeId, username = null) {
         }
 
         const sub = data[0];
+        
+        // Debug logging
+        console.log('📥 Raw submission from Supabase:', {
+            file_name: sub.file_name,
+            file_content_length: sub.file_content?.length || 0,
+            file_content_preview: sub.file_content ? sub.file_content.substring(0, 150) : 'MISSING/EMPTY',
+            file_type: sub.file_type,
+            file_size: sub.file_size,
+            status: sub.status
+        });
+        
         // Normalize snake_case to camelCase
-        return {
+        const submission = {
             fileName: sub.file_name || '',
             fileContent: sub.file_content || '',
             submittedAt: sub.submitted_at,
@@ -163,6 +191,13 @@ async function getSubmission(challengeId, username = null) {
             aiReview: sub.ai_review || null,
             aiReviewStatus: sub.ai_review ? 'completed' : 'pending'
         };
+        
+        console.log('📤 Normalized submission for use:', {
+            fileContentLength: submission.fileContent?.length || 0,
+            status: submission.status
+        });
+        
+        return submission;
     } catch (error) {
         console.error('❌ Exception fetching submission:', error);
         return null;
@@ -242,29 +277,40 @@ async function deleteSubmission(challengeId, username = null) {
 /**
  * Update submission status (admin only)
  */
-function updateSubmissionStatus(challengeId, status, feedback = '', username = null) {
+async function updateSubmissionStatus(challengeId, status, feedback = '', username = null) {
     const user = username ? { username } : window.getCurrentUser();
     if (!user) throw new Error('User not logged in');
 
-    const submissions = getSubmissions();
-    const submission = submissions[user.username]?.[challengeId];
-    
-    if (submission) {
-        submission.status = status;
-        submission.feedback = feedback;
-        submission.reviewedAt = new Date().toISOString();
-        saveSubmissions(submissions);
-        console.log('✅ Submission status updated:', challengeId, 'to', status);
-        return true;
+    // Use Supabase to update
+    if (window.updateSubmissionStatusByChallenge) {
+        try {
+            await window.updateSubmissionStatusByChallenge(user.username, challengeId, status, feedback);
+            console.log('✅ Submission status updated:', challengeId, 'to', status);
+            return true;
+        } catch (error) {
+            console.error('❌ Failed to update submission status:', error);
+            return false;
+        }
     }
+    
+    console.warn('⚠️ Supabase not initialized for status update');
     return false;
 }
 
 /**
  * Get all submissions (admin)
  */
-function getAllSubmissions() {
-    return getSubmissions();
+async function getAllSubmissions() {
+    if (window.supabaseGetAllSubmissions) {
+        try {
+            return await window.supabaseGetAllSubmissions();
+        } catch (error) {
+            console.error('❌ Failed to get all submissions:', error);
+            return [];
+        }
+    }
+    console.warn('⚠️ Supabase not initialized for fetching submissions');
+    return [];
 }
 
 /**
@@ -288,19 +334,29 @@ async function requestAiReview(challengeId, username = null) {
     const user = username ? { username } : window.getCurrentUser();
     if (!user) throw new Error('User not logged in');
 
-    const submission = getSubmission(challengeId, username);
-    if (!submission) throw new Error('Submission not found');
+    const submission = await getSubmission(challengeId, username);
+    if (!submission) {
+        throw new Error('Submission not found - please upload a file first');
+    }
 
-    if (!submission.fileContent) throw new Error('No code content to review');
+    if (!submission.fileContent || submission.fileContent.trim().length === 0) {
+        console.error('❌ Cannot request AI review:', {
+            fileContentLength: submission.fileContent?.length || 0,
+            fileContentType: typeof submission.fileContent,
+            fileName: submission.fileName,
+            status: submission.status
+        });
+        throw new Error('No code content to review - the submission appears to be empty. Please check that your file was uploaded correctly.');
+    }
 
     const apiKey = getGroqApiKey();
     if (!apiKey) throw new Error('Groq API key not configured');
 
     try {
-        // Update status to processing
-        const submissions = getSubmissions();
-        submissions[user.username][challengeId].aiReviewStatus = 'processing';
-        saveSubmissions(submissions);
+        // Update status to processing in Supabase
+        if (window.updateSubmissionStatusByChallenge) {
+            await window.updateSubmissionStatusByChallenge(user.username, challengeId, 'processing');
+        }
 
         console.log('🤖 Requesting AI review from Groq...');
         
@@ -547,15 +603,21 @@ async function getLatestSubmissions(limit = 10) {
 /**
  * Clear all submissions for current user (for cleanup/debugging)
  */
-function clearUserSubmissions(username = null) {
+async function clearUserSubmissions(username = null) {
     const user = username ? { username } : window.getCurrentUser();
     if (!user) throw new Error('User not logged in');
     
-    const submissions = getSubmissions();
-    if (submissions[user.username]) {
-        delete submissions[user.username];
-        saveSubmissions(submissions);
-        console.log('🗑️ Cleared all submissions for user:', user.username);
+    // Clear from Supabase
+    if (window.supabaseClearUserSubmissions) {
+        try {
+            await window.supabaseClearUserSubmissions(user.username);
+            console.log('🗑️ Cleared all submissions for user:', user.username);
+        } catch (error) {
+            console.error('❌ Failed to clear submissions:', error);
+            throw error;
+        }
+    } else {
+        console.warn('⚠️ Supabase not initialized for clearing submissions');
     }
 }
 
