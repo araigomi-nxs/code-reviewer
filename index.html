@@ -665,6 +665,14 @@
     <script src="js/env-config.js"></script>
     <script>
         window.ENV = window.ENV || {};
+        
+        // Debug: Show what was injected
+        console.log('🔧 === ENVIRONMENT CONFIGURATION ===');
+        console.log('window.ENV object:', window.ENV);
+        console.log('VITE_GROQ_API_KEY:', window.ENV.VITE_GROQ_API_KEY ? `✅ Present (length: ${window.ENV.VITE_GROQ_API_KEY.length})` : '❌ Missing/Empty');
+        console.log('VITE_SUPABASE_URL:', window.ENV.VITE_SUPABASE_URL ? '✅ Present' : '❌ Missing/Empty');
+        console.log('VITE_SUPABASE_ANON_KEY:', window.ENV.VITE_SUPABASE_ANON_KEY ? '✅ Present' : '❌ Missing/Empty');
+        console.log('🔧 === END CONFIGURATION ===\n');
     </script>
 
     <!-- Load environment variables -->
