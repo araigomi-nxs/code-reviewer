@@ -4,7 +4,8 @@
  */
 
 // Your Groq API key (set this if .env.local loading fails)
-const GROQ_API_KEY = '';
+// Get a free API key from: https://console.groq.com/keys
+const GROQ_API_KEY = 'your-groq-api-key-here';
 
 // Auto-setup on page load
 function setupConfig() {
