@@ -401,6 +401,16 @@ async function requestAiReview(challengeId, username = null) {
 
     const apiKey = getGroqApiKey();
     if (!apiKey) throw new Error('Groq API key not configured');
+    
+    // DEBUG: Log the API key being used
+    console.log('🔑 === API KEY DEBUG ===');
+    console.log('API Key source - window.ENV:', window.ENV?.VITE_GROQ_API_KEY ? '✅ Set in window.ENV' : '❌ Not in window.ENV');
+    console.log('API Key source - localStorage:', localStorage.getItem('groq_api_key') ? '✅ Set in localStorage' : '❌ Not in localStorage');
+    console.log('API Key retrieved:', apiKey);
+    console.log('API Key length:', apiKey?.length || 0);
+    console.log('API Key starts with:', apiKey ? apiKey.substring(0, 10) : 'N/A');
+    console.log('API Key ends with:', apiKey ? apiKey.substring(apiKey.length - 10) : 'N/A');
+    console.log('🔑 === END DEBUG ===\n');
 
     try {
         // Update status to processing in Supabase
@@ -446,6 +456,12 @@ ${solution.solution}
             sourceCodePreview: submission.fileContent?.substring(0, 200) || 'N/A',
             solution: solution
         });
+
+        console.log('🌐 === GROQ API REQUEST ===');
+        console.log('Endpoint: https://api.groq.com/openai/v1/chat/completions');
+        console.log('Authorization header:', `Bearer ${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 10)}`);
+        console.log('Model:', 'qwen/qwen3-32b');
+        console.log('🌐 === END REQUEST DEBUG ===\n');
 
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
@@ -512,8 +528,23 @@ RESPOND WITH ONLY CODE BLOCK FORMAT - nothing else.`
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error?.message || 'Groq API call failed');
+            console.error('❌ === GROQ API ERROR ===');
+            console.error('HTTP Status:', response.status, response.statusText);
+            console.error('Status Details:');
+            console.error('  200-299:', 'Success');
+            console.error('  400-499:', 'Client error (usually auth/key issue)');
+            console.error('  500-599:', 'Server error');
+            console.error('Your status:', response.status, response.status >= 400 && response.status < 500 ? '← CLIENT ERROR (likely invalid API key)' : '');
+            
+            try {
+                const error = await response.json();
+                console.error('API Response:', error);
+                console.error('Error message from Groq:', error.error?.message || error.message || 'Unknown error');
+                throw new Error(error.error?.message || error.message || 'Groq API call failed');
+            } catch (parseError) {
+                console.error('Could not parse error response:', parseError);
+                throw new Error(`Groq API returned ${response.status}: ${response.statusText}`);
+            }
         }
 
         const data = await response.json();
