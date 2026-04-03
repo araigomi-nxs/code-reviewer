@@ -608,7 +608,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
     const allSubmissions = window.getChallengeSubmissions ? await window.getChallengeSubmissions(challengeId) : [];
     
     if (allSubmissions.length > 0) {
-        submissionsListHTML = '<div class="submissions-list" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; max-height: 500px; overflow-y: auto; border-radius: 4px;">';
+        submissionsListHTML = '<div class="submissions-list" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); max-height: 500px; overflow-y: auto; border-radius: 4px;">';
         submissionsListHTML += `<h5 style="margin: 0 0 10px 0; position: sticky; top: 0; background: var(--bg-primary); padding: 5px 0; z-index: 10;">📋 Submissions (${allSubmissions.length})</h5>`;
         
         for (const sub of allSubmissions) {
@@ -647,15 +647,15 @@ async function createUploadForm(challengeId, topicId = 'default') {
             }
             
             submissionsListHTML += `
-                <div class="submission-item" onclick="showCodePreview('${sub.username}', '${challengeId}')" style="background: white; padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: center; gap: 10px;">
-                    ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%;">${avatarHtml}</div>` : ''}
+                <div class="submission-item" onclick="showCodePreview('${sub.username}', '${challengeId}')" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: center; gap: 10px;">
+                    ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%;">${avatarHtml}</div>` : ''}
                     <div style="flex: 1; min-width: 0;">
-                        <div style="font-weight: bold; color: #333; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                        <div style="font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
                             <span>${statusEmoji}</span>
                             <span>${sub.username}</span>
                             ${aiIndicator ? `<span>${aiIndicator}</span>` : ''}
                         </div>
-                        <div style="font-size: 12px; color: #666;">
+                        <div style="font-size: 12px; color: var(--text-secondary);">
                             <span>${sub.fileName}</span> | 
                             <span>${dateStr}${ratingDisplay}</span>
                         </div>
