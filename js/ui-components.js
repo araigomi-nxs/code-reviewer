@@ -608,8 +608,8 @@ async function createUploadForm(challengeId, topicId = 'default') {
     const allSubmissions = window.getChallengeSubmissions ? await window.getChallengeSubmissions(challengeId) : [];
     
     if (allSubmissions.length > 0) {
-        submissionsListHTML = '<div class="submissions-list" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">';
-        submissionsListHTML += `<h5 style="margin: 0 0 10px 0;">📋 Submissions (${allSubmissions.length})</h5>`;
+        submissionsListHTML = '<div class="submissions-list" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; max-height: 500px; overflow-y: auto; border-radius: 4px;">';
+        submissionsListHTML += `<h5 style="margin: 0 0 10px 0; position: sticky; top: 0; background: var(--bg-primary); padding: 5px 0; z-index: 10;">📋 Submissions (${allSubmissions.length})</h5>`;
         
         for (const sub of allSubmissions) {
             const statusColor = sub.status === 'pending' ? '#FFA500' : 
