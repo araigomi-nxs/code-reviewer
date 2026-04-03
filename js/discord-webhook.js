@@ -73,6 +73,34 @@ function getStatusLabel(status) {
 }
 
 /**
+ * Extract rating from AI review text
+ * Looks for patterns like "Rating: ⭐⭐⭐⭐⭐" or "Rating: Incorrect output"
+ */
+function extractRatingFromReview(aiReviewText) {
+    if (!aiReviewText) return null;
+    
+    // Look for rating line
+    const ratingMatch = aiReviewText.match(/Rating:\s*(.+?)(?:\n|$)/i);
+    
+    if (ratingMatch && ratingMatch[1]) {
+        return ratingMatch[1].trim();
+    }
+    
+    return null;
+}
+
+/**
+ * Extract review content without the rating
+ */
+function extractReviewContent(aiReviewText) {
+    if (!aiReviewText) return '';
+    
+    // Remove the rating line from the review
+    const withoutRating = aiReviewText.replace(/Rating:\s*.+?(?:\n|$)/i, '').trim();
+    return withoutRating;
+}
+
+/**
  * Send submission notification to Discord
  */
 async function sendDiscordNotification(submissionData) {
@@ -91,7 +119,8 @@ async function sendDiscordNotification(submissionData) {
             feedback,
             aiReview,
             fileName,
-            submittedAt
+            submittedAt,
+            rating
         } = submissionData;
 
         // Create embed message
@@ -119,6 +148,26 @@ async function sendDiscordNotification(submissionData) {
             timestamp: new Date().toISOString()
         };
 
+        // Extract and display rating prominently if AI review
+        let extractedRating = rating;
+        let reviewContent = aiReview;
+        
+        if (status === 'ai-review' || status === 'ai_review') {
+            if (aiReview && !rating) {
+                extractedRating = extractRatingFromReview(aiReview);
+                reviewContent = extractReviewContent(aiReview);
+            }
+            
+            // Add rating as a prominent field for AI reviews
+            if (extractedRating) {
+                embed.fields.push({
+                    name: '⭐ AI Rating',
+                    value: extractedRating,
+                    inline: false
+                });
+            }
+        }
+
         // Add feedback if available
         if (feedback && feedback.trim()) {
             const feedbackText = feedback.substring(0, 1024); // Discord field limit
@@ -129,9 +178,9 @@ async function sendDiscordNotification(submissionData) {
             });
         }
 
-        // Add AI review if available
-        if (aiReview && aiReview.trim()) {
-            const reviewText = aiReview.substring(0, 1024); // Discord field limit
+        // Add AI review content if available
+        if (reviewContent && reviewContent.trim()) {
+            const reviewText = reviewContent.substring(0, 1024); // Discord field limit
             embed.fields.push({
                 name: '🤖 AI Review',
                 value: reviewText,
@@ -261,7 +310,7 @@ async function testDiscordWebhookConnection() {
  * Create submission update notification
  * Call this when a submission status is updated
  */
-async function notifySubmissionUpdate(username, challengeId, newStatus, feedback = '', aiReview = '', fileName = '', submittedAt = '') {
+async function notifySubmissionUpdate(username, challengeId, newStatus, feedback = '', aiReview = '', fileName = '', submittedAt = '', rating = '') {
     const notification = {
         username,
         challengeId,
@@ -269,7 +318,8 @@ async function notifySubmissionUpdate(username, challengeId, newStatus, feedback
         feedback,
         aiReview,
         fileName,
-        submittedAt: submittedAt || new Date().toISOString()
+        submittedAt: submittedAt || new Date().toISOString(),
+        rating
     };
 
     return await sendDiscordNotification(notification);
@@ -293,9 +343,28 @@ async function notifyUnderReview(username, challengeId) {
     return await notifySubmissionUpdate(username, challengeId, 'under-review', 'Admin is reviewing...');
 }
 
+/**
+ * Notify AI Review - extracts rating and full review from AI response
+ */
 async function notifyAIReview(username, challengeId, aiReview = '') {
     console.log(`📢 Notifying: AI review for ${username} - ${challengeId}`);
-    return await notifySubmissionUpdate(username, challengeId, 'ai-review', '', aiReview);
+    
+    // Extract rating from AI review
+    const rating = extractRatingFromReview(aiReview);
+    
+    console.log(`🤖 Extracted Rating: "${rating}" from AI review`);
+    console.log(`📊 Full AI Review Length: ${aiReview?.length || 0} characters`);
+    
+    return await notifySubmissionUpdate(
+        username, 
+        challengeId, 
+        'ai-review', 
+        '', 
+        aiReview, 
+        '',
+        '',
+        rating
+    );
 }
 
 async function notifySubmissionCompleted(username, challengeId, feedback = '') {
@@ -321,5 +390,7 @@ window.discord.notifyUnderReview = notifyUnderReview;
 window.discord.notifyAIReview = notifyAIReview;
 window.discord.notifyCompleted = notifySubmissionCompleted;
 window.discord.notifyRejected = notifySubmissionRejected;
+window.discord.extractRating = extractRatingFromReview;
+window.discord.extractReview = extractReviewContent;
 
 console.log('✅ Discord webhook module loaded');
