@@ -613,10 +613,10 @@ async function createUploadForm(challengeId, topicId = 'default') {
         
         for (const sub of allSubmissions) {
             const statusColor = sub.status === 'pending' ? '#FFA500' : 
-                               (sub.status === 'approved' || sub.status === 'completed') ? '#4CAF50' : 
+                               (sub.status === 'completed') ? '#4CAF50' : 
                                '#f44336';
             const statusEmoji = sub.status === 'pending' ? '⏳' : 
-                               (sub.status === 'approved' || sub.status === 'completed') ? '✅' : 
+                               (sub.status === 'completed') ? '✅' : 
                                '❌';
             const dateStr = new Date(sub.submittedAt).toLocaleDateString() + ' ' + 
                           new Date(sub.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -683,7 +683,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
         // User is logged in
         if (hasSubmitted && submission && submission.status) {
             const statusColor = submission.status === 'pending' ? '#FFA500' : 
-                               (submission.status === 'approved' || submission.status === 'completed') ? '#4CAF50' : 
+                               (submission.status === 'completed') ? '#4CAF50' : 
                                '#f44336';
             statusHTML = `
                 <div style="color: ${statusColor}; font-weight: bold; margin-bottom: 10px;">
@@ -692,7 +692,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
             `;
         }
 
-        // Allow resubmission only if status is not 'approved' or 'rejected' (allow re-submit for pending)
+        // Allow resubmission if status is 'pending' (rejected or initial), not 'completed'
         const isFormDisabled = hasSubmitted && submission && submission.status !== 'pending';
         
         contentHTML = `
@@ -804,7 +804,7 @@ async function showCodePreview(username, challengeId) {
                        (submission.status === 'approved' || submission.status === 'completed') ? '#4CAF50' : 
                        '#f44336';
     const statusEmoji = submission.status === 'pending' ? '⏳' : 
-                       (submission.status === 'approved' || submission.status === 'completed') ? '✅' : 
+                       (submission.status === 'completed') ? '✅' : 
                        '❌';
     
     header.style.cssText = `
@@ -852,7 +852,7 @@ async function showCodePreview(username, challengeId) {
     ` : '';
 
     let approveButtonHtml = '';
-    if (isAdminUser && submission.status !== 'completed' && submission.status !== 'approved') {
+    if (isAdminUser && submission.status !== 'completed' && submission.status !== 'rejected') {
         approveButtonHtml = `
             <button onclick="if(window.approveAdminSubmission) { window.approveAdminSubmission('${challengeId}', '${username}'); setTimeout(() => document.getElementById('${modal.id}').remove(), 500); } else { alert('Admin tools not loaded.'); }" style="
                 background: #4CAF50;
@@ -1044,7 +1044,7 @@ async function showCodePreview(username, challengeId) {
             border-top: 1px solid #e0e0e0;
             text-align: center;
         `;
-        const isCompleted = submission.status === 'completed' || submission.status === 'approved';
+        const isCompleted = submission.status === 'completed';
         buttonDiv.innerHTML = `
             <button id="requestNewReviewBtn_${username}_${challengeId}" ${isCompleted ? 'disabled' : `onclick="requestCodeReview('${username}', '${challengeId}', this)"`} style="
                 background: ${isCompleted ? '#ccc' : '#FF9800'};
@@ -1137,7 +1137,7 @@ async function showCodePreview(username, challengeId) {
             align-items: center;
             gap: 15px;
         `;
-        const isCompleted = submission.status === 'completed' || submission.status === 'approved';
+        const isCompleted = submission.status === 'completed';
         noReviewDiv.innerHTML = `
             <div style="color: #999;">No AI review yet</div>
             <button id="requestAiReviewBtn_${username}_${challengeId}" ${isCompleted ? 'disabled' : `onclick="requestCodeReview('${username}', '${challengeId}', this)"`} style="
@@ -1888,7 +1888,7 @@ function updateUserStats() {
         const completedEl = document.getElementById('userCompleted');
         const pendingEl = document.getElementById('userPending');
         
-        if (completedEl && stats) completedEl.textContent = stats.approved || 0;
+        if (completedEl && stats) completedEl.textContent = stats.completed || 0;
         if (pendingEl && stats) pendingEl.textContent = stats.pending || 0;
     }).catch(console.error);
 }

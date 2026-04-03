@@ -820,6 +820,25 @@ async function updateSubmissionStatusByChallenge(username, challengeId, status, 
 
         if (error) throw error;
         console.log('✅ Submission status updated:', challengeId, 'to', status);
+        
+        // Send Discord webhook notification
+        if (window.discord) {
+            try {
+                if (status === 'completed') {
+                    if (window.discord.notifyCompleted) {
+                        await window.discord.notifyCompleted(username, challengeId, feedback);
+                    }
+                } else if (status === 'rejected') {
+                    if (window.discord.notifyRejected) {
+                        await window.discord.notifyRejected(username, challengeId, feedback);
+                    }
+                }
+            } catch (discordError) {
+                console.warn('⚠️ Discord notification failed (non-critical):', discordError);
+                // Don't throw - Discord notification shouldn't block the status update
+            }
+        }
+        
         return data;
     } catch (error) {
         console.error('Error updating submission status:', error);

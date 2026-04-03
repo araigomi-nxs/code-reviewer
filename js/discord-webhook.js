@@ -22,12 +22,8 @@ function getStatusEmoji(status) {
     const emojiMap = {
         'created': '✅',
         'pending': '⏳',
-        'under-review': '👀',
-        'under review': '👀',
         'ai-review': '🤖',
         'ai_review': '🤖',
-        'processing': '⚙️',
-        'approved': '✨',
         'completed': '🎉',
         'rejected': '❌'
     };
@@ -41,13 +37,9 @@ function getStatusColor(status) {
     const colorMap = {
         'created': 5814783,      // Blue
         'pending': 16776960,     // Yellow
-        'under-review': 16756480, // Orange
-        'under review': 16756480,
         'ai-review': 11093254,   // Purple
         'ai_review': 11093254,
-        'processing': 11093254,
-        'approved': 65280,       // Green
-        'completed': 65280,
+        'completed': 65280,      // Green
         'rejected': 16711680     // Red
     };
     return colorMap[status?.toLowerCase()] || 3447003; // Default blue
@@ -60,13 +52,9 @@ function getStatusLabel(status) {
     const labelMap = {
         'created': 'Created',
         'pending': 'Pending Review',
-        'under-review': 'Under Review',
-        'under review': 'Under Review',
-        'ai-review': 'AI Review',
-        'ai_review': 'AI Review',
-        'processing': 'Processing',
-        'approved': 'Approved',
-        'completed': 'Completed ✨',
+        'ai-review': 'AI Review Complete',
+        'ai_review': 'AI Review Complete',
+        'completed': 'Completed ✅',
         'rejected': 'Rejected'
     };
     return labelMap[status?.toLowerCase()] || status || 'Unknown';
@@ -377,6 +365,73 @@ async function notifySubmissionRejected(username, challengeId, feedback = '') {
     return await notifySubmissionUpdate(username, challengeId, 'rejected', feedback);
 }
 
+/**
+ * Notify submission deletion
+ */
+async function notifySubmissionDeleted(username, challengeId, fileName = '') {
+    console.log(`📢 Notifying: Submission deleted for ${username} - ${challengeId}`);
+    
+    const webhookUrl = getDiscordWebhookUrl();
+    if (!webhookUrl) {
+        console.log('ℹ️ Discord webhook not configured - skipping notification');
+        return false;
+    }
+
+    try {
+        const embed = {
+            title: '🗑️ Submission Deleted',
+            description: `User: **${username}**\nChallenge: **${challengeId}**`,
+            color: 9671571,  // Gray
+            fields: [
+                {
+                    name: '📝 File',
+                    value: fileName || 'N/A',
+                    inline: true
+                },
+                {
+                    name: '⏰ Time',
+                    value: new Date().toLocaleString(),
+                    inline: true
+                },
+                {
+                    name: '📌 Status',
+                    value: 'Deleted',
+                    inline: true
+                }
+            ],
+            footer: {
+                text: 'Coding Reviewer Platform',
+                icon_url: 'https://github.com/favicon.ico'
+            },
+            timestamp: new Date().toISOString()
+        };
+
+        const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                embeds: [embed],
+                username: 'Coding Reviewer Bot',
+                avatar_url: 'https://github.com/favicon.ico'
+            })
+        });
+
+        if (response.ok) {
+            console.log(`✅ Discord deletion notification sent for ${username} - ${challengeId}`);
+            return true;
+        } else {
+            const errorText = await response.text();
+            console.error(`❌ Discord notification failed: ${response.status} - ${errorText}`);
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Error sending Discord deletion notification:', error);
+        return false;
+    }
+}
+
 // Expose functions globally
 if (!window.discord) {
     window.discord = {};
@@ -390,6 +445,7 @@ window.discord.notifyUnderReview = notifyUnderReview;
 window.discord.notifyAIReview = notifyAIReview;
 window.discord.notifyCompleted = notifySubmissionCompleted;
 window.discord.notifyRejected = notifySubmissionRejected;
+window.discord.notifyDeleted = notifySubmissionDeleted;
 window.discord.extractRating = extractRatingFromReview;
 window.discord.extractReview = extractReviewContent;
 

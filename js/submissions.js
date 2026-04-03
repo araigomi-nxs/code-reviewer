@@ -278,7 +278,7 @@ async function getSubmissionStatus(challengeId, username = null) {
 function getUserCompletedChallenges(username = null) {
     const submissions = getUserSubmissions(username);
     return Object.entries(submissions)
-        .filter(([, submission]) => submission.status === 'approved')
+        .filter(([, submission]) => submission.status === 'completed')
         .map(([challengeId, submission]) => ({
             challengeId,
             ...submission
@@ -293,7 +293,7 @@ async function getUserStats(username = null) {
     return {
         total: Object.keys(submissions).length,
         pending: Object.values(submissions).filter(s => s.status === 'pending').length,
-        approved: Object.values(submissions).filter(s => s.status === 'approved' || s.status === 'completed').length,
+        completed: Object.values(submissions).filter(s => s.status === 'completed').length,
         rejected: Object.values(submissions).filter(s => s.status === 'rejected').length
     };
 }
@@ -307,11 +307,31 @@ async function deleteSubmission(challengeId, username = null) {
 
     console.log('🗑️ Deleting submission:', { username: user.username, challengeId });
 
+    // Get submission details before deletion for Discord notification
+    let fileName = '';
+    try {
+        const submission = await getSubmission(challengeId, user.username);
+        fileName = submission?.fileName || '';
+    } catch (e) {
+        console.warn('⚠️ Could not retrieve filename for deletion notification');
+    }
+
     // Delete from Supabase
     if (window.supabaseDeleteSubmission) {
         try {
             await window.supabaseDeleteSubmission(user.username, challengeId);
             console.log('✅ Submission deleted from Supabase:', user.username, challengeId);
+            
+            // Send Discord webhook notification about deletion
+            if (window.discord && window.discord.notifyDeleted) {
+                try {
+                    await window.discord.notifyDeleted(user.username, challengeId, fileName);
+                } catch (discordError) {
+                    console.warn('⚠️ Discord notification failed (non-critical):', discordError);
+                    // Don't throw - Discord notification shouldn't block the deletion
+                }
+            }
+            
             return true;
         } catch (error) {
             console.error('❌ Supabase delete failed:', error.message);
@@ -447,9 +467,9 @@ async function requestAiReview(challengeId, username = null) {
     console.log('🔑 === END DEBUG ===\n');
 
     try {
-        // Update status to processing in Supabase
+        // Update status to pending (AI review in progress) in Supabase
         if (window.updateSubmissionStatusByChallenge) {
-            await window.updateSubmissionStatusByChallenge(user.username, challengeId, 'processing');
+            await window.updateSubmissionStatusByChallenge(user.username, challengeId, 'pending');
         }
 
         console.log('🤖 Requesting AI review from Groq...');
