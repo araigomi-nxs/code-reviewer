@@ -23,6 +23,10 @@ window.ENV = {
     VITE_SUPABASE_ANON_KEY: 'your-supabase-anon-key-here',
     
     // Replace with your Groq API key from https://console.groq.com/keys
-    VITE_GROQ_API_KEY: 'your-groq-api-key-here'
+    VITE_GROQ_API_KEY: 'your-groq-api-key-here',
+    
+    // Replace with your Discord Webhook URL from https://discord.com/developers/applications
+    // Create a webhook in your Discord server: Server Settings → Integrations → Webhooks → New Webhook
+    VITE_DISCORD_WEBHOOK_URL: 'https://discordapp.com/api/webhooks/your-webhook-id/your-webhook-token'
 };
 console.log('✅ Environment variables injected by build');

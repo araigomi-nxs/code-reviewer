@@ -98,6 +98,17 @@ async function submitChallenge(challengeId, file, topicId = 'default') {
                         console.log('Challenge ID:', challengeId);
                         console.log('Content that was sent to Supabase (length):', submissionData.fileContent?.length || 0);
                         console.log('✅ ===== END SUBMISSION SAVE =====\n');
+                        
+                        // Send Discord webhook notification about new submission
+                        if (window.discord && window.discord.notifyCreated) {
+                            try {
+                                await window.discord.notifyCreated(username, challengeId, file.name);
+                            } catch (discordError) {
+                                console.warn('⚠️ Discord notification failed (non-critical):', discordError);
+                                // Don't throw - Discord notification shouldn't block the submission
+                            }
+                        }
+                        
                         resolve(submissionData);
                     } catch (error) {
                         console.error('❌ Supabase save failed:', error.message);
@@ -323,6 +334,25 @@ async function updateSubmissionStatus(challengeId, status, feedback = '', userna
         try {
             await window.updateSubmissionStatusByChallenge(user.username, challengeId, status, feedback);
             console.log('✅ Submission status updated:', challengeId, 'to', status);
+            
+            // Send Discord webhook notification
+            if (window.discord && window.discord.notifySubmissionUpdate) {
+                try {
+                    const submission = await getSubmission(challengeId, user.username);
+                    await window.discord.notifySubmissionUpdate(
+                        user.username,
+                        challengeId,
+                        status,
+                        feedback,
+                        submission?.aiReview || '',
+                        submission?.fileName || ''
+                    );
+                } catch (discordError) {
+                    console.warn('⚠️ Discord notification failed (non-critical):', discordError);
+                    // Don't throw - Discord notification shouldn't block the update
+                }
+            }
+            
             return true;
         } catch (error) {
             console.error('❌ Failed to update submission status:', error);
@@ -572,6 +602,16 @@ RESPOND WITH ONLY CODE BLOCK FORMAT - nothing else.`
                     'completed'
                 );
                 console.log('✅ AI review saved to Supabase, result:', result);
+                
+                // Send Discord webhook notification about AI review
+                if (window.discord && window.discord.notifyAIReview) {
+                    try {
+                        await window.discord.notifyAIReview(user.username, challengeId, aiReview);
+                    } catch (discordError) {
+                        console.warn('⚠️ Discord notification failed (non-critical):', discordError);
+                        // Don't throw - Discord notification shouldn't block the AI review
+                    }
+                }
             } catch (error) {
                 console.error('❌ Supabase update FAILED:', error.message, error);
                 throw new Error(`Database save failed: ${error.message}`);
