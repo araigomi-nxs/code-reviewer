@@ -699,10 +699,12 @@ async function createUploadForm(challengeId, topicId = 'default') {
             <div class="upload-container">
                 <h4>📤 Submit Solution</h4>
                 ${statusHTML}
-                <input type="file" id="fileInput_${challengeId}" accept=".java,.cpp,.py,.c,.txt,.js,.go,.rs" class="file-input" ${isFormDisabled ? 'disabled' : ''}>
-                <button onclick="submitChallengeFile('${challengeId}', '${topicId}')" class="btn-submit" ${isFormDisabled ? 'disabled' : ''}>
-                    🚀 ${isFormDisabled ? 'Already Submitted' : (hasSubmitted && submission && submission.status === 'pending' ? 'Resubmit' : 'Submit')}
-                </button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="file" id="fileInput_${challengeId}" accept=".java,.cpp,.py,.c,.txt,.js,.go,.rs" class="file-input" style="flex: 1;" ${isFormDisabled ? 'disabled' : ''}>
+                    <button onclick="submitChallengeFile('${challengeId}', '${topicId}')" class="btn-submit" style="white-space: nowrap;" ${isFormDisabled ? 'disabled' : ''}>
+                        🚀 ${isFormDisabled ? 'Already Submitted' : (hasSubmitted && submission && submission.status === 'pending' ? 'Resubmit' : 'Submit')}
+                    </button>
+                </div>
                 <p class="upload-info">
                     Accepted: .java, .cpp, .py, .c, .txt, .js, .go, .rs | Max: 10MB
                 </p>
@@ -852,6 +854,7 @@ async function showCodePreview(username, challengeId) {
     ` : '';
 
     let approveButtonHtml = '';
+    let rejectButtonHtml = '';
     if (isAdminUser && submission.status !== 'completed' && submission.status !== 'rejected') {
         approveButtonHtml = `
             <button onclick="if(window.approveAdminSubmission) { window.approveAdminSubmission('${challengeId}', '${username}'); setTimeout(() => document.getElementById('${modal.id}').remove(), 500); } else { alert('Admin tools not loaded.'); }" style="
@@ -865,6 +868,19 @@ async function showCodePreview(username, challengeId) {
                 font-size: 14px;
                 margin-right: 5px;
             ">✅ Approve</button>
+        `;
+        rejectButtonHtml = `
+            <button onclick="if(window.rejectAdminSubmissionDialog) { window.rejectAdminSubmissionDialog('${challengeId}', '${username}'); setTimeout(() => document.getElementById('${modal.id}').remove(), 500); } else { alert('Admin tools not loaded.'); }" style="
+                background: #f44336;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 8px 15px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 14px;
+                margin-right: 5px;
+            ">❌ Reject</button>
         `;
     }
     
@@ -884,6 +900,7 @@ async function showCodePreview(username, challengeId) {
         </div>
         <div style="display: flex; gap: 5px;">
             ${approveButtonHtml}
+            ${rejectButtonHtml}
             ${deleteButtonHtml}
             <button onclick="document.getElementById('${modal.id}').remove()" style="
                 background: #f44336;
@@ -1477,6 +1494,7 @@ function addCompletionIndicatorStyles() {
             border: 2px solid #ddd;
             border-radius: 4px;
             cursor: pointer;
+            min-width: 0;
         }
 
         .file-input:hover {
