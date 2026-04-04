@@ -689,7 +689,20 @@
                     <h1>Java Coding Reviewer</h1>
                     <p>Learn & Practice Coding Fundamentals</p>
                 </div>
-                <button class="theme-toggle" onclick="toggleTheme()" style="display: none;">🌙 Dark Mode</button>
+                <div id="headerProfileCard" style="display: flex; gap: 15px; align-items: center;">
+                    <div style="display: flex; gap: 12px; align-items: center; padding: 8px 12px; background: var(--bg-secondary); border-radius: 6px;">
+                        <div id="headerUserAvatar" style="width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); font-size: 18px; flex-shrink: 0;"></div>
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <div id="headerUserName" style="font-weight: 500; font-size: 0.9em; color: var(--text-primary);"></div>
+                            <div style="display: flex; gap: 12px; font-size: 0.75em; color: var(--text-secondary);">
+                                <span>✅ <span id="headerCompleted">0</span></span>
+                                <span>⏳ <span id="headerPending">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight: 500;">Logout</button>
+                    <button class="theme-toggle" onclick="toggleTheme()" style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em;">🌙</button>
+                </div>
             </div>
         </header>
 

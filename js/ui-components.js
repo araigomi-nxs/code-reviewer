@@ -1666,53 +1666,11 @@ function addCompletionIndicatorStyles() {
 }
 
 /**
- * Show user profile dropdown
+ * Initialize header profile card (no longer floating)
  */
 function createUserProfileMenu() {
-    if (document.getElementById('userProfileMenu')) return;
-
-    const menu = document.createElement('div');
-    menu.id = 'userProfileMenu';
-    menu.className = 'user-profile-menu';
-    menu.innerHTML = `
-        <div class="profile-header">
-            <button onclick="toggleTheme()" class="theme-emoji-btn" id="themeToggleBtn" title="Toggle theme">
-                🌙
-            </button>
-        </div>
-
-        <div class="profile-card">
-            <div id="userAvatar" class="profile-avatar">
-                <!-- Avatar will be loaded dynamically -->
-            </div>
-            <div class="profile-info">
-                <p id="userName" class="profile-name"></p>
-            </div>
-        </div>
-
-        <div class="profile-stats">
-            <div class="stat">
-                <span class="stat-value" id="userCompleted">0</span>
-                <span class="stat-label">Completed</span>
-            </div>
-            <div class="stat">
-                <span class="stat-value" id="userPending">0</span>
-                <span class="stat-label">Pending</span>
-            </div>
-        </div>
-
-        <div class="profile-actions">
-            <button onclick="loadAdminDashboard()" class="menu-btn admin-btn" id="adminBtn" style="display:none;">
-                📋 Admin Panel
-            </button>
-            <button onclick="handleLogout()" class="menu-btn logout-btn">
-                Logout
-            </button>
-        </div>
-    `;
-
-    document.body.appendChild(menu);
-    addUserProfileMenuStyles();
+    // Profile now renders in the header, no floating menu needed
+    return;
 }
 
 /**
@@ -1868,20 +1826,22 @@ function addUserProfileMenuStyles() {
 }
 
 /**
- * Update user profile menu with user data
+ * Update header profile card with user data
  */
 async function updateUserProfileMenu() {
     try {
         const user = window.getCurrentUser();
         if (!user) return;
 
-        createUserProfileMenu();
-
         const profile = user.profile;
-        const isAdmin = window.isUserAdmin();
 
-        document.getElementById('userName').textContent = profile?.username || 'User';
-        const avatarContainer = document.getElementById('userAvatar');
+        // Update header profile card
+        const headerUserName = document.getElementById('headerUserName');
+        if (headerUserName) {
+            headerUserName.textContent = profile?.username || 'User';
+        }
+
+        const avatarContainer = document.getElementById('headerUserAvatar');
         if (avatarContainer) {
             // Clear previous content
             avatarContainer.textContent = '';
@@ -1892,10 +1852,19 @@ async function updateUserProfileMenu() {
                 img.src = profile.avatar_url;
                 img.alt = 'Avatar';
                 img.className = 'avatar-img';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '50%';
                 avatarContainer.appendChild(img);
                 avatarContainer.style.background = 'transparent';
             } else if (profile?.avatar_color) {
                 avatarContainer.style.background = profile.avatar_color;
+                avatarContainer.textContent = profile?.username?.charAt(0).toUpperCase() || '👤';
+                avatarContainer.style.color = 'white';
+                avatarContainer.style.fontWeight = 'bold';
+            } else {
+                avatarContainer.textContent = '👤';
             }
         }
         document.getElementById('userCompleted').textContent = '0';
@@ -2055,17 +2024,22 @@ async function _doInitializeUploadForms() {
 }
 
 /**
- * Update user stats in profile menu
+ * Update user stats in header card
  */
 function updateUserStats() {
     if (!window.getUserStats) return;
     window.getUserStats().then(stats => {
-        const completedEl = document.getElementById('userCompleted');
-        const pendingEl = document.getElementById('userPending');
+        // Update header counters
+        const completedEl = document.getElementById('headerCompleted');
+        const pendingEl = document.getElementById('headerPending');
         
         if (completedEl && stats) completedEl.textContent = stats.completed || 0;
         if (pendingEl && stats) pendingEl.textContent = stats.pending || 0;
-    }).catch(console.error);
+        
+        console.log('📊 User stats updated:', stats);
+    }).catch(error => {
+        console.error('❌ Error updating user stats:', error);
+    });
 }
 
 /**
