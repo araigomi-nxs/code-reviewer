@@ -1330,6 +1330,11 @@ async function deleteSubmissionAndRefresh(username, challengeId, modalId) {
             modal.remove();
         }
         
+        // Update user stats counter in header
+        if (typeof updateUserStats === 'function') {
+            updateUserStats();
+        }
+        
         // Refresh upload forms to show the submission box for this challenge
         if (window.initializeUploadForms) {
             setTimeout(() => {
@@ -1342,6 +1347,11 @@ async function deleteSubmissionAndRefresh(username, challengeId, modalId) {
             setTimeout(() => {
                 window.displayLatestSubmissionsDashboard();
             }, 500);  // Longer delay to ensure Supabase sync
+        }
+        
+        // Refresh topic card user profiles
+        if (typeof loadTopicCardUsers === 'function') {
+            setTimeout(() => loadTopicCardUsers(), 500);
         }
     } catch (error) {
         showNotification(`❌ Failed to delete submission: ${error.message}`, 'error');
@@ -1361,6 +1371,15 @@ function clearFailedReview(username, challengeId) {
             const modal = document.getElementById(`codePreviewModal_${username}_${challengeId}`);
             if (modal) {
                 modal.remove();
+                
+                // Refresh stats and topic cards
+                if (typeof updateUserStats === 'function') {
+                    updateUserStats();
+                }
+                if (typeof loadTopicCardUsers === 'function') {
+                    loadTopicCardUsers();
+                }
+                
                 showCodePreview(username, challengeId);
             }
         }, 500);
@@ -1412,6 +1431,11 @@ async function requestCodeReview(username, challengeId, buttonElement) {
         await window.requestAiReview(challengeId, username);
         showNotification('✅ AI review completed!', 'success');
         
+        // Update user stats (in case status changed)
+        if (typeof updateUserStats === 'function') {
+            updateUserStats();
+        }
+        
         // Refresh the modal
         setTimeout(() => {
             const modal = document.getElementById(`codePreviewModal_${username}_${challengeId}`);
@@ -1444,6 +1468,11 @@ async function submitChallengeFile(challengeId, topicId = 'default') {
         await window.submitChallenge(challengeId, file, topicId);
         showNotification('✅ Submission received! Status: Pending', 'success');
 
+        // Update user stats counter in header
+        if (typeof updateUserStats === 'function') {
+            updateUserStats();
+        }
+
         // Refresh the entire upload form to show submission in the list
         const formElement = document.getElementById(`uploadForm_${challengeId}`);
         if (formElement) {
@@ -1466,6 +1495,11 @@ async function submitChallengeFile(challengeId, topicId = 'default') {
             }, 300);
         }
         
+        // Refresh topic card user profiles
+        if (typeof loadTopicCardUsers === 'function') {
+            setTimeout(() => loadTopicCardUsers(), 300);
+        }
+        
         // Automatically request AI review after submission
         showNotification('🤖 AI review in progress...', 'info');
         try {
@@ -1479,6 +1513,11 @@ async function submitChallengeFile(challengeId, topicId = 'default') {
                     window.displayLatestSubmissionsDashboard();
                 }, 2000);  // 2 second delay for Supabase to sync
             }
+            
+            // Refresh topic card user profiles after AI review
+            if (typeof loadTopicCardUsers === 'function') {
+                setTimeout(() => loadTopicCardUsers(), 2000);
+            }
         } catch (aiError) {
             console.error('AI review failed:', aiError);
             showNotification('⚠️ AI review is being processed in the background', 'info');
@@ -1489,6 +1528,11 @@ async function submitChallengeFile(challengeId, topicId = 'default') {
                     console.log('🔄 Refreshing dashboard after AI review error');
                     window.displayLatestSubmissionsDashboard();
                 }, 2000);
+            }
+            
+            // Refresh topic card user profiles
+            if (typeof loadTopicCardUsers === 'function') {
+                setTimeout(() => loadTopicCardUsers(), 2000);
             }
         }
     } catch (error) {
