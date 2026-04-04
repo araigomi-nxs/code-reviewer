@@ -647,7 +647,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
             }
             
             submissionsListHTML += `
-                <div class="submission-item" onclick="showCodePreview('${sub.username}', '${challengeId}')" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: flex-start; gap: 10px; position: relative;">
+                <div class="submission-item" data-username="${sub.username}" data-challengeid="${challengeId}" onclick="handleShowCodePreview(this)" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: flex-start; gap: 10px; position: relative;">
                     ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%; margin-top: 2px;">${avatarHtml}</div>` : ''}
                     <div style="flex: 1; min-width: 0;">
                         <div style="font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
@@ -717,6 +717,48 @@ async function createUploadForm(challengeId, topicId = 'default') {
 
     form.innerHTML = contentHTML + submissionsListHTML;
     return form;
+}
+
+/**
+ * Handle showing code preview from submission item
+ */
+function handleShowCodePreview(element) {
+    const username = element.getAttribute('data-username');
+    const challengeId = element.getAttribute('data-challengeid');
+    console.log('🎯 Show code preview clicked - Username:', username, 'Challenge:', challengeId);
+    showCodePreview(username, challengeId);
+}
+
+/**
+ * Handle creating code runner
+ */
+function handleCreateCodeRunner(button) {
+    const fileName = button.getAttribute('data-filename');
+    const fileContentEncoded = button.getAttribute('data-filecontent');
+    const fileContent = atob(fileContentEncoded); // Decode from base64
+    console.log('🎯 Create code runner clicked - File:', fileName);
+    createCodeRunnerUI({fileName: fileName, fileContent: fileContent});
+}
+
+/**
+ * Handle submit challenge click
+ */
+function handleSubmitChallenge(button) {
+    const challengeId = button.getAttribute('data-challengeid');
+    const topicId = button.getAttribute('data-topicid');
+    console.log('🎯 Submit challenge clicked - Challenge:', challengeId, 'Topic:', topicId);
+    submitChallengeFile(challengeId, topicId);
+}
+
+/**
+ * Handle delete submission click
+ */
+function handleDeleteSubmission(button) {
+    const username = button.getAttribute('data-username');
+    const challengeId = button.getAttribute('data-challengeid');
+    const modalId = button.getAttribute('data-modalid');
+    console.log('🎯 Delete submission clicked - Username:', username, 'Challenge:', challengeId);
+    deleteSubmissionAndRefresh(username, challengeId, modalId);
 }
 
 /**
@@ -861,7 +903,7 @@ async function showCodePreview(username, challengeId) {
     let approveButtonHtml = '';
     let rejectButtonHtml = '';
     let runCodeButtonHtml = `
-        <button onclick="createCodeRunnerUI({fileName: '${submission.fileName}', fileContent: \`${submission.fileContent.replace(/`/g, '\\`')}\`}); return false;" style="
+        <button class="run-code-btn" data-filename="${submission.fileName}" data-filecontent="${btoa(submission.fileContent)}" onclick="handleCreateCodeRunner(this)" style="
             background: #2196F3;
             color: white;
             border: none;
@@ -2039,7 +2081,7 @@ async function displayLatestSubmissionsDashboard() {
         }
         
         html += `
-            <div onclick="showCodePreview('${sub.username}', '${sub.challengeId}')" style="
+            <div data-username="${sub.username}" data-challengeid="${sub.challengeId}" onclick="handleShowCodePreview(this)" style="
                 background: white;
                 padding: 12px;
                 border-radius: 6px;
@@ -2113,6 +2155,10 @@ function initializeUI() {
  */
 if (typeof window !== 'undefined') {
     window.handleRequestCodeReview = handleRequestCodeReview;
+    window.handleShowCodePreview = handleShowCodePreview;
+    window.handleCreateCodeRunner = handleCreateCodeRunner;
+    window.handleSubmitChallenge = handleSubmitChallenge;
+    window.handleDeleteSubmission = handleDeleteSubmission;
 }
 
 // Auto-initialize when DOM is ready
