@@ -174,7 +174,7 @@ function createCodeRunnerUI(submission) {
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button onclick="runCodeExecution('${submission.fileName}', \`${submission.fileContent.replace(/`/g, '\\`')}\`)" class="code-runner-btn-run">▶️ Run Code</button>
+                <button onclick="runCodeExecution('${submission.fileName}', '${submission.fileContent.replace(/'/g, "\\'")}')" class="code-runner-btn-run">▶️ Run Code</button>
                 <button onclick="closeCodeRunner()" class="code-runner-btn-close">Close</button>
             </div>
 
@@ -248,12 +248,11 @@ async function runCodeExecution(fileName, fileContent) {
         
         let errorMsg = '❌ Error: ' + error.message;
         
-        // Check if it's a Judge0 API error
-        if (error.message.includes('Judge0')) {
+        // Check if it's a Groq API error
+        if (error.message.includes('GROQ_API_KEY')) {
             errorMsg += '\n\n⚙️ Setup Required:\n';
-            errorMsg += '1. Get API key from: https://rapidapi.com/judge0-official/api/judge0\n';
-            errorMsg += '2. Add to .env: JUDGE0_API_KEY=your_key\n';
-            errorMsg += '3. Restart the application';
+            errorMsg += 'Add GROQ_API_KEY to your Vercel environment variables\n';
+            errorMsg += 'Visit: https://vercel.com/dashboard';
         }
         
         outputDiv.textContent = errorMsg;

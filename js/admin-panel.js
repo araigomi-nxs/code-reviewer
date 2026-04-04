@@ -722,8 +722,8 @@ function createSubmissionItemHTML(submission) {
             </div>
             <div class="submission-actions">
                 <button onclick="viewAdminSubmission('${submission.challenge_id}', '${username}')" class="btn-view">👁️ View</button>
-                <button onclick="showApproveCommentDialog('${submission.challenge_id}', '${username}')" class="btn-approve">✅ Approve</button>
-                <button onclick="showRejectCommentDialog('${submission.challenge_id}', '${username}')" class="btn-reject">❌ Reject</button>
+                <button class="btn-approve" data-challenge="${submission.challenge_id}" data-username="${username}" onclick="handleApproval(this)">✅ Approve</button>
+                <button class="btn-reject" data-challenge="${submission.challenge_id}" data-username="${username}" onclick="handleRejection(this)">❌ Reject</button>
             </div>
         </div>
     `;
@@ -762,7 +762,7 @@ function showReviewCommentDialog(action, challengeId, username) {
     const buttonText = isApprove ? 'Approve' : 'Reject';
     const buttonColor = isApprove ? '#4CAF50' : '#f44336';
     const message = isApprove 
-        ? 'Add any approval comments or remarks (optional):'
+        ? 'Please add feedback or remarks for this submission:'
         : 'Please provide a reason for rejection:';
 
     const dialog = document.createElement('div');
@@ -1271,7 +1271,7 @@ function displayAdminSubmissionViewModal(submission) {
             : '';
         
         const buttons = !isDecided
-            ? `<button class="btn-approve" onclick="showApproveCommentDialog('${submission.challenge_id}', '${submission.username}')">✅ Approve</button><button class="btn-reject" onclick="showRejectCommentDialog('${submission.challenge_id}', '${submission.username}')">❌ Reject</button>`
+            ? `<button class="btn-approve" data-challenge="${submission.challenge_id}" data-username="${submission.username}" onclick="handleApproval(this)">✅ Approve</button><button class="btn-reject" data-challenge="${submission.challenge_id}" data-username="${submission.username}" onclick="handleRejection(this)">❌ Reject</button>`
             : '';
         
         console.log('✅ All sections built successfully');
@@ -1498,9 +1498,31 @@ function addSubmissionViewModalStyles() {
 }
 
 /**
+ * Handle approval button click
+ */
+function handleApproval(button) {
+    const challengeId = button.getAttribute('data-challenge');
+    const username = button.getAttribute('data-username');
+    console.log('🎯 Approve button clicked - Challenge:', challengeId, 'Username:', username);
+    showApproveCommentDialog(challengeId, username);
+}
+
+/**
+ * Handle rejection button click
+ */
+function handleRejection(button) {
+    const challengeId = button.getAttribute('data-challenge');
+    const username = button.getAttribute('data-username');
+    console.log('🎯 Reject button clicked - Challenge:', challengeId, 'Username:', username);
+    showRejectCommentDialog(challengeId, username);
+}
+
+/**
  * Export functions to global scope
  */
 window.loadAdminDashboard = loadAdminDashboard;
+window.handleApproval = handleApproval;
+window.handleRejection = handleRejection;
 window.closeAdminPanel = closeAdminPanel;
 window.showApproveCommentDialog = showApproveCommentDialog;
 window.showRejectCommentDialog = showRejectCommentDialog;
