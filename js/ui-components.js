@@ -2027,26 +2027,38 @@ async function _doInitializeUploadForms() {
  * Update user stats in header card
  */
 function updateUserStats() {
-    if (!window.getUserStats) return;
-    window.getUserStats().then(stats => {
-        // Update header counters
-        const completedEl = document.getElementById('headerCompleted');
-        const pendingEl = document.getElementById('headerPending');
-        const rejectedEl = document.getElementById('headerRejected');
-        
-        if (completedEl && stats) completedEl.textContent = stats.completed || 0;
-        if (pendingEl && stats) pendingEl.textContent = stats.pending || 0;
-        if (rejectedEl && stats) rejectedEl.textContent = stats.rejected || 0;
-        
-        // Reload topic card users after status update
-        if (typeof loadTopicCardUsers === 'function') {
-            loadTopicCardUsers();
+    try {
+        const user = window.getCurrentUser();
+        if (!user || !window.getUserStats) {
+            console.warn('⚠️ User not logged in or getUserStats not available');
+            return;
         }
         
-        console.log('📊 User stats updated:', stats);
-    }).catch(error => {
-        console.error('❌ Error updating user stats:', error);
-    });
+        // Call with explicit username to ensure proper data fetching
+        window.getUserStats(user.username).then(stats => {
+            // Update header counters
+            const completedEl = document.getElementById('headerCompleted');
+            const pendingEl = document.getElementById('headerPending');
+            const rejectedEl = document.getElementById('headerRejected');
+            
+            console.log('📊 Stats returned:', stats);
+            
+            if (completedEl && stats) completedEl.textContent = stats.completed || 0;
+            if (pendingEl && stats) pendingEl.textContent = stats.pending || 0;
+            if (rejectedEl && stats) rejectedEl.textContent = stats.rejected || 0;
+            
+            // Reload topic card users after status update
+            if (typeof loadTopicCardUsers === 'function') {
+                loadTopicCardUsers();
+            }
+            
+            console.log('📊 User stats updated:', stats);
+        }).catch(error => {
+            console.error('❌ Error updating user stats:', error);
+        });
+    } catch (error) {
+        console.error('❌ Error in updateUserStats:', error);
+    }
 }
 
 /**
