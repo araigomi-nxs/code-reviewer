@@ -1548,5 +1548,5 @@ window.applyAdminFilters = applyAdminFilters;
 window.getSubmissionForAdmin = getSubmissionForAdmin;
 window.updateSubmissionStatus = updateSubmissionStatus;
 window.markChallengeCompleted = markChallengeCompleted;
-window.displaySubmissionViewModal = displaySubmissionViewModal;
-window.closeSubmissionViewModal = closeSubmissionViewModal;
+window.displayAdminSubmissionViewModal = displayAdminSubmissionViewModal;
+window.closeAdminSubmissionViewModal = closeAdminSubmissionViewModal;
