@@ -1867,16 +1867,10 @@ async function updateUserProfileMenu() {
                 avatarContainer.textContent = '👤';
             }
         }
-        document.getElementById('userCompleted').textContent = '0';
-        document.getElementById('userPending').textContent = '0';
         
         // Fetch and set true counts
         if (typeof updateUserStats === 'function') {
             updateUserStats();
-        }
-
-        if (isAdmin) {
-            document.getElementById('adminBtn').style.display = 'block';
         }
 
     } catch (error) {
