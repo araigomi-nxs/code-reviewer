@@ -564,7 +564,42 @@
             margin-bottom: 12px;
         }
 
-        .stats {
+        .topic-card-users {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            justify-content: center;
+            min-height: 32px;
+            align-items: center;
+        }
+
+        .topic-user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            background: var(--accent);
+            color: var(--bg-primary);
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 1px solid var(--border-color);
+        }
+
+        .topic-user-avatar:hover {
+            transform: scale(1.2);
+        }
+
+        .topic-users-loading {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
@@ -686,7 +721,7 @@
         <header>
             <div class="header-top">
                 <div>
-                    <h1>Java Coding Reviewer</h1>
+                    <h1>☕ Java Coding Reviewer</h1>
                     <p>Learn & Practice Coding Fundamentals</p>
                 </div>
                 <div id="headerProfileCard" style="display: flex; gap: 15px; align-items: center;">
@@ -697,11 +732,14 @@
                             <div style="display: flex; gap: 12px; font-size: 0.75em; color: var(--text-secondary);">
                                 <span>✅ <span id="headerCompleted">0</span></span>
                                 <span>⏳ <span id="headerPending">0</span></span>
+                                <span>❌ <span id="headerRejected">0</span></span>
                             </div>
                         </div>
                     </div>
-                    <button onclick="handleLogout()" style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight: 500;">Logout</button>
-                    <button class="theme-toggle" onclick="toggleTheme()" style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em;">🌙</button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="theme-toggle" onclick="toggleTheme()" style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">🌙</button>
+                        <button onclick="handleLogout()" style="background: white; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9em; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"><img src="logo/logout.png" alt="Logout" style="width: 20px; height: 20px;"></button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -715,34 +753,40 @@
                     programming concepts with these 6 foundational topics</p>
             </div>
             <div class="topic-card" onclick="selectTopic('loops')">
-                <div class="topic-number">1️⃣</div>
+                <div class="topic-number">☕</div>
                 <h3>Loop Structures</h3>
                 <p>for, while, do-while, nested loops, break/continue</p>
+                <div class="topic-card-users" data-topic="loops"><span class="topic-users-loading">Loading...</span></div>
             </div>
             <div class="topic-card" onclick="selectTopic('foreach')">
-                <div class="topic-number">2️⃣</div>
+                <div class="topic-number">☕</div>
                 <h3>For-Each Loop</h3>
                 <p>Enhanced loops, arrays & collections iteration</p>
+                <div class="topic-card-users" data-topic="foreach"><span class="topic-users-loading">Loading...</span></div>
             </div>
             <div class="topic-card" onclick="selectTopic('recursion')">
-                <div class="topic-number">3️⃣</div>
+                <div class="topic-number">☕</div>
                 <h3>Recursion</h3>
                 <p>Base cases, factorial, Fibonacci & algorithms</p>
+                <div class="topic-card-users" data-topic="recursion"><span class="topic-users-loading">Loading...</span></div>
             </div>
             <div class="topic-card" onclick="selectTopic('arrays2d')">
-                <div class="topic-number">4️⃣</div>
+                <div class="topic-number">☕</div>
                 <h3>2D Arrays</h3>
                 <p>Matrix operations, traversal & transformations</p>
+                <div class="topic-card-users" data-topic="arrays2d"><span class="topic-users-loading">Loading...</span></div>
             </div>
             <div class="topic-card" onclick="selectTopic('arraylist')">
-                <div class="topic-number">5️⃣</div>
+                <div class="topic-number">☕</div>
                 <h3>ArrayList</h3>
                 <p>Dynamic arrays, collections & common operations</p>
+                <div class="topic-card-users" data-topic="arraylist"><span class="topic-users-loading">Loading...</span></div>
             </div>
             <div class="topic-card" onclick="selectTopic('oop')">
-                <div class="topic-number">6</div>
+                <div class="topic-number">☕</div>
                 <h3>OOP Basics</h3>
                 <p>Encapsulation, Inheritance, Polymorphism & Interfaces</p>
+                <div class="topic-card-users" data-topic="oop"><span class="topic-users-loading">Loading...</span></div>
             </div>
 
             <!-- Latest Submissions Dashboard -->
@@ -841,7 +885,7 @@
         const topicsData = {
             loops: {
                 name: 'Loop Structures',
-                icon: '■',
+                icon: '☕',
                 concepts: `
                     <h3>1. FOR LOOP</h3>
                     <p>Used when you know the exact number of iterations</p>
@@ -1090,7 +1134,7 @@ for (char c : letters) System.out.print(c + " ");</div>
             },
             foreach: {
                 name: 'For-Each Loop',
-                icon: '■',
+                icon: '☕',
                 concepts: `
                     <h3>1. WHAT IS FOR-EACH LOOP?</h3>
                     <p>Enhanced for loop introduced in Java 5</p>
@@ -1182,7 +1226,7 @@ for (int[] row : matrix) {
             },
             recursion: {
                 name: 'Recursion',
-                icon: '■',
+                icon: '☕',
                 concepts: `
                     <h3>1. WHAT IS RECURSION?</h3>
                     <p>A method calling itself with a base case and recursive case</p>
@@ -1299,7 +1343,7 @@ System.out.println(fibonacci(6));  // Output: 8</div>
             },
             arrays2d: {
                 name: '2D Arrays',
-                icon: '■',
+                icon: '☕',
                 concepts: `
                     <h3>1. WHAT IS A 2D ARRAY?</h3>
                     <p>Array of arrays (grid structure) with rows and columns</p>
@@ -1431,7 +1475,7 @@ System.out.println("Diagonal Sum: " + diagonalSum);  // Output: 34</div>
             },
             arraylist: {
                 name: 'ArrayList',
-                icon: '■',
+                icon: '☕',
                 concepts: `
                     <h3>1. WHAT IS ARRAYLIST?</h3>
                     <p>Dynamic array that grows/shrinks at runtime</p>
@@ -1540,7 +1584,7 @@ System.out.println("Average: " + average);  // Output: 85.25</div>
             },
             oop: {
                 name: 'OOP Basics',
-                icon: '■',
+                icon: '☕',
                 concepts: `
                     <h3>1. ENCAPSULATION</h3>
                     <p>Hide internal details, expose only what's needed using private fields + public methods</p>

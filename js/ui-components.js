@@ -1988,15 +1988,15 @@ async function _doInitializeUploadForms() {
                                 position: absolute;
                                 top: 10px;
                                 right: 10px;
-                                width: 40px;
-                                height: 40px;
+                                width: 28px;
+                                height: 28px;
                                 background: ${statusColor};
                                 border-radius: 50%;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
                                 color: white;
-                                font-size: 18px;
+                                font-size: 12px;
                                 font-weight: bold;
                                 z-index: 100;
                             `;
@@ -2032,9 +2032,16 @@ function updateUserStats() {
         // Update header counters
         const completedEl = document.getElementById('headerCompleted');
         const pendingEl = document.getElementById('headerPending');
+        const rejectedEl = document.getElementById('headerRejected');
         
         if (completedEl && stats) completedEl.textContent = stats.completed || 0;
         if (pendingEl && stats) pendingEl.textContent = stats.pending || 0;
+        if (rejectedEl && stats) rejectedEl.textContent = stats.rejected || 0;
+        
+        // Reload topic card users after status update
+        if (typeof loadTopicCardUsers === 'function') {
+            loadTopicCardUsers();
+        }
         
         console.log('📊 User stats updated:', stats);
     }).catch(error => {
@@ -2202,6 +2209,11 @@ function initializeUI() {
         createAuthModal();
     }
     
+    // Load topic card user profiles
+    if (typeof loadTopicCardUsers === 'function') {
+        setTimeout(() => loadTopicCardUsers(), 500);
+    }
+    
     // Note: Upload forms are initialized by selectTopic() and switchTab() after challenges are rendered
 }
 
@@ -2254,6 +2266,117 @@ async function handleRunCodeInlineExecution(button) {
 }
 
 /**
+ * Load and display user profiles at bottom of topic cards
+ */
+async function loadTopicCardUsers() {
+    try {
+        const topicCards = document.querySelectorAll('[data-topic]');
+        if (topicCards.length === 0) return;
+
+        // Get all submissions
+        if (!window.getLatestSubmissions) {
+            console.warn('⚠️ getLatestSubmissions not available yet');
+            return;
+        }
+
+        const submissions = await window.getLatestSubmissions(1000); // Get many submissions
+        if (!submissions || submissions.length === 0) {
+            console.log('📭 No submissions to display on topic cards');
+            return;
+        }
+
+        // Map challenges to topics
+        const CHALLENGE_TO_TOPIC = {
+            'challenge_1': 'loops', 'challenge_2': 'loops', 'challenge_3': 'loops',
+            'challenge_4': 'foreach', 'challenge_5': 'foreach', 'challenge_6': 'foreach',
+            'challenge_7': 'recursion', 'challenge_8': 'recursion', 'challenge_9': 'recursion',
+            'challenge_10': 'arrays2d', 'challenge_11': 'arrays2d', 'challenge_12': 'arrays2d',
+            'challenge_13': 'arraylist', 'challenge_14': 'arraylist', 'challenge_15': 'arraylist',
+            'challenge_16': 'oop', 'challenge_17': 'oop', 'challenge_18': 'oop'
+        };
+
+        // Group submissions by topic
+        const topicUsers = {};
+        submissions.forEach(sub => {
+            const topic = CHALLENGE_TO_TOPIC[sub.challengeId] || 'default';
+            if (!topicUsers[topic]) topicUsers[topic] = [];
+            topicUsers[topic].push({
+                username: sub.username,
+                status: sub.status,
+                challengeId: sub.challengeId
+            });
+        });
+
+        // Populate each topic card with users
+        topicCards.forEach(card => {
+            const topic = card.getAttribute('data-topic');
+            const usersContainer = card.querySelector('.topic-card-users');
+            if (!usersContainer) return;
+
+            const users = topicUsers[topic];
+            if (!users || users.length === 0) {
+                usersContainer.innerHTML = '<span class="topic-users-loading">No submissions yet</span>';
+                return;
+            }
+
+            // Get unique users with their best status for this topic
+            const uniqueUsersMap = {};
+            users.forEach(u => {
+                if (!uniqueUsersMap[u.username]) {
+                    uniqueUsersMap[u.username] = {
+                        username: u.username,
+                        hasCompleted: u.status === 'completed',
+                        hasPending: u.status === 'pending',
+                        hasRejected: u.status === 'rejected'
+                    };
+                } else {
+                    const existing = uniqueUsersMap[u.username];
+                    if (u.status === 'completed') existing.hasCompleted = true;
+                    if (u.status === 'pending') existing.hasPending = true;
+                    if (u.status === 'rejected') existing.hasRejected = true;
+                }
+            });
+
+            const uniqueUsers = Object.values(uniqueUsersMap).slice(0, 5);
+            const remainingCount = Object.keys(uniqueUsersMap).length - uniqueUsers.length;
+
+            let html = '';
+            uniqueUsers.forEach(user => {
+                // Determine status color
+                let statusBg = '#FFA500'; // pending (orange)
+                let statusIcon = '⏳';
+                if (user.hasCompleted) {
+                    statusBg = '#4CAF50'; // completed (green)
+                    statusIcon = '✓';
+                } else if (user.hasRejected && !user.hasPending) {
+                    statusBg = '#f44336'; // rejected (red)
+                    statusIcon = '✕';
+                }
+
+                // Get initials for avatar
+                const initials = user.username.substring(0, 2).toUpperCase();
+                
+                html += `<div class="topic-user-avatar" style="background: ${statusBg};" title="${user.username} ${statusIcon}">
+                    ${initials}
+                </div>`;
+            });
+
+            if (remainingCount > 0) {
+                html += `<div class="topic-user-avatar" style="background: var(--accent); opacity: 0.6;" title="+${remainingCount} more">
+                    +${remainingCount}
+                </div>`;
+            }
+
+            usersContainer.innerHTML = html;
+            console.log(`👥 ${topic}: ${Object.keys(uniqueUsersMap).length} users displayed`);
+        });
+
+    } catch (error) {
+        console.error('❌ Error loading topic card users:', error);
+    }
+}
+
+/**
  * Export functions to global scope
  */
 if (typeof window !== 'undefined') {
@@ -2264,6 +2387,7 @@ if (typeof window !== 'undefined') {
     window.handleRunCodeInlineExecution = handleRunCodeInlineExecution;
     window.handleSubmitChallenge = handleSubmitChallenge;
     window.handleDeleteSubmission = handleDeleteSubmission;
+    window.loadTopicCardUsers = loadTopicCardUsers;
 }
 
 // Auto-initialize when DOM is ready

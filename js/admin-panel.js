@@ -902,6 +902,11 @@ async function approveAdminSubmission(challengeId, username, comment = '') {
 
         console.log('✅ === APPROVAL COMPLETE ===\n');
         showNotification('✅ Submission approved', 'success');
+        
+        // Update user stats counter
+        if (typeof updateUserStats === 'function') {
+            updateUserStats();
+        }
     } catch (error) {
         console.error('❌ Error approving submission:', error);
         showNotification(`❌ Error approving submission: ${error.message}`, 'error');
@@ -948,6 +953,11 @@ async function rejectAdminSubmission(challengeId, username, feedback = '') {
 
         console.log('❌ === REJECTION COMPLETE ===\n');
         showNotification('❌ Submission rejected', 'success');
+        
+        // Update user stats counter
+        if (typeof updateUserStats === 'function') {
+            updateUserStats();
+        }
     } catch (error) {
         console.error('❌ Error rejecting submission:', error);
         showNotification(`❌ Error rejecting submission: ${error.message}`, 'error');
