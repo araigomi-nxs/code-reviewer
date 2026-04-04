@@ -886,6 +886,251 @@
             border: 1px solid #f5c6cb;
         }
 
+        /* Notes List Styles */
+        .notes-list-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notes-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .notes-list-header h3 {
+            color: var(--text-primary);
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .notes-create-button {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .notes-create-button:hover {
+            background: var(--accent-hover);
+        }
+
+        .notes-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .note-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .note-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .note-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .note-item-author {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .note-item-date {
+            font-size: 0.8em;
+            color: var(--text-tertiary);
+        }
+
+        .note-item-preview {
+            color: var(--text-primary);
+            font-size: 0.9em;
+            line-height: 1.4;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+        }
+
+        .note-item-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .note-action-button {
+            font-size: 0.75em;
+            padding: 4px 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .note-action-button:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-header h2 {
+            color: var(--text-primary);
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-textarea {
+            width: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 0.9em;
+            line-height: 1.6;
+            padding: 14px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            min-height: 300px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .modal-textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .modal-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .modal-button {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            border: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .modal-button.cancel {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-button.cancel:hover {
+            background: var(--bg-secondary);
+        }
+
+        .modal-button.save {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .modal-button.save:hover {
+            background: var(--accent-hover);
+        }
+
+        .resource-create-button {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .resource-create-button:hover {
+            background: var(--accent-hover);
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -2068,13 +2313,44 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                         <h2>📝 Study Notes - ${topic.name}</h2>
                         <div id="notesMessage"></div>
                         <div class="notes-container">
-                            <div class="notes-editor-section">
-                                <h3>📄 Your Notes</h3>
-                                <textarea id="notesText" class="notes-textarea" placeholder="Write your study notes here...&#10;- Key concepts to remember&#10;- Examples and explanations&#10;- Tips and tricks&#10;- Questions to review later"></textarea>
+                            <div class="notes-list-section">
+                                <div class="notes-list-header">
+                                    <h3>📄 Notes</h3>
+                                    <button class="notes-create-button" onclick="openNoteModal()">+ New Note</button>
+                                </div>
+                                <div class="notes-list" id="notesList"></div>
                             </div>
                             <div class="resources-section">
                                 <h3>📦 Resources</h3>
-                                
+                                <div class="notes-list" id="resourcesList"></div>
+                                <button class="resource-create-button" onclick="openResourceModal()">+ Add Resource</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Note Creation/Editing Modal -->
+                    <div class="modal" id="noteModal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 id="noteModalTitle">📝 New Note</h2>
+                                <button class="modal-close" onclick="closeNoteModal()">&times;</button>
+                            </div>
+                            <textarea id="noteModalTextarea" class="modal-textarea" placeholder="Write your study notes here...&#10;- Key concepts to remember&#10;- Examples and explanations&#10;- Tips and tricks&#10;- Questions to review later"></textarea>
+                            <div class="modal-footer">
+                                <button class="modal-button cancel" onclick="closeNoteModal()">Cancel</button>
+                                <button class="modal-button save" onclick="saveNoteFromModal(currentTopic)">Save Note</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resource Creation Modal -->
+                    <div class="modal" id="resourceModal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>📦 Add Resource</h2>
+                                <button class="modal-close" onclick="closeResourceModal()">&times;</button>
+                            </div>
+                            <div id="resourceModalContent">
                                 <div class="resource-upload-group">
                                     <label>📸 Add Image</label>
                                     <div class="resource-upload-input">
@@ -2098,14 +2374,11 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                                         <button class="resource-upload-button" onclick="addFileResource(currentTopic)">Add File</button>
                                     </div>
                                 </div>
-
-                                <div class="resource-list" id="resourcesList" style="display: none;">
-                                    <h4>Attached Resources:</h4>
-                                    <div id="resourcesContainer"></div>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="modal-button cancel" onclick="closeResourceModal()">Close</button>
                             </div>
                         </div>
-                        <button class="save-notes-button" onclick="saveNotes(currentTopic)">💾 Save Notes</button>
                     </div>
                 `;
                 console.log('Tab contents built - Done!');
@@ -2161,6 +2434,21 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                 loadNotes(currentTopic);
             }
         }
+
+        // ========== MODAL EVENT LISTENERS ==========
+
+        // Click outside modal to close
+        window.addEventListener('click', function(event) {
+            const noteModal = document.getElementById('noteModal');
+            const resourceModal = document.getElementById('resourceModal');
+            
+            if (event.target === noteModal) {
+                closeNoteModal();
+            }
+            if (event.target === resourceModal) {
+                closeResourceModal();
+            }
+        });
 
         function backToHome() {
             document.getElementById('mainContent').style.display = 'none';
@@ -2653,9 +2941,10 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
          * Variables to track current note being edited
          */
         let currentNotesId = null;
+        let editingNoteId = null;
 
         /**
-         * Load notes from Supabase and display them
+         * Load all notes from Supabase and display them in a list
          */
         async function loadNotes(topicKey) {
             try {
@@ -2665,19 +2954,13 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     return;
                 }
 
-                console.log('📝 Loading notes for topic:', topicKey, 'user:', user.username);
+                console.log('📝 Loading notes for topic:', topicKey);
 
-                // Try to load from Supabase
+                // Load all notes for this topic
                 if (window.supabaseGetStudyNotes) {
-                    const studyNote = await window.supabaseGetStudyNotes(user.username, topicKey);
-                    if (studyNote) {
-                        const notesTextarea = document.getElementById('notesText');
-                        if (notesTextarea) {
-                            notesTextarea.value = studyNote.notes_content || '';
-                            currentNotesId = studyNote.id;
-                            console.log('✅ Study notes loaded from Supabase');
-                        }
-                    }
+                    const allNotes = await window.supabaseGetStudyNotes(user.username, topicKey);
+                    displayNotesList(allNotes);
+                    console.log('✅ Study notes loaded from Supabase');
                 } else {
                     console.warn('⚠️ Supabase notes functions not available yet');
                 }
@@ -2686,7 +2969,7 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                 if (window.supabaseGetStudyResources) {
                     const resources = await window.supabaseGetStudyResources(user.username, topicKey);
                     displayResources(resources);
-                    console.log('✅ Study resources loaded:', resources.length, 'resources');
+                    console.log('✅ Study resources loaded:', Array.isArray(resources) ? resources.length : 1, 'resources');
                 }
             } catch (error) {
                 console.error('❌ Error loading notes:', error);
@@ -2695,9 +2978,107 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
         }
 
         /**
-         * Save notes to Supabase
+         * Display list of all notes
          */
-        async function saveNotes(topicKey) {
+        function displayNotesList(notesData) {
+            const list = document.getElementById('notesList');
+            if (!list) {
+                console.error('Notes list container not found');
+                return;
+            }
+
+            if (!notesData) {
+                list.innerHTML = '<div style="text-align: center; color: var(--text-tertiary); padding: 24px;">No notes yet. Click "+ New Note" to create one.</div>';
+                return;
+            }
+
+            // Handle both single note and array of notes
+            const notesArray = Array.isArray(notesData) ? notesData : [notesData];
+            
+            if (notesArray.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: var(--text-tertiary); padding: 24px;">No notes yet. Click "+ New Note" to create one.</div>';
+                return;
+            }
+
+            list.innerHTML = notesArray.map(note => createNoteItem(note)).join('');
+        }
+
+        /**
+         * Create HTML for a note item in the list
+         */
+        function createNoteItem(note) {
+            const createdAt = new Date(note.created_at).toLocaleString();
+            const preview = (note.notes_content || '').substring(0, 150).replace(/\n/g, ' ');
+            const isOwnNote = window.getCurrentUser().username === note.username;
+
+            return `
+                <div class="note-item">
+                    <div class="note-item-header">
+                        <span class="note-item-author">👤 ${escapeHtml(note.username)}</span>
+                        <span class="note-item-date">${createdAt}</span>
+                    </div>
+                    <div class="note-item-preview">${escapeHtml(preview)}${preview.length >= 150 ? '...' : ''}</div>
+                    <div class="note-item-actions">
+                        <button class="note-action-button" onclick="viewNote('${note.id}')">View</button>
+                        ${isOwnNote ? `<button class="note-action-button" onclick="editNote('${note.id}')">Edit</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * View a note in detail
+         */
+        async function viewNote(noteId) {
+            // In a fully-featured app, this would open the note in a separate view
+            // For now, we'll open it in the edit modal as read-only
+            openNoteModal(noteId);
+        }
+
+        /**
+         * Edit an existing note
+         */
+        async function editNote(noteId) {
+            openNoteModal(noteId);
+        }
+
+        /**
+         * Open note creation/editing modal
+         */
+        async function openNoteModal(noteId = null) {
+            const modal = document.getElementById('noteModal');
+            const textarea = document.getElementById('noteModalTextarea');
+            const title = document.getElementById('noteModalTitle');
+
+            if (noteId) {
+                editingNoteId = noteId;
+                title.textContent = '📝 Edit Note';
+                // In a full implementation, fetch the note content here
+                textarea.value = '';
+                textarea.placeholder = 'Loading note...';
+            } else {
+                editingNoteId = null;
+                title.textContent = '📝 New Note';
+                textarea.value = '';
+            }
+
+            modal.classList.add('show');
+        }
+
+        /**
+         * Close note modal
+         */
+        function closeNoteModal() {
+            const modal = document.getElementById('noteModal');
+            modal.classList.remove('show');
+            editingNoteId = null;
+            document.getElementById('noteModalTextarea').value = '';
+        }
+
+        /**
+         * Save note from modal
+         */
+        async function saveNoteFromModal(topicKey) {
             try {
                 const user = window.getCurrentUser();
                 if (!user) {
@@ -2705,26 +3086,49 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     return;
                 }
 
-                const notesText = document.getElementById('notesText');
-                if (!notesText) {
-                    console.error('Notes textarea not found');
+                const textarea = document.getElementById('noteModalTextarea');
+                const content = textarea.value.trim();
+
+                if (!content) {
+                    showNotesMessage('❌ Please write some content', 'error');
                     return;
                 }
 
-                const content = notesText.value;
-
-                // Save to Supabase
                 if (window.supabaseSaveStudyNotes) {
                     await window.supabaseSaveStudyNotes(user.username, topicKey, content);
-                    showNotesMessage('✅ Notes saved successfully!', 'success');
-                    console.log('📝 Notes saved to Supabase for topic:', topicKey, 'Length:', content.length);
+                    showNotesMessage('✅ Note saved successfully!', 'success');
+                    console.log('📝 Note saved to Supabase');
+                    
+                    // Reload notes list
+                    loadNotes(topicKey);
+                    closeNoteModal();
                 } else {
                     throw new Error('Supabase notes functions not available');
                 }
             } catch (error) {
-                console.error('❌ Error saving notes:', error);
-                showNotesMessage('❌ Failed to save notes: ' + error.message, 'error');
+                console.error('❌ Error saving note:', error);
+                showNotesMessage('❌ Failed to save note: ' + error.message, 'error');
             }
+        }
+
+        /**
+         * Open resource creation modal
+         */
+        function openResourceModal() {
+            const modal = document.getElementById('resourceModal');
+            modal.classList.add('show');
+        }
+
+        /**
+         * Close resource modal
+         */
+        function closeResourceModal() {
+            const modal = document.getElementById('resourceModal');
+            modal.classList.remove('show');
+            // Clear inputs
+            document.getElementById('imageInput').value = '';
+            document.getElementById('videoLinkInput').value = '';
+            document.getElementById('fileInput').value = '';
         }
 
         /**
@@ -2765,6 +3169,9 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                         fileInput.value = '';
                         showNotesMessage(`✅ Image "${file.name}" added successfully!`, 'success');
                         console.log('📸 Image resource added:', file.name);
+                        
+                        // Close modal after success
+                        setTimeout(() => closeResourceModal(), 500);
                     }
                 } catch (error) {
                     console.error('❌ Error adding image:', error);
@@ -2818,6 +3225,9 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     linkInput.value = '';
                     showNotesMessage('✅ Video link added successfully!', 'success');
                     console.log('🎥 Video resource added:', url);
+                    
+                    // Close modal after success
+                    setTimeout(() => closeResourceModal(), 500);
                 }
             } catch (error) {
                 console.error('❌ Error adding video link:', error);
@@ -2863,6 +3273,9 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                         fileInput.value = '';
                         showNotesMessage(`✅ File "${file.name}" added successfully!`, 'success');
                         console.log('📄 File resource added:', file.name);
+                        
+                        // Close modal after success
+                        setTimeout(() => closeResourceModal(), 500);
                     }
                 } catch (error) {
                     console.error('❌ Error adding file:', error);
@@ -2877,22 +3290,27 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
          * Display resources in the resources list
          */
         function displayResources(resources) {
-            const container = document.getElementById('resourcesContainer');
             const list = document.getElementById('resourcesList');
 
-            if (!container || !list) {
-                console.error('Resources container not found');
+            if (!list) {
+                console.error('Resources list container not found');
                 return;
             }
 
             if (!resources || resources.length === 0) {
-                list.style.display = 'none';
-                container.innerHTML = '';
+                list.innerHTML = '<div style="text-align: center; color: var(--text-tertiary); padding: 24px;">No resources yet. Click "+ Add Resource" to add one.</div>';
                 return;
             }
 
-            list.style.display = 'block';
-            container.innerHTML = resources.map(resource => createResourceItem(resource)).join('');
+            // Handle both single resource and array
+            const resourcesArray = Array.isArray(resources) ? resources : [resources];
+            
+            if (resourcesArray.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: var(--text-tertiary); padding: 24px;">No resources yet. Click "+ Add Resource" to add one.</div>';
+                return;
+            }
+
+            list.innerHTML = resourcesArray.map(resource => createResourceItem(resource)).join('');
         }
 
         /**
@@ -2905,32 +3323,35 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                 'file': '📄'
             };
 
-            let preview = '';
-            if (resource.resource_type === 'image' && resource.resource_data) {
-                preview = `<img src="${resource.resource_data}" class="resource-preview" alt="Resource preview">`;
-            }
-
             const icon = icons[resource.resource_type] || '📦';
             const fileSize = resource.resource_size ? `(${(resource.resource_size / 1024).toFixed(1)} KB)` : '';
             const createdAt = resource.created_at ? new Date(resource.created_at).toLocaleString() : 'N/A';
+            const creator = resource.username || 'Unknown';
+
+            let preview = '';
+            if (resource.resource_type === 'image' && resource.resource_data) {
+                preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 120px;"><img src="${resource.resource_data}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 120px; object-fit: cover;"></div>`;
+            }
+
+            let actions = '';
+            if (resource.resource_type === 'video') {
+                actions = `<a href="${resource.resource_url}" target="_blank" class="note-action-button" style="text-decoration: none; display: inline-block;">Open</a>`;
+            }
 
             return `
-                <div class="resource-item">
-                    <div class="resource-item-info">
-                        <div class="resource-item-icon">${icon}</div>
-                        <div class="resource-item-text">
-                            <div class="resource-item-title">${escapeHtml(resource.resource_name)}</div>
-                            <div class="resource-item-type">
-                                ${resource.resource_type === 'video' ? 'Video Link' : resource.resource_type === 'file' ? 'File' : 'Image'}
-                                ${fileSize ? ' • ' + fileSize : ''}
-                                • ${createdAt}
-                            </div>
-                        </div>
-                        ${preview}
+                <div class="note-item">
+                    <div class="note-item-header">
+                        <span class="note-item-author">${icon} ${escapeHtml(resource.resource_name)}</span>
+                        <span class="note-item-date">${createdAt}</span>
                     </div>
-                    <div class="resource-item-actions">
-                        ${resource.resource_type === 'video' ? `<a href="${resource.resource_url}" target="_blank" style="color: var(--accent); text-decoration: none; font-size: 0.85em; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 3px;">Open</a>` : ''}
-                        <button class="resource-delete-button" onclick="deleteResource('${resource.id}')">Delete</button>
+                    <div class="resource-item-type" style="color: var(--text-secondary); font-size: 0.85em; margin-bottom: 8px;">
+                        👤 ${escapeHtml(creator)} • ${resource.resource_type === 'video' ? 'Video' : resource.resource_type === 'file' ? 'File' : 'Image'}
+                        ${fileSize ? ' • ' + fileSize : ''}
+                    </div>
+                    ${preview}
+                    <div class="note-item-actions">
+                        ${actions}
+                        <button class="note-action-button" onclick="deleteResource('${resource.id}')">Delete</button>
                     </div>
                 </div>
             `;

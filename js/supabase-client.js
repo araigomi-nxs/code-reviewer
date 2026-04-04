@@ -592,22 +592,23 @@ async function supabaseSaveStudyNotes(username, topicId, notesContent) {
 
 // Get study notes for a topic (GLOBAL - all users can see all notes)
 async function supabaseGetStudyNotes(username, topicId) {
-    if (!supabaseInstance) return null;
+    if (!supabaseInstance) return [];
 
     try {
         // Note: username parameter kept for backward compatibility
         // All users can see all notes for this topic (GLOBAL MODE)
+        // Returns array of all notes for the topic (one per user)
         const { data, error } = await supabaseInstance
             .from('study_notes')
             .select('*')
             .eq('topic_id', topicId)
-            .maybeSingle();
+            .order('created_at', { ascending: false });
 
-        if (error && error.code !== 'PGRST116') throw error;
-        return data || null;
+        if (error) throw error;
+        return data || [];
     } catch (error) {
         console.error('❌ Failed to get study notes:', error);
-        return null;
+        return [];
     }
 }
 

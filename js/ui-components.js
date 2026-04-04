@@ -670,7 +670,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
             <div class="upload-container">
                 <h4>📤 Submit Solution</h4>
                 <p style="color: var(--text-secondary); margin: 10px 0;">Please log in to submit your solution</p>
-                <button onclick="location.reload()" class="btn-submit" style="background: var(--primary-color, #4CAF50);">Login to Submit</button>
+                <button onclick="location.reload()" class="btn-submit">Login to Submit</button>
             </div>
         `;
     } else {
@@ -1658,8 +1658,8 @@ function addCompletionIndicatorStyles() {
 
         .btn-submit {
             padding: 10px 15px;
-            background: var(--primary-color, #4CAF50);
-            color: white;
+            background: var(--accent);
+            color: var(--bg-primary);
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -1668,7 +1668,7 @@ function addCompletionIndicatorStyles() {
         }
 
         .btn-submit:hover:not(:disabled) {
-            background: #45a049;
+            background: var(--accent-hover);
         }
 
         .btn-submit:disabled {
