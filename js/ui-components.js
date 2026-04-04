@@ -652,7 +652,6 @@ async function createUploadForm(challengeId, topicId = 'default') {
                     <div style="flex: 1; min-width: 0;">
                         <div style="font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
                             <span>${sub.username}</span>
-                            ${aiIndicator ? `<span>${aiIndicator}</span>` : ''}
                         </div>
                         <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">
                             <span>${sub.fileName}</span> | 
