@@ -2345,7 +2345,6 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                         <div id="notesMessage"></div>
                         <div class="notes-container">
                             <div class="notes-list-header">
-                                <h3>📝 Notes & Resources</h3>
                                 <button class="notes-create-button" onclick="openCreateModal()">+ Create</button>
                             </div>
                             <div class="notes-list" id="studyList"></div>
@@ -2396,6 +2395,19 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                             <div class="modal-footer">
                                 <button class="modal-button cancel" onclick="closeCreateModal()">Cancel</button>
                                 <button class="modal-button save" id="createButton" onclick="saveFromCreateModal(currentTopic)">Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image Preview Modal -->
+                    <div class="modal" id="imagePreviewModal" style="display: none;">
+                        <div class="modal-content" style="max-width: 90%; max-height: 90vh;">
+                            <div class="modal-header">
+                                <h2>Image Preview</h2>
+                                <button class="modal-close" onclick="closeImagePreview()">&times;</button>
+                            </div>
+                            <div style="display: flex; justify-content: center; align-items: center; padding: 20px; background: var(--bg-secondary); border-radius: 4px;">
+                                <img id="previewImageContent" src="" alt="Full preview" style="max-width: 100%; max-height: 70vh; object-fit: contain;">
                             </div>
                         </div>
                     </div>
@@ -2459,9 +2471,23 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
         // Click outside modal to close
         window.addEventListener('click', function(event) {
             const createModal = document.getElementById('createModal');
+            const imagePreviewModal = document.getElementById('imagePreviewModal');
             
             if (event.target === createModal) {
                 closeCreateModal();
+            }
+            if (event.target === imagePreviewModal) {
+                closeImagePreview();
+            }
+        });
+
+        // Press ESC to close image preview
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const imagePreviewModal = document.getElementById('imagePreviewModal');
+                if (imagePreviewModal && imagePreviewModal.style.display !== 'none') {
+                    closeImagePreview();
+                }
             }
         });
 
@@ -3106,6 +3132,26 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
         }
 
         /**
+         * Open image preview modal
+         */
+        function openImagePreview(imageUrl) {
+            const modal = document.getElementById('imagePreviewModal');
+            const img = document.getElementById('previewImageContent');
+            img.src = imageUrl;
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+        }
+
+        /**
+         * Close image preview modal
+         */
+        function closeImagePreview() {
+            const modal = document.getElementById('imagePreviewModal');
+            modal.style.display = 'none';
+        }
+
+        /**
          * Switch between creation tabs
          */
         function switchCreateTab(tab) {
@@ -3387,11 +3433,11 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             if (resource.resource_type === 'image') {
                 // Option 2: Display from Supabase Storage URL (preferred)
                 if (resource.resource_url && !resource.resource_url.includes('data:')) {
-                    preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 150px;"><img src="${resource.resource_url}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 150px; object-fit: contain; background: var(--bg-secondary); display: block;"></div>`;
+                    preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 300px; cursor: pointer;" onclick="openImagePreview('${resource.resource_url.replace(/'/g, "\\'")}')"><img src="${resource.resource_url}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 300px; object-fit: contain; background: var(--bg-secondary); display: block;"></div>`;
                 }
                 // Fallback: Display from base64 (old format, for backward compatibility)
                 else if (resource.resource_data) {
-                    preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 150px;"><img src="${resource.resource_data}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 150px; object-fit: contain; background: var(--bg-secondary); display: block;"></div>`;
+                    preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 300px; cursor: pointer;" onclick="openImagePreview('${resource.resource_data.replace(/'/g, "\\'")}')"><img src="${resource.resource_data}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 300px; object-fit: contain; background: var(--bg-secondary); display: block;"></div>`;
                 }
             }
 
@@ -3402,13 +3448,10 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
 
             return `
                 <div class="note-item">
-                    <div class="note-item-header">
-                        <span class="note-item-author">${icon} ${escapeHtml(resource.resource_name)}</span>
-                        <span class="note-item-date">${createdAt}</span>
-                    </div>
-                    <div class="resource-item-type" style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.85em; margin-bottom: 8px;">
+                    <div class="note-item-header" style="display: flex; align-items: center; gap: 8px;">
                         ${profileIcon}
-                        <span>${escapeHtml(creator)} • ${resource.resource_type === 'video' ? 'Video' : resource.resource_type === 'file' ? 'File' : 'Image'} ${fileSize ? ' • ' + fileSize : ''}</span>
+                        <span class="note-item-author">${escapeHtml(creator)} • ${resource.resource_type === 'video' ? '🎥 Video' : resource.resource_type === 'file' ? '📄 File' : '📸 Image'} ${fileSize ? ' • ' + fileSize : ''}</span>
+                        <span class="note-item-date">${createdAt}</span>
                     </div>
                     ${preview}
                     <div class="note-item-actions">
