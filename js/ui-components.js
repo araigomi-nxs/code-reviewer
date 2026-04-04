@@ -1486,15 +1486,17 @@ function addCompletionIndicatorStyles() {
 
         .upload-container h4 {
             margin: 0;
-            color: #333;
+            color: var(--text-primary);
         }
 
         .file-input {
             padding: 8px;
-            border: 2px solid #ddd;
+            border: 2px solid var(--border-color);
             border-radius: 4px;
             cursor: pointer;
             min-width: 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
         }
 
         .file-input:hover {
@@ -1523,7 +1525,7 @@ function addCompletionIndicatorStyles() {
         }
 
         .file-input:disabled {
-            background: #f0f0f0;
+            background: var(--bg-tertiary);
             cursor: not-allowed;
             opacity: 0.6;
         }
@@ -1531,7 +1533,7 @@ function addCompletionIndicatorStyles() {
         .upload-info {
             margin: 5px 0;
             font-size: 12px;
-            color: #999;
+            color: var(--text-tertiary);
         }
 
         .submission-item {
@@ -1540,7 +1542,7 @@ function addCompletionIndicatorStyles() {
         }
 
         .submission-item:hover {
-            background: #f9f9f9 !important;
+            background: var(--bg-secondary) !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
         }
