@@ -276,13 +276,13 @@ function createAuthModal() {
                     <input type="password" id="signupConfirm" placeholder="Confirm Password" required>
                     
                     <div style="margin: 15px 0;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 14px;">Choose Your Avatar:</label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--text-primary); font-size: 14px;">Choose Your Avatar:</label>
                         <div style="display: flex; gap: 8px; justify-content: space-around; flex-wrap: wrap;" id="avatarSelector">
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon1.png" onclick="selectAvatar('logo/usericon1.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid #ddd; border-radius: 50%; background: white; cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon1.png" alt="avatar1" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon2.png" onclick="selectAvatar('logo/usericon2.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid #ddd; border-radius: 50%; background: white; cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon2.png" alt="avatar2" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon3.png" onclick="selectAvatar('logo/usericon3.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid #ddd; border-radius: 50%; background: white; cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon3.png" alt="avatar3" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon4.png" onclick="selectAvatar('logo/usericon4.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid #ddd; border-radius: 50%; background: white; cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon4.png" alt="avatar4" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon5.png" onclick="selectAvatar('logo/usericon5.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid #ddd; border-radius: 50%; background: white; cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon5.png" alt="avatar5" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                            <button type="button" class="avatar-btn" data-avatar="logo/usericon1.png" onclick="selectAvatar('logo/usericon1.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon1.png" alt="avatar1" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                            <button type="button" class="avatar-btn" data-avatar="logo/usericon2.png" onclick="selectAvatar('logo/usericon2.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon2.png" alt="avatar2" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                            <button type="button" class="avatar-btn" data-avatar="logo/usericon3.png" onclick="selectAvatar('logo/usericon3.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon3.png" alt="avatar3" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                            <button type="button" class="avatar-btn" data-avatar="logo/usericon4.png" onclick="selectAvatar('logo/usericon4.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon4.png" alt="avatar4" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                            <button type="button" class="avatar-btn" data-avatar="logo/usericon5.png" onclick="selectAvatar('logo/usericon5.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon5.png" alt="avatar5" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
                         </div>
                         <input type="hidden" id="selectedAvatar" value="">
                     </div>
@@ -323,7 +323,7 @@ function addAuthModalStyles() {
         }
 
         .auth-container {
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 30px;
             width: 100%;
@@ -355,7 +355,7 @@ function addAuthModalStyles() {
 
         .auth-tab h3 {
             margin: 15px 0;
-            color: #333;
+            color: var(--text-primary);
         }
 
         .auth-tab form {
@@ -366,7 +366,7 @@ function addAuthModalStyles() {
 
         .auth-tab input {
             padding: 10px 12px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
         }
@@ -395,7 +395,7 @@ function addAuthModalStyles() {
             text-align: center;
             margin-top: 15px;
             font-size: 13px;
-            color: #666;
+            color: var(--text-secondary);
         }
 
         .auth-switch a {
@@ -450,7 +450,7 @@ function selectAvatar(avatar, event) {
     
     // Update button styles
     document.querySelectorAll('.avatar-btn').forEach(btn => {
-        btn.style.borderColor = '#ddd';
+        btn.style.borderColor = 'var(--border-color)';
         btn.style.boxShadow = 'none';
     });
     
@@ -652,11 +652,9 @@ async function createUploadForm(challengeId, topicId = 'default') {
                         <div style="flex: 1; min-width: 0; font-size: 13px; color: var(--text-primary);">
                             <span style="font-weight: bold;">${sub.username}</span> - <span style="color: var(--text-secondary);">${sub.fileName}</span> - <span style="color: var(--text-secondary);">${dateStr}${ratingDisplay}</span>
                         </div>
-                        <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; position: absolute; top: 10px; right: 10px; background: var(--bg-primary); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">
-                            <span style="color: ${statusColor}; font-weight: bold; font-size: 11px; white-space: nowrap;">${sub.status === 'pending' ? '⏳' : (sub.status === 'completed') ? '✅' : '❌'} ${sub.status.toUpperCase()}</span>
-                        </div>
+                        <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: ${statusColor}; border-radius: 50%; color: white; font-size: 16px; font-weight: bold;" title="${sub.status === 'pending' ? 'Pending Review' : (sub.status === 'completed') ? 'Completed' : 'Rejected'}">${sub.status === 'pending' ? '⏳' : (sub.status === 'completed') ? '✓' : '✕'}</div>
                     </div>
-                    ${sub.feedback ? `<div style="font-size: 12px; color: #333; background: ${sub.status === 'completed' ? '#e8f5e9' : '#ffebee'}; padding: 8px 10px; border-radius: 3px; border-left: 3px solid ${sub.status === 'completed' ? '#4CAF50' : '#f44336'}; margin-top: 4px;">
+                    ${sub.feedback ? `<div style="font-size: 12px; color: var(--text-primary); background: ${sub.status === 'completed' ? 'rgba(76, 175, 80, 0.15)' : 'rgba(244, 67, 54, 0.15)'}; padding: 8px 10px; border-radius: 3px; border-left: 3px solid ${sub.status === 'completed' ? '#4CAF50' : '#f44336'}; margin-top: 4px;">
                         <strong>${sub.status === 'completed' ? '✅ Approved' : '❌ Rejected'}:</strong> ${sub.feedback.substring(0, 100)}${sub.feedback.length > 100 ? '...' : ''}
                     </div>` : ''}
                 </div>
@@ -671,8 +669,8 @@ async function createUploadForm(challengeId, topicId = 'default') {
         contentHTML = `
             <div class="upload-container">
                 <h4>📤 Submit Solution</h4>
-                <p style="color: #999; margin: 10px 0;">Please log in to submit your solution</p>
-                <button onclick="location.reload()" class="btn-submit" style="background: #666;">Login to Submit</button>
+                <p style="color: var(--text-secondary); margin: 10px 0;">Please log in to submit your solution</p>
+                <button onclick="location.reload()" class="btn-submit" style="background: var(--primary-color, #4CAF50);">Login to Submit</button>
             </div>
         `;
     } else {
@@ -817,7 +815,7 @@ async function showCodePreview(username, challengeId) {
 
     const modalContent = document.createElement('div');
     modalContent.style.cssText = `
-        background: white;
+        background: var(--bg-secondary);
         border-radius: 8px;
         width: 95%;
         max-width: 1400px;
@@ -835,12 +833,12 @@ async function showCodePreview(username, challengeId) {
                        (submission.status === 'approved' || submission.status === 'completed') ? '#4CAF50' : 
                        '#f44336';
     const statusEmoji = submission.status === 'pending' ? '⏳' : 
-                       (submission.status === 'completed') ? '✅' : 
-                       '❌';
+                       (submission.status === 'completed') ? '✓' : 
+                       '✕';
     
     header.style.cssText = `
         padding: 20px;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -857,7 +855,7 @@ async function showCodePreview(username, challengeId) {
         aiStatusHtml = ' 🤖 AI Reviewed';
         const rating = extractRatingFromReview(submission.aiReview);
         if (rating) {
-            ratingHtml = ` | <span style="font-weight: bold; font-size: 14px; padding: 4px 8px; border-radius: 3px; background: ${rating.includes('Incorrect') ? '#ffebee' : '#e8f5e9'}; color: ${rating.includes('Incorrect') ? '#f44336' : '#4CAF50'};">${rating}</span>`;
+            ratingHtml = ` | <span style="font-weight: bold; font-size: 14px; padding: 4px 8px; border-radius: 3px; background: ${rating.includes('Incorrect') ? 'rgba(244, 67, 54, 0.15)' : 'rgba(76, 175, 80, 0.15)'}; color: ${rating.includes('Incorrect') ? '#f44336' : '#4CAF50'};">${rating}</span>`;
         }
     } else if (submission.aiReviewStatus === 'processing') {
         aiStatusHtml = ' ⏳ AI Reviewing...';
@@ -920,8 +918,8 @@ async function showCodePreview(username, challengeId) {
             <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">
                 ${statusEmoji} ${username}'s Submission
             </div>
-            <div style="font-size: 12px; color: #666;">
-                <span style="color: ${statusColor}; font-weight: bold;">${statusEmoji} ${submission.status.toUpperCase()}</span> | 
+            <div style="font-size: 12px; color: var(--text-secondary);">
+                <span style="color: ${statusColor}; font-weight: bold; background: ${statusColor}; color: white; padding: 2px 8px; border-radius: 12px; display: inline-block;">${statusEmoji}</span> | 
                 <span>${submission.fileName}</span> | 
                 <span>${new Date(submission.submittedAt).toLocaleString()}</span>
             </div>
@@ -962,15 +960,15 @@ async function showCodePreview(username, challengeId) {
         overflow-y: auto;
         overflow-x: hidden;
         padding: 20px;
-        background: #f8f8f8;
-        border-right: 1px solid #eee;
+        background: var(--bg-secondary);
+        border-right: 1px solid var(--border-color);
         min-width: 0;
     `;
 
     const codeLabel = document.createElement('div');
     codeLabel.style.cssText = `
         font-weight: bold;
-        color: #333;
+        color: var(--text-primary);
         font-size: 12px;
     `;
     codeLabel.textContent = '📝 YOUR CODE';
@@ -1036,22 +1034,22 @@ async function showCodePreview(username, challengeId) {
         display: none;
         margin-top: 20px;
         padding-top: 20px;
-        border-top: 2px solid #ddd;
+        border-top: 2px solid var(--border-color);
     `;
     codeRunnerSection.innerHTML = `
-        <div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 12px;">▶️ CODE RUNNER</div>
+        <div style="font-weight: bold; color: var(--text-primary); margin-bottom: 10px; font-size: 12px;">▶️ CODE RUNNER</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
             <div>
-                <label style="display: block; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 6px;">📥 Test Input (optional)</label>
-                <textarea id="inlineCodeRunnerInput_${modal.id}" placeholder="Enter test input" style="width: 100%; height: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace; font-size: 11px; resize: vertical;"></textarea>
+                <label style="display: block; font-size: 11px; font-weight: bold; color: var(--text-secondary); margin-bottom: 6px;">📥 Test Input (optional)</label>
+                <textarea id="inlineCodeRunnerInput_${modal.id}" placeholder="Enter test input" style="width: 100%; height: 80px; padding: 8px; border: 1px solid var(--border-color); border-radius: 3px; font-family: monospace; font-size: 11px; resize: vertical; background: var(--bg-primary); color: var(--text-primary);"></textarea>
             </div>
             <div>
-                <label style="display: block; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 6px;">📤 Output</label>
-                <div id="inlineCodeRunnerOutput_${modal.id}" style="width: 100%; height: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; background: #2d2d2d; color: #0a0; font-family: monospace; font-size: 11px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;"></div>
+                <label style="display: block; font-size: 11px; font-weight: bold; color: var(--text-secondary); margin-bottom: 6px;">📤 Output</label>
+                <div id="inlineCodeRunnerOutput_${modal.id}" style="width: 100%; height: 80px; padding: 8px; border: 1px solid var(--border-color); border-radius: 3px; background: var(--bg-primary); color: #0a0; font-family: monospace; font-size: 11px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;"></div>
             </div>
         </div>
         <button data-filename="${submission.fileName}" data-filecontent="${btoa(submission.fileContent)}" data-modalid="${modal.id}" onclick="handleRunCodeInlineExecution(this)" style="
-            background: #4CAF50;
+            background: var(--primary-color, #4CAF50);
             color: white;
             border: none;
             border-radius: 3px;
@@ -1079,7 +1077,7 @@ async function showCodePreview(username, challengeId) {
     const reviewLabel = document.createElement('div');
     reviewLabel.style.cssText = `
         font-weight: bold;
-        color: #333;
+        color: var(--text-primary);
         margin-bottom: 10px;
         font-size: 12px;
     `;
@@ -1104,14 +1102,14 @@ async function showCodePreview(username, challengeId) {
         if (review) {
             const reviewTextDiv = document.createElement('div');
             reviewTextDiv.style.cssText = `
-                background: #f5f5f5;
+                background: var(--bg-secondary);
                 padding: 15px;
                 border-radius: 4px;
                 border-left: 3px solid #2196F3;
                 margin-bottom: 15px;
                 font-size: 13px;
                 line-height: 1.6;
-                color: #333;
+                color: var(--text-primary);
             `;
             reviewTextDiv.innerHTML = `<strong>💭 Review:</strong><br />` + review.replace(/\n/g, '<br />');
             reviewContainer.appendChild(reviewTextDiv);
@@ -1122,7 +1120,7 @@ async function showCodePreview(username, challengeId) {
             const suggestionLabel = document.createElement('div');
             suggestionLabel.style.cssText = `
                 font-weight: bold;
-                color: #333;
+                color: var(--text-primary);
                 margin-bottom: 10px;
                 font-size: 12px;
             `;
@@ -1136,7 +1134,7 @@ async function showCodePreview(username, challengeId) {
                 color: #f8f8f2;
                 padding: 15px;
                 border-radius: 4px;
-                border: 1px solid #e0e0e0;
+                border: 1px solid var(--border-color);
                 font-size: 13px;
                 line-height: 1.6;
                 overflow-y: auto;
@@ -1155,7 +1153,7 @@ async function showCodePreview(username, challengeId) {
         const buttonDiv = document.createElement('div');
         buttonDiv.style.cssText = `
             padding: 10px;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid var(--border-color);
             text-align: center;
         `;
         const isCompleted = submission.status === 'completed';
@@ -1175,25 +1173,23 @@ async function showCodePreview(username, challengeId) {
     } else if (aiReviewStatus === 'processing') {
         const processingDiv = document.createElement('div');
         processingDiv.style.cssText = `
-            background: white;
+            background: rgba(255, 193, 7, 0.1);
             padding: 20px;
             border-radius: 4px;
-            border: 1px solid #fff3cd;
-            background: #fffbf0;
+            border: 1px solid rgba(255, 193, 7, 0.3);
             text-align: center;
-            color: #666;
+            color: var(--text-secondary);
         `;
-        processingDiv.innerHTML = '<div>⏳ AI is reviewing this code...</div><div style="font-size: 12px; margin-top: 10px; color: #999;">Please wait or refresh in a moment</div>';
+        processingDiv.innerHTML = '<div>⏳ AI is reviewing this code...</div><div style="font-size: 12px; margin-top: 10px; color: var(--text-tertiary);">Please wait or refresh in a moment</div>';
         reviewContainer.appendChild(processingDiv);
     } else if (aiReviewStatus === 'failed') {
         const errorDiv = document.createElement('div');
         errorDiv.style.cssText = `
-            background: white;
+            background: rgba(244, 67, 54, 0.15);
             padding: 20px;
             border-radius: 4px;
-            border: 1px solid #f5c6cb;
-            background: #ffe6e6;
-            color: #721c24;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: var(--text-primary);
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -1239,10 +1235,10 @@ async function showCodePreview(username, challengeId) {
     } else {
         const noReviewDiv = document.createElement('div');
         noReviewDiv.style.cssText = `
-            background: white;
+            background: var(--bg-primary);
             padding: 20px;
             border-radius: 4px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border-color);
             text-align: center;
             flex: 1;
             display: flex;
@@ -1253,9 +1249,9 @@ async function showCodePreview(username, challengeId) {
         `;
         const isCompleted = submission.status === 'completed';
         noReviewDiv.innerHTML = `
-            <div style="color: #999;">No AI review yet</div>
+            <div style="color: var(--text-tertiary);">No AI review yet</div>
             <button id="requestAiReviewBtn_${username}_${challengeId}" ${isCompleted ? 'disabled' : ''} class="request-review-btn" data-username="${username}" data-challengeid="${challengeId}" ${isCompleted ? '' : 'onclick="handleRequestCodeReview(this)"'} style="
-                background: ${isCompleted ? '#ccc' : '#2196F3'};
+                background: ${isCompleted ? 'var(--bg-tertiary)' : 'var(--primary-color, #2196F3)'};
                 color: white;
                 border: none;
                 border-radius: 4px;
@@ -1273,7 +1269,7 @@ async function showCodePreview(username, challengeId) {
     // Footer with feedback (if any)
     let footer = '';
     if (submission.feedback) {
-        const feedbackBgColor = submission.status === 'completed' ? '#e8f5e9' : '#ffebee';
+        const feedbackBgColor = submission.status === 'completed' ? 'rgba(76, 175, 80, 0.15)' : 'rgba(244, 67, 54, 0.15)';
         const feedbackBorderColor = submission.status === 'completed' ? '#4CAF50' : '#f44336';
         
         footer = document.createElement('div');
@@ -1283,8 +1279,8 @@ async function showCodePreview(username, challengeId) {
             background: ${feedbackBgColor};
         `;
         footer.innerHTML = `
-            <div style="font-weight: bold; color: #333; margin-bottom: 10px;">💬 Admin Feedback:</div>
-            <div style="color: #333; font-size: 14px;">${submission.feedback}</div>
+            <div style="font-weight: bold; color: var(--text-primary); margin-bottom: 10px;">💬 Admin Feedback:</div>
+            <div style="color: var(--text-primary); font-size: 14px;">${submission.feedback}</div>
         `;
     }
 
@@ -1517,15 +1513,15 @@ async function updateChallengeSubmissionUI(challengeId) {
     const submission = await window.getSubmission(challengeId, user.username);
     if (submission) {
         const statusEmoji = submission.status === 'pending' ? '⏳' : 
-                           (submission.status === 'completed') ? '✅' : 
-                           '❌';
-        const statusText = submission.status.toUpperCase();
+                           (submission.status === 'completed') ? '✓' : 
+                           '✕';
         const statusColor = submission.status === 'pending' ? '#FFA500' : 
                            (submission.status === 'approved' || submission.status === 'completed') ? '#4CAF50' : 
                            '#f44336';
         statusEl.innerHTML = `
-            <div style="color: ${statusColor}; font-weight: bold; margin-top: 10px;">
-                ${statusEmoji} Submitted: ${statusText}
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                <div style="width: 24px; height: 24px; background: ${statusColor}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">${statusEmoji}</div>
+                <span style="color: ${statusColor}; font-weight: bold;">Submitted</span>
             </div>
         `;
     }
@@ -1579,13 +1575,13 @@ function addCompletionIndicatorStyles() {
         }
 
         .completion-indicator.pending {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #856404;
+            background: rgba(255, 193, 7, 0.15);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 193, 7, 0.5);
         }
 
         .upload-form {
-            background: #f5f5f5;
+            background: var(--bg-secondary);
             padding: 15px;
             border-radius: 8px;
             margin: 15px 0;
@@ -1732,7 +1728,7 @@ function addUserProfileMenuStyles() {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -1758,7 +1754,7 @@ function addUserProfileMenuStyles() {
         }
 
         .theme-emoji-btn:hover {
-            background: #f0f0f0;
+            background: var(--bg-tertiary);
             transform: scale(1.1);
         }
 
@@ -1766,7 +1762,7 @@ function addUserProfileMenuStyles() {
             display: flex;
             gap: 12px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .profile-avatar {
@@ -1776,7 +1772,7 @@ function addUserProfileMenuStyles() {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f0f0f0;
+            background: var(--bg-tertiary);
             flex-shrink: 0;
             overflow: hidden;
             font-size: 28px;
@@ -1797,13 +1793,13 @@ function addUserProfileMenuStyles() {
         .profile-name {
             margin: 0;
             font-weight: bold;
-            color: #333;
+            color: var(--text-primary);
         }
 
         .profile-email {
             margin: 0;
             font-size: 12px;
-            color: #999;
+            color: var(--text-tertiary);
         }
 
         .profile-stats {
@@ -1811,7 +1807,7 @@ function addUserProfileMenuStyles() {
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             padding: 15px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .stat {
@@ -1828,7 +1824,7 @@ function addUserProfileMenuStyles() {
         .stat-label {
             display: block;
             font-size: 11px;
-            color: #999;
+            color: var(--text-tertiary);
             text-transform: uppercase;
         }
 
@@ -2023,18 +2019,21 @@ async function _doInitializeUploadForms() {
                                 position: absolute;
                                 top: 10px;
                                 right: 10px;
-                                color: ${statusColor};
+                                width: 40px;
+                                height: 40px;
+                                background: ${statusColor};
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                font-size: 18px;
                                 font-weight: bold;
-                                font-size: 12px;
-                                background: var(--bg-primary);
-                                padding: 6px 10px;
-                                border-radius: 4px;
-                                border: 1px solid var(--bg-tertiary);
                                 z-index: 100;
                             `;
                             const statusEmoji = submission.status === 'pending' ? '⏳' : 
-                                             (submission.status === 'completed') ? '✅' : 
-                                             '❌';
+                                             (submission.status === 'completed') ? '✓' : 
+                                             '✕';
                             statusBadge.textContent = `${statusEmoji} ${submission.status.toUpperCase()}`;
                             item.appendChild(statusBadge);
                         }
@@ -2085,7 +2084,7 @@ async function displayLatestSubmissionsDashboard() {
 
     if (latestSubmissions.length === 0) {
         dashboardContainer.innerHTML = `
-            <div style="text-align: center; padding: 40px 20px; color: #999;">
+            <div style="text-align: center; padding: 40px 20px; color: var(--text-tertiary);">
                 <div style="font-size: 48px; margin-bottom: 10px;">📋</div>
                 <div>No submissions yet</div>
             </div>
@@ -2100,8 +2099,8 @@ async function displayLatestSubmissionsDashboard() {
                            (sub.status === 'approved' || sub.status === 'completed') ? '#4CAF50' : 
                            '#f44336';
         const statusEmoji = sub.status === 'pending' ? '⏳' : 
-                           (sub.status === 'approved' || sub.status === 'completed') ? '✅' : 
-                           '❌';
+                           (sub.status === 'approved' || sub.status === 'completed') ? '✓' : 
+                           '✕';
         const timeStr = new Date(sub.submittedAt).toLocaleString();
         
         // Get challenge title
@@ -2135,9 +2134,9 @@ async function displayLatestSubmissionsDashboard() {
             console.log(`⭐ Rating extracted for ${sub.username}:`, rating);
             if (rating) {
                 if (rating.includes('Incorrect')) {
-                    ratingDisplay = ` | <span style="background: #ffebee; color: #f44336; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">❌ ${rating}</span>`;
+                    ratingDisplay = ` | <span style="background: rgba(244, 67, 54, 0.15); color: #f44336; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">❌ ${rating}</span>`;
                 } else if (rating.includes('⭐')) {
-                    ratingDisplay = ` | <span style="background: #e8f5e9; color: #4CAF50; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">🤖 ${rating}</span>`;
+                    ratingDisplay = ` | <span style="background: rgba(76, 175, 80, 0.15); color: #4CAF50; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">🤖 ${rating}</span>`;
                 }
                 console.log(`✅ Rating display set to: ${ratingDisplay}`);
             }
@@ -2166,7 +2165,7 @@ async function displayLatestSubmissionsDashboard() {
         
         html += `
             <div data-username="${sub.username}" data-challengeid="${sub.challengeId}" onclick="handleShowCodePreview(this)" style="
-                background: white;
+                background: var(--bg-secondary);
                 padding: 12px;
                 border-radius: 6px;
                 border-left: 4px solid ${statusColor};
@@ -2178,23 +2177,21 @@ async function displayLatestSubmissionsDashboard() {
                 align-items: center;
                 gap: 10px;
             " onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'">
-                ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%;">${avatarHtml}</div>` : ''}
+                ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%;">${avatarHtml}</div>` : ''}
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: bold; color: #333; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                    <div style="font-weight: bold; color: var(--text-primary); font-size: 14px; display: flex; align-items: center; gap: 6px;">
                         ${sub.username}
                     </div>
-                    <div style="font-size: 13px; color: #555; margin-top: 4px;">
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">
                         ${challengeTitle}
                     </div>
-                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                        <span style="background: #f0f0f0; padding: 2px 8px; border-radius: 3px;">${topicDisplay}</span> | 
+                    <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 5px;">
+                        <span style="background: var(--bg-tertiary); padding: 2px 8px; border-radius: 3px;">${topicDisplay}</span> | 
                         <span>${timeStr}</span>
                         ${ratingDisplay}
                     </div>
                 </div>
-                <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
-                    <span style="color: ${statusColor}; font-weight: bold; font-size: 12px;">${statusEmoji} ${sub.status.toUpperCase()}</span>
-                </div>
+                <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: ${statusColor}; border-radius: 50%; color: white; font-size: 16px; font-weight: bold;" title="${sub.status === 'pending' ? 'Pending Review' : (sub.status === 'completed') ? 'Completed' : 'Rejected'}">${statusEmoji}</div>
             </div>
         `;
     }
@@ -2263,7 +2260,7 @@ async function handleRunCodeInlineExecution(button) {
     }
     
     outputElement.textContent = '⏳ Executing...';
-    outputElement.style.color = '#999';
+    outputElement.style.color = 'var(--text-tertiary)';
     
     try {
         const testInput = inputElement ? inputElement.value : '';
