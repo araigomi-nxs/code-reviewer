@@ -640,18 +640,17 @@ async function createUploadForm(challengeId, topicId = 'default') {
                 aiIndicator = ' 🤖';
                 const rating = extractRatingFromReview(sub.aiReview);
                 if (rating) {
-                    ratingDisplay = ` | ${rating}`;
+                    ratingDisplay = ` | <strong>🤖</strong> ${rating}`;
                 }
             } else if (sub.aiReviewStatus === 'processing') {
                 aiIndicator = ' ⏳AI';
             }
             
             submissionsListHTML += `
-                <div class="submission-item" onclick="showCodePreview('${sub.username}', '${challengeId}')" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: flex-start; gap: 10px;">
+                <div class="submission-item" onclick="showCodePreview('${sub.username}', '${challengeId}')" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: flex-start; gap: 10px; position: relative;">
                     ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%; margin-top: 2px;">${avatarHtml}</div>` : ''}
                     <div style="flex: 1; min-width: 0;">
                         <div style="font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                            <span>${statusEmoji}</span>
                             <span>${sub.username}</span>
                             ${aiIndicator ? `<span>${aiIndicator}</span>` : ''}
                         </div>
@@ -663,8 +662,8 @@ async function createUploadForm(challengeId, topicId = 'default') {
                             <strong>${sub.status === 'completed' ? '✅ Approved' : '❌ Rejected'}:</strong> ${sub.feedback.substring(0, 100)}${sub.feedback.length > 100 ? '...' : ''}
                         </div>` : ''}
                     </div>
-                    <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; padding-top: 2px;">
-                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px;">${statusEmoji} ${sub.status.toUpperCase()}</span>
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; padding-top: 2px; position: absolute; top: 10px; right: 10px;">
+                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px; white-space: nowrap;">${sub.status}<${new Date(sub.submitted_at).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</span>
                     </div>
                 </div>
             `;
