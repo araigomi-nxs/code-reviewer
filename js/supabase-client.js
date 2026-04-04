@@ -757,7 +757,7 @@ async function supabaseUploadImageToStorage(file, topicId, username) {
 
         // Upload file to storage bucket
         const { data, error } = await supabaseInstance.storage
-            .from('study-resources')
+            .from('study_resources')
             .upload(fileName, file, {
                 cacheControl: '3600', // 1 hour cache
                 upsert: false // Don't overwrite existing files
@@ -770,7 +770,7 @@ async function supabaseUploadImageToStorage(file, topicId, username) {
 
         // Get public URL for the uploaded file
         const { data: urlData } = supabaseInstance.storage
-            .from('study-resources')
+            .from('study_resources')
             .getPublicUrl(fileName);
 
         const publicUrl = urlData.publicUrl;

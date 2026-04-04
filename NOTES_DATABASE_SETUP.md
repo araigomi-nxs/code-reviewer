@@ -25,7 +25,7 @@ The notes feature uses Supabase for persistent storage. Notes are **GLOBAL** - a
 
 2. **Create New Bucket**
    - Click "Create a New Bucket"
-   - Bucket name: `study-resources`
+   - Bucket name: `study_resources`
    - **Make it PUBLIC** (important!)
    - Click "Create bucket"
 
@@ -37,7 +37,7 @@ The notes feature uses Supabase for persistent storage. Notes are **GLOBAL** - a
      ```sql
      CREATE POLICY "Public read access"
      ON storage.objects FOR SELECT
-     USING (bucket_id = 'study-resources');
+     USING (bucket_id = 'study_resources');
      ```
 
 ### Step 2: Create Database Tables
@@ -200,7 +200,7 @@ The following functions have been added to `js/supabase-client.js`:
     topic_id: "loops",
     resource_type: "image",        // or "video" or "file"
     resource_name: "diagram.png",
-    resource_url: "https://myproject.supabase.co/storage/v1/object/public/study-resources/loops/user@example.com_1680000000.png",  // Public Storage URL
+    resource_url: "https://myproject.supabase.co/storage/v1/object/public/study_resources/loops/user@example.com_1680000000.png",  // Public Storage URL
     resource_data: null,           // Not used for new images
     resource_size: 102400,         // In bytes
     created_at: "2026-04-05T10:00:00Z"
@@ -236,7 +236,7 @@ The following functions have been added to `js/supabase-client.js`:
 
 1. **Create Storage Bucket (NEW - Option 2)**
    - Go to Supabase Console → "Storage" sidebar
-   - Create new bucket named `study-resources`
+   - Create new bucket named `study_resources`
    - **Make it PUBLIC** so users can access image URLs
    - Add public read access policy if needed
 
@@ -252,7 +252,7 @@ The following functions have been added to `js/supabase-client.js`:
    - If needed, copy and run the optional RLS SQL above
 
 5. **Verify Setup**
-   - Go to "Storage" in the sidebar: should see `study-resources` bucket
+   - Go to "Storage" in the sidebar: should see `study_resources` bucket
    - Go to "Table Editor" in the sidebar: should see `study_notes` and `study_resources` tables
 
 ## Testing
@@ -262,7 +262,7 @@ After setup, test by:
 1. **User 1**: Open the app, select a topic, click "📝 Notes" tab
 2. **Add Notes**: Write some study notes and save
 3. **Add Image**: User 1 uploads an image to the topic
-   - Image should upload to `study-resources` bucket
+   - Image should upload to `study_resources` bucket
    - Should appear immediately without 414 errors ✅
 4. **User 2**: Log in with a different account, go to the same topic
 5. **View Shared Notes**: You should see User 1's notes immediately
@@ -280,7 +280,7 @@ After setup, test by:
 
 ### Image Upload Fails with "Cannot read property 'from'"
 
-- Verify `study-resources` bucket exists in Supabase Storage
+- Verify `study_resources` bucket exists in Supabase Storage
 - Check that the bucket is set to PUBLIC
 - Ensure storage policies allow public access
 
@@ -293,9 +293,9 @@ After setup, test by:
 ### Images Not Displaying (Blank/Broken)
 
 - Check browser console for image loading errors
-- Verify the `study-resources` bucket has public read access
+- Verify the `study_resources` bucket has public read access
 - Ensure image URL in database starts with `https://...` (not `data:`)
-- Go to Supabase Dashboard → Storage → study-resources to see uploaded files
+- Go to Supabase Dashboard → Storage → study_resources to see uploaded files
 
 ### Notes Not Saving
 
