@@ -1084,7 +1084,7 @@ async function showCodePreview(username, challengeId) {
         `;
         const isCompleted = submission.status === 'completed';
         buttonDiv.innerHTML = `
-            <button id="requestNewReviewBtn_${username}_${challengeId}" ${isCompleted ? 'disabled' : `onclick="requestCodeReview('${username}', '${challengeId}', this)"`} style="
+            <button id="requestNewReviewBtn_${username}_${challengeId}" ${isCompleted ? 'disabled' : ''} class="request-review-btn" data-username="${username}" data-challengeid="${challengeId}" ${isCompleted ? '' : 'onclick="handleRequestCodeReview(this)"'} style="
                 background: ${isCompleted ? '#ccc' : '#FF9800'};
                 color: white;
                 border: none;
@@ -1178,7 +1178,7 @@ async function showCodePreview(username, challengeId) {
         const isCompleted = submission.status === 'completed';
         noReviewDiv.innerHTML = `
             <div style="color: #999;">No AI review yet</div>
-            <button id="requestAiReviewBtn_${username}_${challengeId}" ${isCompleted ? 'disabled' : `onclick="requestCodeReview('${username}', '${challengeId}', this)"`} style="
+            <button id="requestAiReviewBtn_${username}_${challengeId}" ${isCompleted ? 'disabled' : ''} class="request-review-btn" data-username="${username}" data-challengeid="${challengeId}" ${isCompleted ? '' : 'onclick="handleRequestCodeReview(this)"'} style="
                 background: ${isCompleted ? '#ccc' : '#2196F3'};
                 color: white;
                 border: none;
@@ -1292,6 +1292,16 @@ function clearFailedReview(username, challengeId) {
     } catch (error) {
         showNotification(`❌ Failed to clear error: ${error.message}`, 'error');
     }
+}
+
+/**
+ * Handle request code review button click
+ */
+function handleRequestCodeReview(button) {
+    const username = button.getAttribute('data-username');
+    const challengeId = button.getAttribute('data-challengeid');
+    console.log('🎯 Request review button clicked - Username:', username, 'Challenge:', challengeId);
+    requestCodeReview(username, challengeId, button);
 }
 
 /**
@@ -2097,6 +2107,13 @@ function initializeUI() {
     }
     
     // Note: Upload forms are initialized by selectTopic() and switchTab() after challenges are rendered
+}
+
+/**
+ * Export functions to global scope
+ */
+if (typeof window !== 'undefined') {
+    window.handleRequestCodeReview = handleRequestCodeReview;
 }
 
 // Auto-initialize when DOM is ready
