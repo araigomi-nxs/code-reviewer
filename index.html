@@ -3067,10 +3067,28 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             const createdAt = new Date(note.created_at).toLocaleString();
             const preview = (note.notes_content || '').substring(0, 150).replace(/\n/g, ' ');
             const isOwnNote = window.getCurrentUser().username === note.username;
+            const creator = note.username || 'Unknown';
+
+            // Get user profile icon - show avatar if available, otherwise use initials
+            let profileIcon = '';
+            try {
+                const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
+                const userProfile = allUsers[creator];
+                if (userProfile && userProfile.avatar) {
+                    profileIcon = `<img src="${userProfile.avatar}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">`;
+                } else {
+                    const userInitial = creator.charAt(0).toUpperCase();
+                    profileIcon = `<div style="width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold;">${userInitial}</div>`;
+                }
+            } catch (e) {
+                const userInitial = creator.charAt(0).toUpperCase();
+                profileIcon = `<div style="width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold;">${userInitial}</div>`;
+            }
 
             return `
                 <div class="note-item">
-                    <div class="note-item-header">
+                    <div class="note-item-header" style="display: flex; align-items: center; gap: 8px;">
+                        ${profileIcon}
                         <span class="note-item-author">📝 ${escapeHtml(note.username)}</span>
                         <span class="note-item-date">${createdAt}</span>
                     </div>
