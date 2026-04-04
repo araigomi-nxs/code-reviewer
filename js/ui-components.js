@@ -336,13 +336,27 @@ function addAuthModalStyles() {
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color, #4CAF50);
+            border-bottom: 2px solid var(--accent);
             padding-bottom: 15px;
         }
 
         .auth-header h2 {
             margin: 0;
-            color: var(--primary-color, #4CAF50);
+            color: var(--accent);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
         }
 
         .auth-tab {
@@ -366,6 +380,8 @@ function addAuthModalStyles() {
 
         .auth-tab input {
             padding: 10px 12px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
@@ -373,22 +389,24 @@ function addAuthModalStyles() {
 
         .auth-tab input:focus {
             outline: none;
-            border-color: var(--primary-color, #4CAF50);
-            box-shadow: 0 0 4px rgba(76, 175, 80, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+            background: var(--bg-primary);
         }
 
         .auth-tab .btn-primary {
             padding: 10px;
-            background: var(--primary-color, #4CAF50);
-            color: white;
+            background: var(--accent);
+            color: var(--bg-primary);
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            transition: background 0.2s;
         }
 
         .auth-tab .btn-primary:hover {
-            background: #45a049;
+            background: var(--accent-hover);
         }
 
         .auth-switch {
@@ -399,13 +417,15 @@ function addAuthModalStyles() {
         }
 
         .auth-switch a {
-            color: var(--primary-color, #4CAF50);
+            color: var(--accent);
             cursor: pointer;
             font-weight: bold;
+            transition: color 0.2s;
         }
 
         .auth-switch a:hover {
             text-decoration: underline;
+            color: var(--accent-hover);
         }
     `;
 
@@ -1653,7 +1673,7 @@ function addCompletionIndicatorStyles() {
         }
 
         .file-input:hover {
-            border-color: var(--primary-color, #4CAF50);
+            border-color: var(--accent);
         }
 
         .btn-submit {
