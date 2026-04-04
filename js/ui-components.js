@@ -2046,7 +2046,7 @@ async function displayLatestSubmissionsDashboard() {
                 ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%;">${avatarHtml}</div>` : ''}
                 <div style="flex: 1; min-width: 0;">
                     <div style="font-weight: bold; color: #333; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-                        ${statusEmoji} ${sub.username}
+                        ${sub.username}
                     </div>
                     <div style="font-size: 13px; color: #555; margin-top: 4px;">
                         ${challengeTitle}
