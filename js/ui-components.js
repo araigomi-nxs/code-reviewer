@@ -639,29 +639,20 @@ async function createUploadForm(challengeId, topicId = 'default') {
             if (sub.aiReviewStatus === 'completed') {
                 const rating = extractRatingFromReview(sub.aiReview);
                 if (rating) {
-                    ratingDisplay = ` | <strong>🤖</strong> ${rating}`;
+                    ratingDisplay = ` - 🤖 ${rating}`;
                 }
             } else if (sub.aiReviewStatus === 'processing') {
                 aiIndicator = ' ⏳AI';
             }
             
             submissionsListHTML += `
-                <div class="submission-item" data-username="${sub.username}" data-challengeid="${challengeId}" onclick="handleShowCodePreview(this)" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: flex-start; gap: 10px; position: relative;">
-                    ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%; margin-top: 2px;">${avatarHtml}</div>` : ''}
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                            <span>${sub.username}</span>
-                        </div>
-                        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">
-                            <span>${sub.fileName}</span> | 
-                            <span>${dateStr}${ratingDisplay}</span>
-                        </div>
-                        ${sub.feedback ? `<div style="font-size: 11px; color: #666; background: ${sub.status === 'completed' ? '#e8f5e9' : '#ffebee'}; padding: 6px 8px; border-radius: 3px; border-left: 2px solid ${sub.status === 'completed' ? '#4CAF50' : '#f44336'}; margin-bottom: 0;">
-                            <strong>${sub.status === 'completed' ? '✅ Approved' : '❌ Rejected'}:</strong> ${sub.feedback.substring(0, 100)}${sub.feedback.length > 100 ? '...' : ''}
-                        </div>` : ''}
+                <div class="submission-item" data-username="${sub.username}" data-challengeid="${challengeId}" onclick="handleShowCodePreview(this)" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: center; gap: 10px; position: relative;">
+                    ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%;">${avatarHtml}</div>` : ''}
+                    <div style="flex: 1; min-width: 0; font-size: 13px; color: var(--text-primary);">
+                        <span style="font-weight: bold;">${sub.username}</span> - <span style="color: var(--text-secondary);">${sub.fileName}</span> - <span style="color: var(--text-secondary);">${dateStr}${ratingDisplay}</span>
                     </div>
-                    <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; padding-top: 2px; position: absolute; top: 10px; right: 10px;">
-                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px; white-space: nowrap;">${sub.status}<${new Date(sub.submitted_at).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</span>
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; position: absolute; top: 10px; right: 10px; background: var(--bg-primary); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">
+                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px; white-space: nowrap;">✓ ${sub.status.toUpperCase()} | ${new Date(sub.submitted_at).toLocaleDateString('en-US', {month: 'numeric', day: 'numeric'})}</span>
                     </div>
                 </div>
             `;
@@ -900,19 +891,7 @@ async function showCodePreview(username, challengeId) {
 
     let approveButtonHtml = '';
     let rejectButtonHtml = '';
-    let runCodeButtonHtml = `
-        <button class="run-code-btn" data-filename="${submission.fileName}" data-filecontent="${btoa(submission.fileContent)}" onclick="handleCreateCodeRunner(this)" style="
-            background: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            margin-right: 5px;
-        ">▶️ Run Code</button>
-    `;
+    // Run code button will be added to code container instead
     
     if (isAdminUser && submission.status !== 'completed' && submission.status !== 'rejected') {
         approveButtonHtml = `
@@ -958,7 +937,6 @@ async function showCodePreview(username, challengeId) {
             </div>
         </div>
         <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-            ${runCodeButtonHtml}
             ${approveButtonHtml}
             ${rejectButtonHtml}
             ${deleteButtonHtml}
@@ -1000,11 +978,43 @@ async function showCodePreview(username, challengeId) {
     codeLabel.style.cssText = `
         font-weight: bold;
         color: #333;
-        margin-bottom: 10px;
         font-size: 12px;
     `;
     codeLabel.textContent = '📝 YOUR CODE';
-    codeContainer.appendChild(codeLabel);
+    
+    // Create header with label and run button
+    const codeHeader = document.createElement('div');
+    codeHeader.style.cssText = `
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    `;
+    codeHeader.appendChild(codeLabel);
+    
+    const runCodeIconBtn = document.createElement('button');
+    runCodeIconBtn.setAttribute('data-filename', submission.fileName);
+    runCodeIconBtn.setAttribute('data-filecontent', btoa(submission.fileContent));
+    runCodeIconBtn.setAttribute('data-modalid', modal.id);
+    runCodeIconBtn.onclick = function() { handleRunCodeInline(this); };
+    runCodeIconBtn.style.cssText = `
+        background: #2196F3;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 4px 8px;
+        cursor: pointer;
+        font-size: 14px;
+        height: 28px;
+        width: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+    runCodeIconBtn.textContent = '▶️';
+    runCodeIconBtn.title = 'Run Code';
+    codeHeader.appendChild(runCodeIconBtn);
+    codeContainer.appendChild(codeHeader);
 
     const codeBlock = document.createElement('pre');
     codeBlock.className = 'code-block';
@@ -1025,6 +1035,40 @@ async function showCodePreview(username, challengeId) {
     
     codeBlock.textContent = submission.fileContent;
     codeContainer.appendChild(codeBlock);
+
+    // Code runner section (hidden by default)
+    const codeRunnerSection = document.createElement('div');
+    codeRunnerSection.id = `codeRunnerSection_${modal.id}`;
+    codeRunnerSection.style.cssText = `
+        display: none;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #ddd;
+    `;
+    codeRunnerSection.innerHTML = `
+        <div style="font-weight: bold; color: #333; margin-bottom: 10px; font-size: 12px;">▶️ CODE RUNNER</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+                <label style="display: block; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 6px;">📥 Test Input (optional)</label>
+                <textarea id="inlineCodeRunnerInput_${modal.id}" placeholder="Enter test input" style="width: 100%; height: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace; font-size: 11px; resize: vertical;"></textarea>
+            </div>
+            <div>
+                <label style="display: block; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 6px;">📤 Output</label>
+                <div id="inlineCodeRunnerOutput_${modal.id}" style="width: 100%; height: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; background: #2d2d2d; color: #0a0; font-family: monospace; font-size: 11px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;"></div>
+            </div>
+        </div>
+        <button data-filename="${submission.fileName}" data-filecontent="${btoa(submission.fileContent)}" data-modalid="${modal.id}" onclick="handleRunCodeInlineExecution(this)" style="
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        ">▶️ Execute</button>
+    `;
+    codeContainer.appendChild(codeRunnerSection);
 
     // AI Review display (right side)
     const reviewContainer = document.createElement('div');
@@ -2149,12 +2193,62 @@ function initializeUI() {
 }
 
 /**
+ * Show code runner inline in preview
+ */
+function handleRunCodeInline(button) {
+    const modalId = button.getAttribute('data-modalid');
+    const runnerSection = document.getElementById(`codeRunnerSection_${modalId}`);
+    if (runnerSection) {
+        runnerSection.style.display = runnerSection.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+/**
+ * Execute code inline and display results
+ */
+async function handleRunCodeInlineExecution(button) {
+    const modalId = button.getAttribute('data-modalid');
+    const fileName = button.getAttribute('data-filename');
+    const fileContentEncoded = button.getAttribute('data-filecontent');
+    const fileContent = atob(fileContentEncoded);
+    
+    const inputElement = document.getElementById(`inlineCodeRunnerInput_${modalId}`);
+    const outputElement = document.getElementById(`inlineCodeRunnerOutput_${modalId}`);
+    
+    if (!outputElement) {
+        console.error('❌ Output element not found');
+        return;
+    }
+    
+    outputElement.textContent = '⏳ Executing...';
+    outputElement.style.color = '#999';
+    
+    try {
+        const testInput = inputElement ? inputElement.value : '';
+        const result = await window.executeCode(fileName, fileContent, testInput);
+        
+        if (result.success) {
+            outputElement.style.color = '#0a0';
+            outputElement.textContent = result.output || '(no output)';
+        } else {
+            outputElement.style.color = '#f00';
+            outputElement.textContent = (result.error || result.output || 'Execution failed');
+        }
+    } catch (error) {
+        outputElement.style.color = '#f00';
+        outputElement.textContent = '❌ ' + error.message;
+    }
+}
+
+/**
  * Export functions to global scope
  */
 if (typeof window !== 'undefined') {
     window.handleRequestCodeReview = handleRequestCodeReview;
     window.handleShowCodePreview = handleShowCodePreview;
     window.handleCreateCodeRunner = handleCreateCodeRunner;
+    window.handleRunCodeInline = handleRunCodeInline;
+    window.handleRunCodeInlineExecution = handleRunCodeInlineExecution;
     window.handleSubmitChallenge = handleSubmitChallenge;
     window.handleDeleteSubmission = handleDeleteSubmission;
 }

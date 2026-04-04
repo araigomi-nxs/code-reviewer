@@ -48,40 +48,88 @@ async function executeCode(fileName, fileContent, testInput = '') {
 }
 
 /**
- * Execute Java code via Groq (using Vercel serverless proxy)
+ * Execute Java code via Groq API (direct - same as AI review)
  */
 async function executeViaJudge0(fileName, fileContent, testInput = '') {
     try {
         console.log('🤖 Sending Java code to Groq executor...');
 
-        const payload = {
-            sourceCode: fileContent,
-            stdin: testInput || ''
-        };
+        // Get API key from window.ENV (loaded by env-config.js)
+        const apiKey = window.ENV?.VITE_GROQ_API_KEY;
+        if (!apiKey) {
+            throw new Error('⚙️ Groq API key not configured in window.ENV. Check that env-config.js is loaded.');
+        }
 
-        // Call the Vercel serverless function proxy
-        const response = await fetch('/api/groq-code-runner', {
+        // Prepare prompt for Groq to execute code
+        const prompt = `You are a Java code executor. Execute the following Java code and return ONLY the output.
+
+Java Code:
+\`\`\`java
+${fileContent}
+\`\`\`
+
+${testInput ? `Test Input (stdin):\n${testInput}\n` : ''}
+
+Execute this code and return ONLY the output. No explanations, no errors formatting, just the raw output the code would produce. If there's a compilation error, respond with: COMPILATION_ERROR: [error message]. If there's a runtime error, respond with: RUNTIME_ERROR: [error message].`;
+
+        console.log('🔑 Using API key from window.ENV');
+        console.log('📤 Sending request to Groq API...');
+
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                model: 'mixtral-8x7b-32768',
+                messages: [
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                temperature: 0.1,
+                max_tokens: 2000
+            })
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('❌ Groq executor error:', errorData);
-
-            if (response.status === 500 && errorData.message?.includes('GROQ_API_KEY')) {
-                throw new Error('⚙️ Setup Required: Add GROQ_API_KEY to your Vercel environment variables at https://vercel.com/dashboard');
-            }
-            throw new Error(`Execution error: ${errorData.error || response.statusText}`);
+            console.error('❌ Groq API error:', errorData);
+            const errorMsg = errorData.error?.message || errorData.error || response.statusText;
+            throw new Error(`Groq API error: ${errorMsg}`);
         }
 
-        const result = await response.json();
+        const groqData = await response.json();
+        const output = groqData.choices[0].message.content.trim();
+
         console.log('✅ Code execution complete');
 
-        return result;
+        // Parse response for errors
+        let success = true;
+        let error = null;
+        let finalOutput = output;
+
+        if (output.startsWith('COMPILATION_ERROR:')) {
+            success = false;
+            error = output.substring('COMPILATION_ERROR:'.length).trim();
+            finalOutput = '';
+        } else if (output.startsWith('RUNTIME_ERROR:')) {
+            success = false;
+            error = output.substring('RUNTIME_ERROR:'.length).trim();
+            finalOutput = '';
+        }
+
+        return {
+            success: success,
+            output: finalOutput || '(no output)',
+            error: error,
+            status: success ? 'Accepted' : (error ? 'Error' : 'Execution Complete'),
+            statusId: success ? 3 : 6,
+            executionTime: 'N/A',
+            memory: 'N/A'
+        };
 
     } catch (error) {
         console.error('❌ Execution error:', error);

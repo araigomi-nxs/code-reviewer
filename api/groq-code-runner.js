@@ -21,13 +21,15 @@ export default async function handler(req, res) {
         const groqApiKey = process.env.VITE_GROQ_API_KEY;
 
         if (!groqApiKey) {
+            console.error('[Groq Runner] VITE_GROQ_API_KEY not found in environment');
             return res.status(500).json({
                 error: 'Groq API key not configured',
-                message: 'Set VITE_GROQ_API_KEY in Vercel environment variables'
+                message: 'Set VITE_GROQ_API_KEY in Vercel environment variables. Available vars: ' + Object.keys(process.env).filter(k => k.includes('GROQ') || k.includes('groq')).join(', ')
             });
         }
 
         console.log('[Groq Runner] Executing Java code with Groq...');
+        console.log('[Groq Runner] API Key present:', groqApiKey.substring(0, 10) + '...');
 
         // Prepare the prompt for Groq to execute the code
         const prompt = `You are a Java code executor. Execute the following Java code and return ONLY the output.
@@ -42,6 +44,7 @@ ${stdin ? `Test Input (stdin):\n${stdin}\n` : ''}
 Execute this code and return ONLY the output. No explanations, no errors formatting, just the raw output the code would produce. If there's a compilation error, respond with: COMPILATION_ERROR: [error message]. If there's a runtime error, respond with: RUNTIME_ERROR: [error message].`;
 
         // Call Groq API
+        console.log('[Groq Runner] Calling Groq API with model: mixtral-8x7b-32768');
         const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -61,12 +64,31 @@ Execute this code and return ONLY the output. No explanations, no errors formatt
             })
         });
 
+        console.log('[Groq Runner] Groq response status:', groqResponse.status);
+
         if (!groqResponse.ok) {
             const errorData = await groqResponse.text();
             console.error('[Groq Runner] Groq API error:', groqResponse.status, errorData);
+            
+            // Parse error message more clearly
+            let errorMessage = `Groq API error (${groqResponse.status})`;
+            try {
+                const errorJson = JSON.parse(errorData);
+                if (errorJson.error?.message) {
+                    errorMessage = errorJson.error.message;
+                } else if (errorJson.message) {
+                    errorMessage = errorJson.message;
+                }
+            } catch (e) {
+                // errorData is not JSON, use as-is
+                if (errorData) {
+                    errorMessage = errorData.substring(0, 200);
+                }
+            }
+            
             return res.status(groqResponse.status).json({
-                error: 'Groq API error',
-                details: errorData
+                error: errorMessage,
+                details: errorData.substring(0, 500)
             });
         }
 
