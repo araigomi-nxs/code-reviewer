@@ -174,7 +174,7 @@ function createCodeRunnerUI(submission) {
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button onclick="runCodeExecution('${submission.fileName}', '${submission.fileContent.replace(/'/g, "\\'")}')" class="code-runner-btn-run">▶️ Run Code</button>
+                <button class="code-runner-btn-run" data-filename="${submission.fileName}" data-filecontent="${btoa(submission.fileContent)}" onclick="handleRunCode(this)">▶️ Run Code</button>
                 <button onclick="closeCodeRunner()" class="code-runner-btn-close">Close</button>
             </div>
 
@@ -196,7 +196,7 @@ function createCodeRunnerUI(submission) {
     modal.onclick = (e) => {
         if (e.target === modal) closeCodeRunner();
     };
-    modal.innerHTML = content.parentElement.innerHTML;
+    modal.innerHTML = content.innerHTML;
     
     // Clear old modal
     const oldModal = document.getElementById('codeRunnerModal');
@@ -260,6 +260,17 @@ async function runCodeExecution(fileName, fileContent) {
 }
 
 /**
+ * Handle run code button click
+ */
+function handleRunCode(button) {
+    const fileName = button.getAttribute('data-filename');
+    const fileContentEncoded = button.getAttribute('data-filecontent');
+    const fileContent = atob(fileContentEncoded); // Decode from base64
+    console.log('🎯 Run Code button clicked - File:', fileName);
+    runCodeExecution(fileName, fileContent);
+}
+
+/**
  * Close code runner modal
  */
 function closeCodeRunner() {
@@ -318,6 +329,7 @@ function addCodeRunnerStyles() {
  * Export functions to global scope
  */
 window.executeCode = executeCode;
+window.handleRunCode = handleRunCode;
 window.createCodeRunnerUI = createCodeRunnerUI;
 window.runCodeExecution = runCodeExecution;
 window.closeCodeRunner = closeCodeRunner;
