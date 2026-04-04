@@ -1,139 +1,74 @@
-# Vercel Environment Variables Setup
+# Groq Code Runner - Environment Setup
 
-This guide explains how to configure your Vercel deployment with the Judge0 API key for Java code execution.
+Your code reviewer uses **Groq AI** for free Java code execution. You already have `VITE_GROQ_API_KEY` configured – no additional setup needed!
 
-## Overview
+## Current Setup
 
-Your code reviewer now uses a **Vercel serverless function** (`/api/judge0-proxy.js`) to securely handle Java code execution. The API key stays on the server side only - never exposed to the client.
-
-## Setup Steps
-
-### 1. Get a Judge0 API Key
-
-1. Go to https://rapidapi.com/judge0-official/api/judge0
-2. Click **"Subscribe to Test"** (free tier available)
-3. You'll get your API key in the dashboard
-4. Copy your API key
-
-### 2. Add to Vercel Environment Variables
-
-#### Option A: Via Vercel Dashboard (Recommended)
-
-1. Go to https://vercel.com/dashboard
-2. Select your **code-reviewer** project
-3. Click **Settings** tab
-4. Go to **Environment Variables** section
-5. Click **Add New**
-6. Fill in:
-   - **Name:** `JUDGE0_API_KEY`
-   - **Value:** (paste your API key from step 1)
-   - **Environments:** Select all (Production, Preview, Development)
-7. Click **Save**
-8. **Redeploy** your project for changes to take effect
-   - Go to **Deployments** tab
-   - Click the three dots on latest deployment
-   - Select **Redeploy**
-
-#### Option B: Via Vercel CLI
-
-```bash
-vercel env add JUDGE0_API_KEY
-```
-
-Then paste your API key when prompted.
-
-### 3. Verify Setup
-
-After deployment:
-
-1. Go to your code reviewer website
-2. Try running some Java code
-3. Check browser console for logs (F12 → Console)
-4. You should see: `📤 Sending Java code to Vercel proxy...`
+✅ `VITE_GROQ_API_KEY` is already in your Vercel environment  
+✅ The serverless function uses this key automatically  
+✅ Code runner works out of the box
 
 ## How It Works
 
 ```
-Browser (Client)
-    ↓ POST /api/judge0-proxy
-    ↓ (no API key exposed)
+Your Browser
+   ↓
+   POST /api/groq-code-runner (with Java code)
+   ↓
 Vercel Serverless Function
-    ↓ Uses JUDGE0_API_KEY from environment
-    ↓
-Judge0 API
-    ↓
-    ↓ Returns execution result
-Vercel Serverless Function
-    ↓ Formats result
-Browser (Client)
-    ↓ Displays output
+   ↓ Uses VITE_GROQ_API_KEY from environment
+   ↓
+Groq AI API
+   ↓ Interprets and executes Java code
+   ↓
+Returns Output
+   ↓
+Your Browser (displays result)
 ```
 
-## Troubleshooting
+## Test It
 
-### "Setup Required: Add JUDGE0_API_KEY to your Vercel environment variables"
+1. Go to your code reviewer website
+2. Try running Java code: `System.out.println("Hello");`
+3. Check browser console (F12 → Console)
+4. You should see: `🤖 Sending Java code to Groq executor...`
 
-- You haven't set the environment variable yet
-- OR you set it but didn't redeploy (see "Redeploy" step above)
+## Groq Features
 
-### "Execution timeout"
+- **Free tier**: 10,000 requests/day (more than enough)
+- **Fast inference**: Groq uses specialized hardware
+- **AI interpretation**: Understands Java code semantics
+- **No credit card**: Truly free
 
-- Judge0 API is slow or overloaded
-- Try again in a few seconds
-- If persistent, you may have exceeded free tier rate limits (upgrade on RapidAPI)
+## If Code Runner Doesn't Work
 
-### "Compilation Error" or "Runtime Error"
+Check that:
 
-- This is a Java code error, not a setup issue
-- Check your Java code syntax
+1. `VITE_GROQ_API_KEY` exists in Vercel environment variables
+2. Your project is deployed to Vercel (code runner requires `/api/groq-code-runner`)
+3. Groq quota not exceeded at https://console.groq.com
 
-## Local Development
+## Need to Update the Key?
 
-For local testing without Vercel, add to your `.env` file:
+If you need a new Groq API key:
 
-```
-JUDGE0_API_KEY=your_api_key_here
-```
+1. Go to https://console.groq.com
+2. Create a new API key
+3. Update `VITE_GROQ_API_KEY` in Vercel dashboard
+4. Redeploy your project
 
-Then run your project locally.
+## About AI Interpretation vs Compilation
 
-## Environment File Documentation
+**Groq (AI Interpretation):**
 
-Your `vercel.json` now includes:
+- ✅ Free
+- ✅ Handles most student code
+- ⚠️ Edge cases with very complex code
 
-```json
-{
-  "env": {
-    "JUDGE0_API_KEY": {
-      "description": "Judge0 RapidAPI key for Java code execution"
-    }
-  },
-  "functions": {
-    "api/judge0-proxy.js": {
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  }
-}
-```
+**Judge0 (Real Compiler):**
 
-This documents:
+- ✅ 100% accurate
+- ❌ Limited free tier or paid
+- ❌ More complexity
 
-- **Required environment variables** for deployment
-- **Function settings**: 1024MB memory, 60-second timeout
-
-## Rate Limits
-
-Judge0 free tier has rate limits:
-
-- Generous limits for free tier usage
-- If you exceed them, upgrade on RapidAPI or implement request caching
-
-## Security
-
-Your setup is now **more secure** because:
-
-- ✅ API key stored only on Vercel servers
-- ✅ Never exposed to client-side code
-- ✅ API calls go through your serverless function
-- ✅ No credentials in version control
+For a student code review platform, Groq is perfect!

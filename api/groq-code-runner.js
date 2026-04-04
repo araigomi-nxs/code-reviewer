@@ -18,12 +18,12 @@ export default async function handler(req, res) {
         }
 
         // Get Groq API key from environment
-        const groqApiKey = process.env.GROQ_API_KEY;
+        const groqApiKey = process.env.VITE_GROQ_API_KEY;
 
         if (!groqApiKey) {
             return res.status(500).json({
                 error: 'Groq API key not configured',
-                message: 'Set GROQ_API_KEY in Vercel environment variables'
+                message: 'Set VITE_GROQ_API_KEY in Vercel environment variables'
             });
         }
 

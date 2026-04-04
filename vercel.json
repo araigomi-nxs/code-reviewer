@@ -2,8 +2,8 @@
   "buildCommand": "node vercel-build.js",
   "outputDirectory": ".",
   "env": {
-    "GROQ_API_KEY": {
-      "description": "Groq API key for free Java code execution (get it at https://console.groq.com)"
+    "VITE_GROQ_API_KEY": {
+      "description": "Groq API key for free Java code execution (already configured)"
     }
   },
   "functions": {
