@@ -2034,7 +2034,7 @@ async function _doInitializeUploadForms() {
                             const statusEmoji = submission.status === 'pending' ? '⏳' : 
                                              (submission.status === 'completed') ? '✓' : 
                                              '✕';
-                            statusBadge.textContent = `${statusEmoji} ${submission.status.toUpperCase()}`;
+                            statusBadge.textContent = statusEmoji;
                             item.appendChild(statusBadge);
                         }
                     } catch (e) {
