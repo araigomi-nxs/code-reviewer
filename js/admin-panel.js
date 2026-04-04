@@ -1543,7 +1543,6 @@ window.confirmApproveWithComment = confirmApproveWithComment;
 window.confirmRejectWithComment = confirmRejectWithComment;
 window.approveAdminSubmission = approveAdminSubmission;
 window.rejectAdminSubmission = rejectAdminSubmission;
-window.rejectSubmissionDialog = rejectSubmissionDialog;
 window.viewAdminSubmission = viewAdminSubmission;
 window.applyAdminFilters = applyAdminFilters;
 window.getSubmissionForAdmin = getSubmissionForAdmin;
