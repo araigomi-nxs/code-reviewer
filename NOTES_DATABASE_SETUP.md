@@ -6,7 +6,41 @@
 
 The notes feature uses Supabase for persistent storage. Notes are **GLOBAL** - all users can view all notes and resources for each topic. This enables collaborative learning where students can share study materials, examples, and resources with each other.
 
-## SQL Migrations
+### Storage Solution: Supabase Storage Buckets (Option 2)
+
+**Images are now stored in Supabase Storage buckets instead of base64 encoding** to avoid the 414 URI Too Long error. This approach:
+
+- ✅ Eliminates 414 errors from oversized data URLs
+- ✅ Improves performance with CDN delivery
+- ✅ Supports larger image files (up to 5MB per Supabase free tier limits)
+- ✅ Stores only the public URL reference in the database
+
+## Setup Instructions
+
+### Step 1: Create Storage Bucket in Supabase
+
+1. **Go to Supabase Dashboard**
+   - Navigate to your Supabase project
+   - Click "Storage" in the left sidebar
+
+2. **Create New Bucket**
+   - Click "Create a New Bucket"
+   - Bucket name: `study-resources`
+   - **Make it PUBLIC** (important!)
+   - Click "Create bucket"
+
+3. **Verify Bucket is Public**
+   - Click on the bucket name
+   - Go to "Policies" tab
+   - Ensure anyone can read files: policy should allow public SELECT access
+   - You can add a policy if needed:
+     ```sql
+     CREATE POLICY "Public read access"
+     ON storage.objects FOR SELECT
+     USING (bucket_id = 'study-resources');
+     ```
+
+### Step 2: Create Database Tables
 
 Run the following SQL in your Supabase SQL Editor to create the required tables:
 
@@ -42,8 +76,8 @@ CREATE TABLE study_resources (
     topic_id TEXT NOT NULL,
     resource_type TEXT NOT NULL, -- 'image', 'video', or 'file'
     resource_name TEXT NOT NULL,
-    resource_url TEXT, -- For video links
-    resource_data BYTEA, -- For images and files (stored as base64 in JSON)
+    resource_url TEXT, -- For storage URLs (images) and video links
+    resource_data BYTEA, -- Deprecated: kept for backward compatibility with old base64 images
     resource_size BIGINT, -- File size in bytes
     created_at TIMESTAMP DEFAULT now()
 );
@@ -54,8 +88,15 @@ CREATE INDEX idx_study_resources_created_at ON study_resources(created_at DESC);
 CREATE INDEX idx_study_resources_type ON study_resources(resource_type);
 
 -- Add comment
-COMMENT ON TABLE study_resources IS 'Stores study resources (images, videos, files) for each topic - globally visible to all users';
+COMMENT ON TABLE study_resources IS 'Stores study resources (images via Storage URLs, videos, files) for each topic - globally visible to all users';
 ```
+
+**Key Changes for Option 2:**
+
+- `resource_url` now stores Supabase Storage public URLs for images (replaces base64 encoding)
+- Images are uploaded to `study-resources` bucket first, then URL is stored in database
+- `resource_data` column kept for **backward compatibility** with old base64 images
+- Videos and file links still use `resource_url` as before
 
 ## Row-Level Security (RLS) - OPTIONAL
 
@@ -121,10 +162,18 @@ The following functions have been added to `js/supabase-client.js`:
 | ------------------------------------------------------------ | ------------------------------------------------------ |
 | `supabaseSaveStudyNotes(username, topicId, notesContent)`    | Save/update notes for a topic (by current user)        |
 | `supabaseGetStudyNotes(username, topicId)`                   | Get all notes for a topic (global - all users' notes)  |
-| `supabaseSaveStudyResource(username, topicId, resourceData)` | Add a resource (image, video, or file) to a topic      |
+| `supabaseUploadImageToStorage(file, topicId, username)`      | Upload image file to 'study-resources' bucket **NEW**  |
+| `supabaseSaveStudyResource(username, topicId, resourceData)` | Add a resource (image URL, video, or file) to a topic  |
 | `supabaseGetStudyResources(username, topicId)`               | Get all resources for a topic (global - all users')    |
 | `supabaseDeleteStudyResource(resourceId)`                    | Delete a specific resource (authenticated users)       |
 | `supabaseDeleteStudyResourcesByTopic(username, topicId)`     | Delete all resources for a topic (authenticated users) |
+
+**New in Option 2:**
+
+- `supabaseUploadImageToStorage()` handles image file uploads directly to the storage bucket
+- Returns the public URL which is then saved in the database
+- Supports up to 5MB files per Supabase free tier limits
+- Automatically generates unique filenames to prevent collisions
 
 ## Data Structure
 
@@ -144,35 +193,67 @@ The following functions have been added to `js/supabase-client.js`:
 ### study_resources Object
 
 ```javascript
+// NEW FORMAT (Option 2): Image stored via Supabase Storage
 {
     id: "uuid",
     username: "user@example.com",  // Who uploaded the resource
     topic_id: "loops",
     resource_type: "image",        // or "video" or "file"
     resource_name: "diagram.png",
-    resource_url: "https://youtube.com/...",  // For videos
-    resource_data: "data:image/png;base64,...", // For images/files
+    resource_url: "https://myproject.supabase.co/storage/v1/object/public/study-resources/loops/user@example.com_1680000000.png",  // Public Storage URL
+    resource_data: null,           // Not used for new images
     resource_size: 102400,         // In bytes
+    created_at: "2026-04-05T10:00:00Z"
+}
+
+// LEGACY FORMAT (backward compatible): Base64 encoded image
+{
+    id: "uuid",
+    username: "user@example.com",
+    topic_id: "loops",
+    resource_type: "image",
+    resource_name: "diagram.png",
+    resource_url: null,            // Not used for old format
+    resource_data: "data:image/png;base64,...",  // Stored in database (deprecated)
+    resource_size: 102400,
+    created_at: "2026-04-05T10:00:00Z"
+}
+
+// VIDEO FORMAT: Still uses resource_url
+{
+    id: "uuid",
+    username: "user@example.com",
+    topic_id: "loops",
+    resource_type: "video",
+    resource_name: "https://youtube.com/watch?v=...",
+    resource_url: "https://youtube.com/watch?v=...", // Video link
+    resource_data: null,           // Not used for videos
     created_at: "2026-04-05T10:00:00Z"
 }
 ```
 
 ## Migration Steps
 
-1. **Open Supabase Dashboard**
+1. **Create Storage Bucket (NEW - Option 2)**
+   - Go to Supabase Console → "Storage" sidebar
+   - Create new bucket named `study-resources`
+   - **Make it PUBLIC** so users can access image URLs
+   - Add public read access policy if needed
+
+2. **Open Supabase Dashboard**
    - Go to your Supabase project
    - Click "SQL Editor" in the left sidebar
 
-2. **Create Tables**
+3. **Create Tables**
    - Copy and run the "Create `study_notes` Table" SQL
    - Copy and run the "Create `study_resources` Table" SQL
 
-3. **Optional: Enable RLS**
+4. **Optional: Enable RLS**
    - If needed, copy and run the optional RLS SQL above
 
-4. **Verify Tables**
-   - Go to "Table Editor" in the sidebar
-   - You should see `study_notes` and `study_resources` tables
+5. **Verify Setup**
+   - Go to "Storage" in the sidebar: should see `study-resources` bucket
+   - Go to "Table Editor" in the sidebar: should see `study_notes` and `study_resources` tables
 
 ## Testing
 
@@ -180,10 +261,14 @@ After setup, test by:
 
 1. **User 1**: Open the app, select a topic, click "📝 Notes" tab
 2. **Add Notes**: Write some study notes and save
-3. **User 2**: Log in with a different account, go to the same topic
-4. **View Shared Notes**: You should see User 1's notes immediately
-5. **Add Resources**: User 2 adds an image or video link
-6. **Verify Sharing**: User 1 refreshes and sees User 2's resources
+3. **Add Image**: User 1 uploads an image to the topic
+   - Image should upload to `study-resources` bucket
+   - Should appear immediately without 414 errors ✅
+4. **User 2**: Log in with a different account, go to the same topic
+5. **View Shared Notes**: You should see User 1's notes immediately
+6. **View Images**: User 1's images should display correctly from Storage URL ✅
+7. **Add Resources**: User 2 adds an image or video link
+8. **Verify Sharing**: User 1 refreshes and sees User 2's resources
 
 ## Troubleshooting
 
@@ -193,11 +278,30 @@ After setup, test by:
 - Check browser console for Supabase connection errors
 - Verify `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set
 
+### Image Upload Fails with "Cannot read property 'from'"
+
+- Verify `study-resources` bucket exists in Supabase Storage
+- Check that the bucket is set to PUBLIC
+- Ensure storage policies allow public access
+
+### Image Upload Says "File too large"
+
+- Images are limited to 5MB on Supabase free tier
+- Compress images before uploading
+- Maximum file size: 5MB (5 _ 1024 _ 1024 bytes)
+
+### Images Not Displaying (Blank/Broken)
+
+- Check browser console for image loading errors
+- Verify the `study-resources` bucket has public read access
+- Ensure image URL in database starts with `https://...` (not `data:`)
+- Go to Supabase Dashboard → Storage → study-resources to see uploaded files
+
 ### Notes Not Saving
 
 - Check browser console for error messages
 - Verify user is logged in: `window.getCurrentUser()`
-- Ensure tables are created in Supabase dashboard
+- Ensure `study_notes` table is created in Supabase dashboard
 
 ### Not Seeing Other Users' Notes
 

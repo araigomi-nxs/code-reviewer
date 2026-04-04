@@ -3176,9 +3176,11 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
         }
 
         /**
-         * Add image resource to Supabase
+         * Add image resource to Supabase Storage (Option 2 implementation)
+         * Uploads image file directly to storage bucket instead of base64 encoding
+         * This avoids 414 URI Too Long errors
          */
-        function addImageResource(topicKey) {
+        async function addImageResource(topicKey) {
             const user = window.getCurrentUser();
             if (!user) {
                 showNotesMessage('❌ Please log in to add resources', 'error');
@@ -3192,37 +3194,59 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             }
 
             const file = fileInput.files[0];
-            const reader = new FileReader();
 
-            reader.onload = async (e) => {
-                try {
-                    const resourceData = {
-                        type: 'image',
-                        name: file.name,
-                        data: e.target.result,
-                        size: file.size
-                    };
-
-                    if (window.supabaseSaveStudyResource) {
-                        await window.supabaseSaveStudyResource(user.username, topicKey, resourceData);
-                        
-                        // Reload combined notes and resources list
-                        loadNotes(topicKey);
-                        
-                        fileInput.value = '';
-                        showNotesMessage(`✅ Image "${file.name}" added successfully!`, 'success');
-                        console.log('📸 Image resource added:', file.name);
-                        
-                        // Close modal after success
-                        setTimeout(() => closeCreateModal(), 500);
-                    }
-                } catch (error) {
-                    console.error('❌ Error adding image:', error);
-                    showNotesMessage('❌ Failed to add image: ' + error.message, 'error');
+            try {
+                // Validate file is an image
+                if (!file.type.startsWith('image/')) {
+                    showNotesMessage('❌ Please select a valid image file', 'error');
+                    return;
                 }
-            };
 
-            reader.readAsDataURL(file);
+                // Check file size (5MB limit for Supabase)
+                const MAX_FILE_SIZE = 5 * 1024 * 1024;
+                if (file.size > MAX_FILE_SIZE) {
+                    showNotesMessage(`❌ Image too large. Maximum size is 5MB (your file: ${(file.size / 1024 / 1024).toFixed(2)}MB)`, 'error');
+                    return;
+                }
+
+                showNotesMessage('⏳ Uploading image...', 'info');
+                console.log('📸 Starting image upload:', file.name);
+
+                // Upload image to Supabase Storage
+                if (!window.supabaseUploadImageToStorage) {
+                    throw new Error('Supabase storage functions not available');
+                }
+
+                const uploadResult = await window.supabaseUploadImageToStorage(file, topicKey, user.username);
+                console.log('✅ Image uploaded to storage:', uploadResult);
+
+                // Save resource record with storage URL (not base64)
+                const resourceData = {
+                    type: 'image',
+                    name: file.name,
+                    url: uploadResult.publicUrl,  // Use public URL instead of base64
+                    size: file.size
+                };
+
+                if (!window.supabaseSaveStudyResource) {
+                    throw new Error('Supabase resource functions not available');
+                }
+
+                await window.supabaseSaveStudyResource(user.username, topicKey, resourceData);
+                
+                // Reload combined notes and resources list
+                loadNotes(topicKey);
+                
+                fileInput.value = '';
+                showNotesMessage(`✅ Image "${file.name}" uploaded successfully!`, 'success');
+                console.log('📸 Image resource saved:', file.name);
+                
+                // Close modal after success
+                setTimeout(() => closeCreateModal(), 500);
+            } catch (error) {
+                console.error('❌ Error adding image:', error);
+                showNotesMessage('❌ Failed to add image: ' + error.message, 'error');
+            }
         }
 
         /**
@@ -3360,8 +3384,15 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             }
 
             let preview = '';
-            if (resource.resource_type === 'image' && resource.resource_data) {
-                preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 150px;"><img src="${resource.resource_data}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 150px; object-fit: contain; background: var(--bg-secondary); display: block;"></div>`;
+            if (resource.resource_type === 'image') {
+                // Option 2: Display from Supabase Storage URL (preferred)
+                if (resource.resource_url && !resource.resource_url.includes('data:')) {
+                    preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 150px;"><img src="${resource.resource_url}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 150px; object-fit: contain; background: var(--bg-secondary); display: block;"></div>`;
+                }
+                // Fallback: Display from base64 (old format, for backward compatibility)
+                else if (resource.resource_data) {
+                    preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 150px;"><img src="${resource.resource_data}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 150px; object-fit: contain; background: var(--bg-secondary); display: block;"></div>`;
+                }
             }
 
             let actions = '';

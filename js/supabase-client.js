@@ -726,6 +726,67 @@ window.diagnosticCheckSubmissionInDB = diagnosticCheckSubmissionInDB;
 window.initializeSupabase = initializeSupabase;
 window.waitForSupabase = waitForSupabase;
 
+/**
+ * Upload image to Supabase Storage bucket (Option 2: Storage Buckets approach)
+ * Stores image file in 'study-resources' bucket and returns public URL
+ * This avoids the 414 URI Too Long error from base64 encoding
+ */
+async function supabaseUploadImageToStorage(file, topicId, username) {
+    if (!supabaseInstance) {
+        throw new Error('Supabase not initialized');
+    }
+
+    try {
+        // Validate file is an image
+        if (!file.type.startsWith('image/')) {
+            throw new Error('File must be an image');
+        }
+
+        // File size limit: 5MB for Supabase free tier
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        if (file.size > MAX_FILE_SIZE) {
+            throw new Error(`File too large. Maximum size is 5MB (your file: ${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+        }
+
+        // Generate unique filename to avoid collisions
+        const timestamp = Date.now();
+        const fileExtension = file.name.split('.').pop() || 'jpg';
+        const fileName = `${topicId}/${username}_${timestamp}.${fileExtension}`;
+
+        console.log('📤 Uploading image to storage:', fileName);
+
+        // Upload file to storage bucket
+        const { data, error } = await supabaseInstance.storage
+            .from('study-resources')
+            .upload(fileName, file, {
+                cacheControl: '3600', // 1 hour cache
+                upsert: false // Don't overwrite existing files
+            });
+
+        if (error) {
+            console.error('❌ Storage upload error:', error);
+            throw error;
+        }
+
+        // Get public URL for the uploaded file
+        const { data: urlData } = supabaseInstance.storage
+            .from('study-resources')
+            .getPublicUrl(fileName);
+
+        const publicUrl = urlData.publicUrl;
+        console.log('✅ Image uploaded successfully:', { fileName, size: file.size, publicUrl });
+
+        return {
+            fileName: fileName,
+            publicUrl: publicUrl,
+            fileSize: file.size
+        };
+    } catch (error) {
+        console.error('❌ Error uploading image to storage:', error.message);
+        throw error;
+    }
+}
+
 // Export notes functions to window
 window.supabaseSaveStudyNotes = supabaseSaveStudyNotes;
 window.supabaseGetStudyNotes = supabaseGetStudyNotes;
@@ -733,6 +794,7 @@ window.supabaseSaveStudyResource = supabaseSaveStudyResource;
 window.supabaseGetStudyResources = supabaseGetStudyResources;
 window.supabaseDeleteStudyResource = supabaseDeleteStudyResource;
 window.supabaseDeleteStudyResourcesByTopic = supabaseDeleteStudyResourcesByTopic;
+window.supabaseUploadImageToStorage = supabaseUploadImageToStorage;
 
 /**
  * Verify study notes system is operational
