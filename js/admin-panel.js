@@ -404,6 +404,177 @@ function addAdminPanelStyles() {
             background: #f8d7da;
             color: #842029;
         }
+
+        /* Comment Dialog Styles */
+        .comment-dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            animation: fadeIn 0.2s ease-in;
+        }
+
+        .comment-dialog {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .comment-dialog-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+        }
+
+        .comment-dialog-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .comment-dialog-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .comment-dialog-close:hover {
+            color: #333;
+        }
+
+        .comment-dialog-body {
+            padding: 20px;
+        }
+
+        .comment-dialog-body p {
+            margin: 0 0 12px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 6px rgba(76, 175, 80, 0.2);
+        }
+
+        .comment-char-count {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .comment-dialog-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            background: #f9f9f9;
+        }
+
+        .btn-cancel {
+            padding: 10px 16px;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-clear {
+            padding: 10px 16px;
+            background: #fff9e6;
+            color: #f57f17;
+            border: 1px solid #ffe082;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-clear:hover {
+            background: #ffe082;
+            color: #e65100;
+        }
+
+        .btn-confirm {
+            padding: 10px 16px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-confirm:hover {
+            opacity: 0.8;
+        }
+
+        .btn-confirm:active {
+            opacity: 0.9;
+        }
     `;
 
     document.head.appendChild(style);
@@ -551,8 +722,8 @@ function createSubmissionItemHTML(submission) {
             </div>
             <div class="submission-actions">
                 <button onclick="viewAdminSubmission('${submission.challenge_id}', '${username}')" class="btn-view">👁️ View</button>
-                <button onclick="approveAdminSubmission('${submission.challenge_id}', '${username}')" class="btn-approve">✅ Approve</button>
-                <button onclick="rejectAdminSubmissionDialog('${submission.challenge_id}', '${username}')" class="btn-reject">❌ Reject</button>
+                <button onclick="showApproveCommentDialog('${submission.challenge_id}', '${username}')" class="btn-approve">✅ Approve</button>
+                <button onclick="showRejectCommentDialog('${submission.challenge_id}', '${username}')" class="btn-reject">❌ Reject</button>
             </div>
         </div>
     `;
@@ -569,18 +740,140 @@ function displayAdminStats(stats) {
 }
 
 /**
+ * Show approval comments dialog
+ */
+function showApproveCommentDialog(challengeId, username) {
+    showReviewCommentDialog('approve', challengeId, username);
+}
+
+/**
+ * Show rejection comments dialog
+ */
+function showRejectCommentDialog(challengeId, username) {
+    showReviewCommentDialog('reject', challengeId, username);
+}
+
+/**
+ * Show review comment dialog (approve or reject)
+ */
+function showReviewCommentDialog(action, challengeId, username) {
+    const isApprove = action === 'approve';
+    const title = isApprove ? '✅ Approve Submission' : '❌ Reject Submission';
+    const buttonText = isApprove ? 'Approve' : 'Reject';
+    const buttonColor = isApprove ? '#4CAF50' : '#f44336';
+    const message = isApprove 
+        ? 'Add any approval comments or remarks (optional):'
+        : 'Please provide a reason for rejection:';
+
+    const dialog = document.createElement('div');
+    dialog.className = 'comment-dialog-overlay';
+    dialog.id = 'commentDialog';
+    dialog.innerHTML = `
+        <div class="comment-dialog">
+            <div class="comment-dialog-header">
+                <h3>${title}</h3>
+                <button class="comment-dialog-close" onclick="closeCommentDialog()">✕</button>
+            </div>
+            <div class="comment-dialog-body">
+                <p>${message}</p>
+                <textarea id="commentTextarea" class="comment-textarea" placeholder="Type your remarks here..." rows="6"></textarea>
+                <div class="comment-char-count">
+                    <span id="charCount">0</span> / 1000 characters
+                </div>
+            </div>
+            <div class="comment-dialog-footer">
+                <button class="btn-cancel" onclick="closeCommentDialog()">Cancel</button>
+                <button class="btn-clear" onclick="clearCommentText()">Clear</button>
+                <button class="btn-confirm" style="background-color: ${buttonColor};" onclick="${isApprove ? 'confirmApproveWithComment' : 'confirmRejectWithComment'}('${challengeId}', '${username}')">${buttonText}</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
+    addAdminPanelStyles();  // This will add styles including comment dialog styles
+    
+    // Focus textarea and setup character counter
+    const textarea = document.getElementById('commentTextarea');
+    textarea.focus();
+    
+    textarea.addEventListener('input', () => {
+        const count = textarea.value.length;
+        document.getElementById('charCount').textContent = Math.min(count, 1000);
+        textarea.value = textarea.value.substring(0, 1000);
+    });
+}
+
+/**
+ * Close comment dialog
+ */
+function closeCommentDialog() {
+    const dialog = document.getElementById('commentDialog');
+    if (dialog) dialog.remove();
+}
+
+/**
+ * Clear comment text
+ */
+function clearCommentText() {
+    const textarea = document.getElementById('commentTextarea');
+    if (textarea) {
+        textarea.value = '';
+        document.getElementById('charCount').textContent = '0';
+        textarea.focus();
+    }
+}
+
+/**
+ * Confirm approve with comment
+ */
+async function confirmApproveWithComment(challengeId, username) {
+    const comment = document.getElementById('commentTextarea').value;
+    console.log('💬 Approval Comment Submitted:', {
+        challengeId,
+        username,
+        commentLength: comment.length,
+        commentPreview: comment.substring(0, 100)
+    });
+    closeCommentDialog();
+    await approveAdminSubmission(challengeId, username, comment);
+}
+
+/**
+ * Confirm reject with comment
+ */
+async function confirmRejectWithComment(challengeId, username) {
+    const comment = document.getElementById('commentTextarea').value;
+    if (!comment.trim()) {
+        showNotification('⚠️ Please provide a reason for rejection', 'error');
+        return;
+    }
+    console.log('❌ Rejection Comment Submitted:', {
+        challengeId,
+        username,
+        commentLength: comment.length,
+        commentPreview: comment.substring(0, 100)
+    });
+    closeCommentDialog();
+    await rejectAdminSubmission(challengeId, username, comment);
+}
+
+/**
  * Approve submission (keeps modal open in approved state)
  */
-async function approveAdminSubmission(challengeId, username) {
-    if (!confirm('Approve this submission?')) return;
+async function approveAdminSubmission(challengeId, username, comment = '') {
 
     try {
+        console.log('✅ === APPROVING SUBMISSION ===');
+        console.log('Challenge ID:', challengeId);
+        console.log('Username:', username);
+        console.log('Comment provided:', !!comment);
+        
         // Update submission status to completed
         await updateSubmissionStatusByChallenge(
             username,
             challengeId,
             'completed',
-            'Approved by admin reviewer.'
+            comment || 'Approved by admin reviewer.'
         );
 
         // Mark challenge as completed for user
@@ -607,27 +900,24 @@ async function approveAdminSubmission(challengeId, username) {
             rejectBtn.style.cursor = 'not-allowed';
         }
 
+        console.log('✅ === APPROVAL COMPLETE ===\n');
         showNotification('✅ Submission approved', 'success');
     } catch (error) {
+        console.error('❌ Error approving submission:', error);
         showNotification(`❌ Error approving submission: ${error.message}`, 'error');
-    }
-}
-
-/**
- * Show reject submission dialog
- */
-function rejectAdminSubmissionDialog(challengeId, username) {
-    const feedback = prompt('Rejection reason/feedback:');
-    if (feedback) {
-        rejectAdminSubmission(challengeId, username, feedback);
     }
 }
 
 /**
  * Reject submission (keeps modal open in rejected state)
  */
-async function rejectAdminSubmission(challengeId, username, feedback) {
+async function rejectAdminSubmission(challengeId, username, feedback = '') {
     try {
+        console.log('❌ === REJECTING SUBMISSION ===');
+        console.log('Challenge ID:', challengeId);
+        console.log('Username:', username);
+        console.log('Feedback provided:', !!feedback);
+        
         await updateSubmissionStatusByChallenge(
             username,
             challengeId,
@@ -656,8 +946,10 @@ async function rejectAdminSubmission(challengeId, username, feedback) {
             rejectBtn.style.cursor = 'not-allowed';
         }
 
+        console.log('❌ === REJECTION COMPLETE ===\n');
         showNotification('❌ Submission rejected', 'success');
     } catch (error) {
+        console.error('❌ Error rejecting submission:', error);
         showNotification(`❌ Error rejecting submission: ${error.message}`, 'error');
     }
 }
@@ -749,6 +1041,7 @@ async function getSubmissionForAdmin(challengeId, username = null) {
                 file_content,
                 file_name,
                 ai_review,
+                feedback,
                 submitted_at
             `)
             .eq('challenge_id', challengeId);
@@ -791,6 +1084,9 @@ async function getSubmissionForAdmin(challengeId, username = null) {
             ai_review_exists: !!data.ai_review,
             ai_review_length: data.ai_review ? data.ai_review.length : 0,
             ai_review_preview: data.ai_review ? data.ai_review.substring(0, 100) : 'MISSING',
+            feedback_exists: !!data.feedback,
+            feedback_length: data.feedback ? data.feedback.length : 0,
+            feedback_preview: data.feedback ? data.feedback.substring(0, 100) : 'NO ADMIN REMARKS YET',
             submitted_at: data.submitted_at
         });
         return data;
@@ -807,6 +1103,14 @@ async function updateSubmissionStatusByChallenge(username, challengeId, status, 
     try {
         const supabase = window.supabaseInstance;
         if (!supabase) throw new Error('Supabase not initialized');
+        
+        console.log('💾 === SAVING SUBMISSION UPDATE TO DATABASE ===');
+        console.log('Username:', username);
+        console.log('Challenge ID:', challengeId);
+        console.log('Status:', status);
+        console.log('Feedback/Remarks length:', feedback.length);
+        console.log('Feedback preview:', feedback.substring(0, 100) + (feedback.length > 100 ? '...' : ''));
+        
         const { data, error } = await supabase
             .from('submissions')
             .update({
@@ -819,7 +1123,11 @@ async function updateSubmissionStatusByChallenge(username, challengeId, status, 
             .select();
 
         if (error) throw error;
-        console.log('✅ Submission status updated:', challengeId, 'to', status);
+        
+        console.log('✅ SUCCESSFULLY SAVED TO DATABASE');
+        console.log('Submission status updated:', challengeId, 'to', status);
+        console.log('Feedback saved to database:', !!feedback);
+        console.log('💾 === END DATABASE SAVE ===\n');
         
         // Send Discord webhook notification
         if (window.discord) {
@@ -841,7 +1149,7 @@ async function updateSubmissionStatusByChallenge(username, challengeId, status, 
         
         return data;
     } catch (error) {
-        console.error('Error updating submission status:', error);
+        console.error('❌ Error updating submission status:', error);
         throw error;
     }
 }
@@ -954,12 +1262,16 @@ function displayAdminSubmissionViewModal(submission) {
             ? `<div class="detail-section"><h4>🤖 AI Feedback</h4><div class="ai-feedback-box">${submission.ai_review}</div></div>`
             : `<div class="detail-section" style="background: #fff3cd; border-left: 3px solid #ffc107; padding: 15px;"><h4>⏳ AI Feedback Status</h4><p>This submission has not been reviewed by AI yet.</p></div>`;
         
+        const adminFeedbackSection = submission.feedback
+            ? `<div class="detail-section" style="background: #f3e5f5; border-left: 3px solid #9c27b0;"><h4>💬 Admin Remarks</h4><div class="admin-feedback-box">${escapeHtml(submission.feedback)}</div></div>`
+            : '';
+        
         const approvalSection = isDecided
             ? `<div class="detail-section" style="background: ${isApproved ? '#e8f5e9' : '#ffebee'}; border-left: 3px solid ${isApproved ? '#4CAF50' : '#f44336'};"><h4>${isApproved ? '✅ Approved' : '❌ Rejected'}</h4><p>${isApproved ? 'This submission has been approved.' : 'This submission has been rejected.'}</p></div>`
             : '';
         
         const buttons = !isDecided
-            ? `<button class="btn-approve" onclick="approveAdminSubmission('${submission.challenge_id}', '${submission.username}')">✅ Approve</button><button class="btn-reject" onclick="rejectAdminSubmissionDialog('${submission.challenge_id}', '${submission.username}')">❌ Reject</button>`
+            ? `<button class="btn-approve" onclick="showApproveCommentDialog('${submission.challenge_id}', '${submission.username}')">✅ Approve</button><button class="btn-reject" onclick="showRejectCommentDialog('${submission.challenge_id}', '${submission.username}')">❌ Reject</button>`
             : '';
         
         console.log('✅ All sections built successfully');
@@ -988,6 +1300,7 @@ function displayAdminSubmissionViewModal(submission) {
                     </div>
 
                     ${reviewSection}
+                    ${adminFeedbackSection}
                     ${approvalSection}
                 </div>
             </div>
@@ -1148,11 +1461,11 @@ function addSubmissionViewModalStyles() {
         }
 
         .admin-feedback-box {
-            background: #fff3cd;
+            background: #f3e5f5;
             padding: 12px;
             border-radius: 4px;
-            border-left: 3px solid #ffc107;
-            color: #856404;
+            border-left: 3px solid #9c27b0;
+            color: #5e35b1;
             font-size: 13px;
             line-height: 1.6;
         }
@@ -1189,6 +1502,13 @@ function addSubmissionViewModalStyles() {
  */
 window.loadAdminDashboard = loadAdminDashboard;
 window.closeAdminPanel = closeAdminPanel;
+window.showApproveCommentDialog = showApproveCommentDialog;
+window.showRejectCommentDialog = showRejectCommentDialog;
+window.showReviewCommentDialog = showReviewCommentDialog;
+window.closeCommentDialog = closeCommentDialog;
+window.clearCommentText = clearCommentText;
+window.confirmApproveWithComment = confirmApproveWithComment;
+window.confirmRejectWithComment = confirmRejectWithComment;
 window.approveSubmission = approveSubmission;
 window.rejectSubmission = rejectSubmission;
 window.rejectSubmissionDialog = rejectSubmissionDialog;

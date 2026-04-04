@@ -647,20 +647,23 @@ async function createUploadForm(challengeId, topicId = 'default') {
             }
             
             submissionsListHTML += `
-                <div class="submission-item" onclick="showCodePreview('${sub.username}', '${challengeId}')" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: center; gap: 10px;">
-                    ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%;">${avatarHtml}</div>` : ''}
+                <div class="submission-item" onclick="showCodePreview('${sub.username}', '${challengeId}')" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: flex-start; gap: 10px;">
+                    ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%; margin-top: 2px;">${avatarHtml}</div>` : ''}
                     <div style="flex: 1; min-width: 0;">
                         <div style="font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
                             <span>${statusEmoji}</span>
                             <span>${sub.username}</span>
                             ${aiIndicator ? `<span>${aiIndicator}</span>` : ''}
                         </div>
-                        <div style="font-size: 12px; color: var(--text-secondary);">
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">
                             <span>${sub.fileName}</span> | 
                             <span>${dateStr}${ratingDisplay}</span>
                         </div>
+                        ${sub.feedback ? `<div style="font-size: 11px; color: #666; background: ${sub.status === 'completed' ? '#e8f5e9' : '#ffebee'}; padding: 6px 8px; border-radius: 3px; border-left: 2px solid ${sub.status === 'completed' ? '#4CAF50' : '#f44336'}; margin-bottom: 0;">
+                            <strong>${sub.status === 'completed' ? '✅ Approved' : '❌ Rejected'}:</strong> ${sub.feedback.substring(0, 100)}${sub.feedback.length > 100 ? '...' : ''}
+                        </div>` : ''}
                     </div>
-                    <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; padding-top: 2px;">
                         <span style="color: ${statusColor}; font-weight: bold; font-size: 11px;">${statusEmoji} ${sub.status.toUpperCase()}</span>
                     </div>
                 </div>
@@ -757,13 +760,16 @@ async function showCodePreview(username, challengeId) {
             aiReview: submission.ai_review || null,
             aiReviewStatus: submission.ai_review ? 'completed' : 'pending',
             status: submission.status || 'pending',
-            topicId: submission.topic_id || 'default'
+            topicId: submission.topic_id || 'default',
+            feedback: submission.feedback || null
         };
         
         console.log('✅ Submission normalized:', {
             fileContent_length: normalizedSubmission.fileContent.length,
             aiReview_length: normalizedSubmission.aiReview ? normalizedSubmission.aiReview.length : 0,
-            fileName: normalizedSubmission.fileName
+            fileName: normalizedSubmission.fileName,
+            feedback_length: normalizedSubmission.feedback ? normalizedSubmission.feedback.length : 0,
+            feedback_preview: normalizedSubmission.feedback ? normalizedSubmission.feedback.substring(0, 100) : 'no feedback'
         });
         
         submission = normalizedSubmission;
@@ -855,6 +861,20 @@ async function showCodePreview(username, challengeId) {
 
     let approveButtonHtml = '';
     let rejectButtonHtml = '';
+    let runCodeButtonHtml = `
+        <button onclick="createCodeRunnerUI({fileName: '${submission.fileName}', fileContent: \`${submission.fileContent.replace(/`/g, '\\`')}\`}); return false;" style="
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 5px;
+        ">▶️ Run Code</button>
+    `;
+    
     if (isAdminUser && submission.status !== 'completed' && submission.status !== 'rejected') {
         approveButtonHtml = `
             <button onclick="if(window.approveAdminSubmission) { window.approveAdminSubmission('${challengeId}', '${username}'); setTimeout(() => document.getElementById('${modal.id}').remove(), 500); } else { alert('Admin tools not loaded.'); }" style="
@@ -898,7 +918,8 @@ async function showCodePreview(username, challengeId) {
                 <span>${aiStatusHtml}${ratingHtml}</span>
             </div>
         </div>
-        <div style="display: flex; gap: 5px;">
+        <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+            ${runCodeButtonHtml}
             ${approveButtonHtml}
             ${rejectButtonHtml}
             ${deleteButtonHtml}

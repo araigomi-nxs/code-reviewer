@@ -720,7 +720,8 @@ async function getChallengeSubmissions(challengeId) {
                 aiReview: sub.ai_review,
                 aiReviewStatus: sub.ai_review_status,
                 aiReviewedAt: sub.ai_reviewed_at,
-                topicId: sub.topic_id
+                topicId: sub.topic_id,
+                feedback: sub.feedback || null
             }));
         } catch (error) {
             console.error('❌ Failed to get submissions:', error);
