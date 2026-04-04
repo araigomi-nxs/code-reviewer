@@ -637,7 +637,6 @@ async function createUploadForm(challengeId, topicId = 'default') {
             }
             
             if (sub.aiReviewStatus === 'completed') {
-                aiIndicator = ' 🤖';
                 const rating = extractRatingFromReview(sub.aiReview);
                 if (rating) {
                     ratingDisplay = ` | <strong>🤖</strong> ${rating}`;
