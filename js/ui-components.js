@@ -599,7 +599,6 @@ async function createUploadForm(challengeId, topicId = 'default') {
     const form = document.createElement('div');
     form.id = formId;
     form.className = 'upload-form';
-    form.style.position = 'relative'; // Make status position relative to entire challenge block
     
     let statusHTML = '';
     let contentHTML = '';
@@ -647,14 +646,19 @@ async function createUploadForm(challengeId, topicId = 'default') {
             }
             
             submissionsListHTML += `
-                <div class="submission-item" data-username="${sub.username}" data-challengeid="${challengeId}" onclick="handleShowCodePreview(this)" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; align-items: center; gap: 10px; position: relative;">
-                    ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%;">${avatarHtml}</div>` : ''}
-                    <div style="flex: 1; min-width: 0; font-size: 13px; color: var(--text-primary);">
-                        <span style="font-weight: bold;">${sub.username}</span> - <span style="color: var(--text-secondary);">${sub.fileName}</span> - <span style="color: var(--text-secondary);">${dateStr}${ratingDisplay}</span>
+                <div class="submission-item" data-username="${sub.username}" data-challengeid="${challengeId}" onclick="handleShowCodePreview(this)" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; flex-direction: column; gap: 8px; position: relative;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%;">${avatarHtml}</div>` : ''}
+                        <div style="flex: 1; min-width: 0; font-size: 13px; color: var(--text-primary);">
+                            <span style="font-weight: bold;">${sub.username}</span> - <span style="color: var(--text-secondary);">${sub.fileName}</span> - <span style="color: var(--text-secondary);">${dateStr}${ratingDisplay}</span>
+                        </div>
+                        <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; position: absolute; top: 10px; right: 10px; background: var(--bg-primary); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">
+                            <span style="color: ${statusColor}; font-weight: bold; font-size: 11px; white-space: nowrap;">${sub.status === 'pending' ? '⏳' : (sub.status === 'completed') ? '✅' : '❌'} ${sub.status.toUpperCase()}</span>
+                        </div>
                     </div>
-                    <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; position: absolute; top: 10px; right: 10px; background: var(--bg-primary); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">
-                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px; white-space: nowrap;">✓ ${sub.status.toUpperCase()}</span>
-                    </div>
+                    ${sub.feedback ? `<div style="font-size: 12px; color: #333; background: ${sub.status === 'completed' ? '#e8f5e9' : '#ffebee'}; padding: 8px 10px; border-radius: 3px; border-left: 3px solid ${sub.status === 'completed' ? '#4CAF50' : '#f44336'}; margin-top: 4px;">
+                        <strong>${sub.status === 'completed' ? '✅ Approved' : '❌ Rejected'}:</strong> ${sub.feedback.substring(0, 100)}${sub.feedback.length > 100 ? '...' : ''}
+                    </div>` : ''}
                 </div>
             `;
         }
@@ -673,19 +677,10 @@ async function createUploadForm(challengeId, topicId = 'default') {
         `;
     } else {
         // User is logged in
-        let statusTopRightHTML = '';
-        if (hasSubmitted && submission && submission.status) {
-            const statusColor = submission.status === 'pending' ? '#FFA500' : 
-                               (submission.status === 'completed') ? '#4CAF50' : 
-                               '#f44336';
-            statusTopRightHTML = `<div style="position: absolute; top: 10px; right: 10px; color: ${statusColor}; font-weight: bold; font-size: 12px; background: var(--bg-primary); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">✓ ${submission.status.toUpperCase()}</div>`;
-        }
-
         // Allow resubmission if status is 'pending' (rejected or initial), not 'completed'
         const isFormDisabled = hasSubmitted && submission && submission.status !== 'pending';
         
         contentHTML = `
-            ${statusTopRightHTML}
             <div class="upload-container">
                 <h4>📤 Submit Solution</h4>
                 <div style="display: flex; gap: 10px; align-items: center;">
@@ -926,7 +921,7 @@ async function showCodePreview(username, challengeId) {
                 ${statusEmoji} ${username}'s Submission
             </div>
             <div style="font-size: 12px; color: #666;">
-                <span style="color: ${statusColor}; font-weight: bold;">${submission.status.toUpperCase()}</span> | 
+                <span style="color: ${statusColor}; font-weight: bold;">${statusEmoji} ${submission.status.toUpperCase()}</span> | 
                 <span>${submission.fileName}</span> | 
                 <span>${new Date(submission.submittedAt).toLocaleString()}</span>
             </div>
@@ -1278,15 +1273,18 @@ async function showCodePreview(username, challengeId) {
     // Footer with feedback (if any)
     let footer = '';
     if (submission.feedback) {
+        const feedbackBgColor = submission.status === 'completed' ? '#e8f5e9' : '#ffebee';
+        const feedbackBorderColor = submission.status === 'completed' ? '#4CAF50' : '#f44336';
+        
         footer = document.createElement('div');
         footer.style.cssText = `
             padding: 20px;
-            border-top: 1px solid #eee;
-            background: #fffbf0;
+            border-top: 3px solid ${feedbackBorderColor};
+            background: ${feedbackBgColor};
         `;
         footer.innerHTML = `
             <div style="font-weight: bold; color: #333; margin-bottom: 10px;">💬 Admin Feedback:</div>
-            <div style="color: #666; font-size: 14px;">${submission.feedback}</div>
+            <div style="color: #333; font-size: 14px;">${submission.feedback}</div>
         `;
     }
 
@@ -1518,13 +1516,16 @@ async function updateChallengeSubmissionUI(challengeId) {
 
     const submission = await window.getSubmission(challengeId, user.username);
     if (submission) {
+        const statusEmoji = submission.status === 'pending' ? '⏳' : 
+                           (submission.status === 'completed') ? '✅' : 
+                           '❌';
         const statusText = submission.status.toUpperCase();
         const statusColor = submission.status === 'pending' ? '#FFA500' : 
                            (submission.status === 'approved' || submission.status === 'completed') ? '#4CAF50' : 
                            '#f44336';
         statusEl.innerHTML = `
             <div style="color: ${statusColor}; font-weight: bold; margin-top: 10px;">
-                ✓ Submitted: ${statusText}
+                ${statusEmoji} Submitted: ${statusText}
             </div>
         `;
     }
@@ -1986,6 +1987,9 @@ async function _doInitializeUploadForms() {
         const formId = `uploadForm_${challengeId}`;
         
         try {
+            // Make challenge item position relative so status appears on it
+            item.style.position = 'relative';
+            
             // Add a data attribute to identify the challenge
             if (!item.dataset.challengeId) {
                 item.dataset.challengeId = challengeId;
@@ -1995,10 +1999,50 @@ async function _doInitializeUploadForms() {
             const oldForms = item.querySelectorAll('.upload-form');
             oldForms.forEach(form => form.remove());
             
+            // Remove old status badges
+            const oldStatus = item.querySelector('[data-challenge-status]');
+            if (oldStatus) oldStatus.remove();
+            
             // Create and add new form with fresh submission data
             const uploadForm = await createUploadForm(challengeId, topicContext);
             if (uploadForm && uploadForm.nodeType === 1) { // nodeType 1 = element node
                 item.appendChild(uploadForm);
+                
+                // Add status badge to challenge item (not form)
+                const user = window.getCurrentUser ? window.getCurrentUser() : null;
+                if (user && window.getSubmission) {
+                    try {
+                        const submission = await window.getSubmission(challengeId, user.username);
+                        if (submission && submission.status) {
+                            const statusColor = submission.status === 'pending' ? '#FFA500' : 
+                                               (submission.status === 'completed') ? '#4CAF50' : 
+                                               '#f44336';
+                            const statusBadge = document.createElement('div');
+                            statusBadge.setAttribute('data-challenge-status', challengeId);
+                            statusBadge.style.cssText = `
+                                position: absolute;
+                                top: 10px;
+                                right: 10px;
+                                color: ${statusColor};
+                                font-weight: bold;
+                                font-size: 12px;
+                                background: var(--bg-primary);
+                                padding: 6px 10px;
+                                border-radius: 4px;
+                                border: 1px solid var(--bg-tertiary);
+                                z-index: 100;
+                            `;
+                            const statusEmoji = submission.status === 'pending' ? '⏳' : 
+                                             (submission.status === 'completed') ? '✅' : 
+                                             '❌';
+                            statusBadge.textContent = `${statusEmoji} ${submission.status.toUpperCase()}`;
+                            item.appendChild(statusBadge);
+                        }
+                    } catch (e) {
+                        console.warn('⚠️ Could not load submission status for', challengeId, ':', e);
+                    }
+                }
+                
                 formsAdded++;
                 console.log('✅ Added upload form for', challengeId);
             } else {
