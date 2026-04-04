@@ -2203,7 +2203,20 @@ function initializeUI() {
     if (user) {
         console.log('✅ User logged in:', user.username);
         updateUserProfileMenu();
-        updateUserStats();
+        
+        // Wait for Supabase to be available before updating stats
+        const waitForSupabaseReady = (attempts = 0) => {
+            if (window.supabaseInstance) {
+                console.log('✅ Supabase ready, updating user stats');
+                updateUserStats();
+            } else if (attempts < 50) {
+                setTimeout(() => waitForSupabaseReady(attempts + 1), 100);
+            } else {
+                console.warn('⚠️ Supabase not ready after 5 seconds, skipping stats update');
+            }
+        };
+        waitForSupabaseReady();
+        
         // Display latest submissions dashboard when user is logged in
         setTimeout(() => {
             if (window.displayLatestSubmissionsDashboard) {
