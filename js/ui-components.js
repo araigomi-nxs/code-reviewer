@@ -652,7 +652,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
                         <span style="font-weight: bold;">${sub.username}</span> - <span style="color: var(--text-secondary);">${sub.fileName}</span> - <span style="color: var(--text-secondary);">${dateStr}${ratingDisplay}</span>
                     </div>
                     <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; position: absolute; top: 10px; right: 10px; background: var(--bg-primary); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">
-                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px; white-space: nowrap;">✓ ${sub.status.toUpperCase()} | ${new Date(sub.submitted_at).toLocaleDateString('en-US', {month: 'numeric', day: 'numeric'})}</span>
+                        <span style="color: ${statusColor}; font-weight: bold; font-size: 11px; white-space: nowrap;">✓ ${sub.status.toUpperCase()}</span>
                     </div>
                 </div>
             `;
@@ -672,13 +672,14 @@ async function createUploadForm(challengeId, topicId = 'default') {
         `;
     } else {
         // User is logged in
+        let statusTopRightHTML = '';
         if (hasSubmitted && submission && submission.status) {
             const statusColor = submission.status === 'pending' ? '#FFA500' : 
                                (submission.status === 'completed') ? '#4CAF50' : 
                                '#f44336';
-            statusHTML = `
-                <div style="color: ${statusColor}; font-weight: bold; margin-bottom: 10px;">
-                    ✓ Submitted: ${submission.status.toUpperCase()} | ${new Date(submission.submittedAt).toLocaleDateString()}
+            statusTopRightHTML = `
+                <div style="position: absolute; top: 10px; right: 10px; color: ${statusColor}; font-weight: bold; font-size: 12px; background: var(--bg-primary); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">
+                    ✓ ${submission.status.toUpperCase()}
                 </div>
             `;
         }
@@ -687,19 +688,21 @@ async function createUploadForm(challengeId, topicId = 'default') {
         const isFormDisabled = hasSubmitted && submission && submission.status !== 'pending';
         
         contentHTML = `
-            <div class="upload-container">
-                <h4>📤 Submit Solution</h4>
-                ${statusHTML}
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="file" id="fileInput_${challengeId}" accept=".java,.cpp,.py,.c,.txt,.js,.go,.rs" class="file-input" style="flex: 1;" ${isFormDisabled ? 'disabled' : ''}>
-                    <button onclick="submitChallengeFile('${challengeId}', '${topicId}')" class="btn-submit" style="white-space: nowrap;" ${isFormDisabled ? 'disabled' : ''}>
-                        🚀 ${isFormDisabled ? 'Already Submitted' : (hasSubmitted && submission && submission.status === 'pending' ? 'Resubmit' : 'Submit')}
-                    </button>
+            <div style="position: relative;">
+                ${statusTopRightHTML}
+                <div class="upload-container">
+                    <h4>📤 Submit Solution</h4>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="file" id="fileInput_${challengeId}" accept=".java,.cpp,.py,.c,.txt,.js,.go,.rs" class="file-input" style="flex: 1;" ${isFormDisabled ? 'disabled' : ''}>
+                        <button onclick="submitChallengeFile('${challengeId}', '${topicId}')" class="btn-submit" style="white-space: nowrap;" ${isFormDisabled ? 'disabled' : ''}>
+                            🚀 ${isFormDisabled ? 'Already Submitted' : (hasSubmitted && submission && submission.status === 'pending' ? 'Resubmit' : 'Submit')}
+                        </button>
+                    </div>
+                    <p class="upload-info">
+                        Accepted: .java, .cpp, .py, .c, .txt, .js, .go, .rs | Max: 10MB
+                    </p>
+                    <div id="status_${challengeId}"></div>
                 </div>
-                <p class="upload-info">
-                    Accepted: .java, .cpp, .py, .c, .txt, .js, .go, .rs | Max: 10MB
-                </p>
-                <div id="status_${challengeId}"></div>
             </div>
         `;
     }
