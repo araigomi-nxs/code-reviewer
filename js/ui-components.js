@@ -599,6 +599,7 @@ async function createUploadForm(challengeId, topicId = 'default') {
     const form = document.createElement('div');
     form.id = formId;
     form.className = 'upload-form';
+    form.style.position = 'relative'; // Make status position relative to entire challenge block
     
     let statusHTML = '';
     let contentHTML = '';
@@ -677,32 +678,26 @@ async function createUploadForm(challengeId, topicId = 'default') {
             const statusColor = submission.status === 'pending' ? '#FFA500' : 
                                (submission.status === 'completed') ? '#4CAF50' : 
                                '#f44336';
-            statusTopRightHTML = `
-                <div style="position: absolute; top: 10px; right: 10px; color: ${statusColor}; font-weight: bold; font-size: 12px; background: var(--bg-primary); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">
-                    ✓ ${submission.status.toUpperCase()}
-                </div>
-            `;
+            statusTopRightHTML = `<div style="position: absolute; top: 10px; right: 10px; color: ${statusColor}; font-weight: bold; font-size: 12px; background: var(--bg-primary); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--bg-tertiary);">✓ ${submission.status.toUpperCase()}</div>`;
         }
 
         // Allow resubmission if status is 'pending' (rejected or initial), not 'completed'
         const isFormDisabled = hasSubmitted && submission && submission.status !== 'pending';
         
         contentHTML = `
-            <div style="position: relative;">
-                ${statusTopRightHTML}
-                <div class="upload-container">
-                    <h4>📤 Submit Solution</h4>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="file" id="fileInput_${challengeId}" accept=".java,.cpp,.py,.c,.txt,.js,.go,.rs" class="file-input" style="flex: 1;" ${isFormDisabled ? 'disabled' : ''}>
-                        <button onclick="submitChallengeFile('${challengeId}', '${topicId}')" class="btn-submit" style="white-space: nowrap;" ${isFormDisabled ? 'disabled' : ''}>
-                            🚀 ${isFormDisabled ? 'Already Submitted' : (hasSubmitted && submission && submission.status === 'pending' ? 'Resubmit' : 'Submit')}
-                        </button>
-                    </div>
-                    <p class="upload-info">
-                        Accepted: .java, .cpp, .py, .c, .txt, .js, .go, .rs | Max: 10MB
-                    </p>
-                    <div id="status_${challengeId}"></div>
+            ${statusTopRightHTML}
+            <div class="upload-container">
+                <h4>📤 Submit Solution</h4>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="file" id="fileInput_${challengeId}" accept=".java,.cpp,.py,.c,.txt,.js,.go,.rs" class="file-input" style="flex: 1;" ${isFormDisabled ? 'disabled' : ''}>
+                    <button onclick="submitChallengeFile('${challengeId}', '${topicId}')" class="btn-submit" style="white-space: nowrap;" ${isFormDisabled ? 'disabled' : ''}>
+                        🚀 ${isFormDisabled ? 'Already Submitted' : (hasSubmitted && submission && submission.status === 'pending' ? 'Resubmit' : 'Submit')}
+                    </button>
                 </div>
+                <p class="upload-info">
+                    Accepted: .java, .cpp, .py, .c, .txt, .js, .go, .rs | Max: 10MB
+                </p>
+                <div id="status_${challengeId}"></div>
             </div>
         `;
     }
