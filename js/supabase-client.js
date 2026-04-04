@@ -797,6 +797,33 @@ window.supabaseDeleteStudyResourcesByTopic = supabaseDeleteStudyResourcesByTopic
 window.supabaseUploadImageToStorage = supabaseUploadImageToStorage;
 
 /**
+ * Get user profile by username - retrieves avatar_url from profiles table
+ */
+async function supabaseGetUserProfile(username) {
+    if (!supabaseInstance) return null;
+
+    try {
+        const { data, error } = await supabaseInstance
+            .from('profiles')
+            .select('avatar_url, username')
+            .eq('username', username)
+            .single();
+
+        if (error) {
+            console.warn('⚠️ User profile not found:', username);
+            return null;
+        }
+
+        return data;
+    } catch (error) {
+        console.error('❌ Error fetching user profile:', error);
+        return null;
+    }
+}
+
+window.supabaseGetUserProfile = supabaseGetUserProfile;
+
+/**
  * Verify study notes system is operational
  * (Notes are GLOBAL - all users can view all notes and resources)
  */

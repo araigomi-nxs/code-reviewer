@@ -3057,38 +3057,46 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     return createResourceItem(item);
                 }
             }).join('');
+
+            // Load avatars after rendering
+            loadNoteAvatars(items);
+            loadResourceAvatars(items);
         }
 
         /**
         /**
          * Create HTML for a note item in the list
          */
+        /**
+         * Get user avatar HTML from Supabase profile
+         */
+        async function getUserAvatarHtml(username) {
+            try {
+                if (window.supabaseGetUserProfile) {
+                    const profile = await window.supabaseGetUserProfile(username);
+                    if (profile && profile.avatar_url) {
+                        return `<img src="${profile.avatar_url}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;" alt="${username}">`;
+                    }
+                }
+            } catch (e) {
+                console.error('Error getting user avatar:', e);
+            }
+            return '';
+        }
+
         function createNoteItem(note) {
             const createdAt = new Date(note.created_at).toLocaleString();
             const preview = (note.notes_content || '').substring(0, 150).replace(/\n/g, ' ');
             const isOwnNote = window.getCurrentUser().username === note.username;
             const creator = note.username || 'Unknown';
 
-            // Get user profile icon - show avatar if available, otherwise use initials
-            let profileIcon = '';
-            try {
-                const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
-                const userProfile = allUsers[creator];
-                if (userProfile && userProfile.avatar) {
-                    profileIcon = `<img src="${userProfile.avatar}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">`;
-                } else {
-                    const userInitial = creator.charAt(0).toUpperCase();
-                    profileIcon = `<div style="width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold;">${userInitial}</div>`;
-                }
-            } catch (e) {
-                const userInitial = creator.charAt(0).toUpperCase();
-                profileIcon = `<div style="width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold;">${userInitial}</div>`;
-            }
+            // Store profile icon retrieval for async loading
+            const noteItemId = `note-${note.id}`;
 
             return `
-                <div class="note-item">
+                <div class="note-item" id="${noteItemId}">
                     <div class="note-item-header" style="display: flex; align-items: center; gap: 8px;">
-                        ${profileIcon}
+                        <span class="note-avatar-placeholder"></span>
                         <span class="note-item-author">📝 ${escapeHtml(note.username)}</span>
                         <span class="note-item-date">${createdAt}</span>
                     </div>
@@ -3099,6 +3107,21 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     </div>
                 </div>
             `;
+        }
+
+        // Load note avatars asynchronously
+        async function loadNoteAvatars(items) {
+            for (const item of items) {
+                if (item.type === 'note') {
+                    const avatarHtml = await getUserAvatarHtml(item.username);
+                    if (avatarHtml) {
+                        const element = document.querySelector(`#note-${item.id} .note-avatar-placeholder`);
+                        if (element) {
+                            element.outerHTML = avatarHtml;
+                        }
+                    }
+                }
+            }
         }
 
         /**
@@ -3430,22 +3453,8 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             const createdAt = resource.created_at ? new Date(resource.created_at).toLocaleString() : 'N/A';
             const creator = resource.username || 'Unknown';
             
-            // Get user profile icon - show avatar if available, otherwise use initials
-            let profileIcon = '';
-            // Try to get user profile data from localStorage
-            try {
-                const allUsers = JSON.parse(localStorage.getItem('users') || '{}');
-                const userProfile = allUsers[creator];
-                if (userProfile && userProfile.avatar) {
-                    profileIcon = `<img src="${userProfile.avatar}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">`;
-                } else {
-                    const userInitial = creator.charAt(0).toUpperCase();
-                    profileIcon = `<div style="width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold;">${userInitial}</div>`;
-                }
-            } catch (e) {
-                const userInitial = creator.charAt(0).toUpperCase();
-                profileIcon = `<div style="width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: var(--bg-primary); display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold;">${userInitial}</div>`;
-            }
+            // Store profile icon retrieval for async loading
+            const resourceItemId = `resource-${resource.id}`;
 
             let preview = '';
             if (resource.resource_type === 'image') {
@@ -3457,17 +3466,23 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                 else if (resource.resource_data) {
                     preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden; max-height: 300px; cursor: pointer;" onclick="openImagePreview('${resource.resource_data.replace(/'/g, "\\'")}')"><img src="${resource.resource_data}" class="resource-preview" alt="Resource preview" style="max-width: 100%; max-height: 300px; object-fit: contain; background: var(--bg-secondary); display: block;"></div>`;
                 }
+            } else if (resource.resource_type === 'video') {
+                // Extract video ID and create embed
+                const embedUrl = getYouTubeEmbedUrl(resource.resource_url);
+                if (embedUrl) {
+                    preview = `<div style="margin-top: 8px; border-radius: 4px; overflow: hidden;"><iframe width="100%" height="300" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 4px;"></iframe></div>`;
+                }
             }
 
             let actions = '';
             if (resource.resource_type === 'video') {
-                actions = `<a href="${resource.resource_url}" target="_blank" class="note-action-button" style="text-decoration: none; display: inline-block;">Open Link</a>`;
+                actions = `<a href="${resource.resource_url}" target="_blank" class="note-action-button" style="text-decoration: none; display: inline-block;">Open Original</a>`;
             }
 
             return `
-                <div class="note-item">
+                <div class="note-item" id="${resourceItemId}">
                     <div class="note-item-header" style="display: flex; align-items: center; gap: 8px;">
-                        ${profileIcon}
+                        <span class="resource-avatar-placeholder"></span>
                         <span class="note-item-author">${escapeHtml(creator)} • ${resource.resource_type === 'video' ? '🎥 Video' : resource.resource_type === 'file' ? '📄 File' : '📸 Image'} ${fileSize ? ' • ' + fileSize : ''}</span>
                         <span class="note-item-date">${createdAt}</span>
                     </div>
@@ -3478,6 +3493,21 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     </div>
                 </div>
             `;
+        }
+
+        // Load resource avatars asynchronously
+        async function loadResourceAvatars(items) {
+            for (const item of items) {
+                if (item.type === 'resource') {
+                    const avatarHtml = await getUserAvatarHtml(item.username);
+                    if (avatarHtml) {
+                        const element = document.querySelector(`#resource-${item.id} .resource-avatar-placeholder`);
+                        if (element) {
+                            element.outerHTML = avatarHtml;
+                        }
+                    }
+                }
+            }
         }
 
         /**
