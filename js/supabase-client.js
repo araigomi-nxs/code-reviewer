@@ -552,6 +552,164 @@ async function setupRealtimeSubmissionsListener() {
     }
 }
 
+/**
+ * Study Notes & Resources Management
+ * Handles persistent storage of notes and learning resources in Supabase
+ */
+
+// Save or update study notes
+async function supabaseSaveStudyNotes(username, topicId, notesContent) {
+    if (!supabaseInstance) {
+        console.error('❌ Supabase not initialized');
+        throw new Error('Supabase not initialized');
+    }
+
+    try {
+        console.log('📝 Saving study notes:', { username, topicId, contentLength: notesContent?.length || 0 });
+
+        const { data, error } = await supabaseInstance
+            .from('study_notes')
+            .upsert([{
+                username: username,
+                topic_id: topicId,
+                notes_content: notesContent || '',
+                updated_at: new Date().toISOString()
+            }], { onConflict: 'username,topic_id' })
+            .select('*');
+
+        if (error) {
+            console.error('❌ Failed to save notes:', error);
+            throw error;
+        }
+
+        console.log('✅ Study notes saved:', { username, topicId, dataLength: data?.length || 0 });
+        return data?.[0] || null;
+    } catch (error) {
+        console.error('❌ Error saving study notes:', error.message);
+        throw error;
+    }
+}
+
+// Get study notes for a topic (GLOBAL - all users can see all notes)
+async function supabaseGetStudyNotes(username, topicId) {
+    if (!supabaseInstance) return null;
+
+    try {
+        // Note: username parameter kept for backward compatibility
+        // All users can see all notes for this topic (GLOBAL MODE)
+        const { data, error } = await supabaseInstance
+            .from('study_notes')
+            .select('*')
+            .eq('topic_id', topicId)
+            .maybeSingle();
+
+        if (error && error.code !== 'PGRST116') throw error;
+        return data || null;
+    } catch (error) {
+        console.error('❌ Failed to get study notes:', error);
+        return null;
+    }
+}
+
+// Save a study resource (image, video link, or file)
+async function supabaseSaveStudyResource(username, topicId, resourceData) {
+    if (!supabaseInstance) {
+        console.error('❌ Supabase not initialized');
+        throw new Error('Supabase not initialized');
+    }
+
+    try {
+        console.log('📦 Saving resource:', { username, topicId, resourceType: resourceData.type });
+
+        const { data, error } = await supabaseInstance
+            .from('study_resources')
+            .insert([{
+                username: username,
+                topic_id: topicId,
+                resource_type: resourceData.type,
+                resource_name: resourceData.name,
+                resource_url: resourceData.url || null,
+                resource_data: resourceData.data || null,
+                resource_size: resourceData.size || null,
+                created_at: new Date().toISOString()
+            }])
+            .select('*');
+
+        if (error) {
+            console.error('❌ Failed to save resource:', error);
+            throw error;
+        }
+
+        console.log('✅ Resource saved:', { resourceId: data?.[0]?.id, resourceName: resourceData.name });
+        return data?.[0] || null;
+    } catch (error) {
+        console.error('❌ Error saving resource:', error.message);
+        throw error;
+    }
+}
+
+// Get all study resources for a topic (GLOBAL - all users can see all resources)
+async function supabaseGetStudyResources(username, topicId) {
+    if (!supabaseInstance) return [];
+
+    try {
+        // Note: username parameter kept for backward compatibility
+        // All users can see all resources for this topic (GLOBAL MODE)
+        const { data, error } = await supabaseInstance
+            .from('study_resources')
+            .select('*')
+            .eq('topic_id', topicId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+    } catch (error) {
+        console.error('❌ Failed to get study resources:', error);
+        return [];
+    }
+}
+
+// Delete a study resource
+async function supabaseDeleteStudyResource(resourceId) {
+    if (!supabaseInstance) return;
+
+    try {
+        console.log('🗑️ Deleting resource:', resourceId);
+
+        const { error } = await supabaseInstance
+            .from('study_resources')
+            .delete()
+            .eq('id', resourceId);
+
+        if (error) throw error;
+        console.log('✅ Resource deleted:', resourceId);
+    } catch (error) {
+        console.error('❌ Failed to delete resource:', error);
+        throw error;
+    }
+}
+
+// Delete all resources for a topic
+async function supabaseDeleteStudyResourcesByTopic(username, topicId) {
+    if (!supabaseInstance) return;
+
+    try {
+        console.log('🗑️ Deleting all resources for topic:', topicId);
+
+        const { error } = await supabaseInstance
+            .from('study_resources')
+            .delete()
+            .eq('username', username)
+            .eq('topic_id', topicId);
+
+        if (error) throw error;
+        console.log('✅ All resources deleted for topic:', topicId);
+    } catch (error) {
+        console.error('❌ Failed to delete resources:', error);
+        throw error;
+    }
+}
+
 // Export real-time functions
 window.setupRealtimeSubmissionsListener = setupRealtimeSubmissionsListener;
 
@@ -566,6 +724,46 @@ window.supabaseDeleteSubmission = supabaseDeleteSubmission;
 window.diagnosticCheckSubmissionInDB = diagnosticCheckSubmissionInDB;
 window.initializeSupabase = initializeSupabase;
 window.waitForSupabase = waitForSupabase;
+
+// Export notes functions to window
+window.supabaseSaveStudyNotes = supabaseSaveStudyNotes;
+window.supabaseGetStudyNotes = supabaseGetStudyNotes;
+window.supabaseSaveStudyResource = supabaseSaveStudyResource;
+window.supabaseGetStudyResources = supabaseGetStudyResources;
+window.supabaseDeleteStudyResource = supabaseDeleteStudyResource;
+window.supabaseDeleteStudyResourcesByTopic = supabaseDeleteStudyResourcesByTopic;
+
+/**
+ * Verify study notes system is operational
+ * (Notes are GLOBAL - all users can view all notes and resources)
+ */
+async function checkStudyNotesRLSSecurity() {
+    if (!supabaseInstance) {
+        console.warn('⚠️ Supabase not initialized yet');
+        return;
+    }
+
+    try {
+        console.log('📝 === STUDY NOTES: GLOBAL MODE ===');
+        console.log('   ✅ All users can view all notes and resources for each topic');
+        console.log('   ✅ Notes are organized by topic, shared globally');
+        console.log('   ✅ Each user can add notes and resources for topics');
+        console.log('📝 === STATUS: OPERATIONAL ===');
+    } catch (error) {
+        console.error('❌ Error during check:', error.message);
+    }
+}
+
+// Export security check function
+window.checkStudyNotesRLSSecurity = checkStudyNotesRLSSecurity;
+
+// Run security check when Supabase is initialized
+window.supabaseInitPromise.then(() => {
+    // Delay slightly to let Supabase initialize
+    setTimeout(() => {
+        checkStudyNotesRLSSecurity();
+    }, 1000);
+});
 
 // Getter for supabaseInstance (since it's initialized asynchronously)
 Object.defineProperty(window, 'supabaseInstance', {

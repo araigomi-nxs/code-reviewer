@@ -656,6 +656,236 @@
             }
         }
 
+        /* Notes Tab Styles */
+        .notes-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .notes-editor-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notes-editor-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .notes-textarea {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 0.9em;
+            line-height: 1.6;
+            padding: 14px;
+            resize: none;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            min-height: 200px;
+            flex: 1;
+        }
+
+        .notes-textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .resources-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resources-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .resource-upload-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .resource-upload-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .resource-upload-group label {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .resource-upload-input {
+            display: flex;
+            gap: 8px;
+            align-items: stretch;
+        }
+
+        .resource-upload-input input[type="text"],
+        .resource-upload-input input[type="file"] {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.85em;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .resource-upload-input input[type="file"] {
+            padding: 4px 12px;
+        }
+
+        .resource-upload-button {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .resource-upload-button:hover {
+            background: var(--accent-hover);
+        }
+
+        .resource-list {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .resource-list h4 {
+            color: var(--text-primary);
+            font-size: 0.9em;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .resource-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .resource-item-info {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .resource-item-icon {
+            font-size: 1em;
+            flex-shrink: 0;
+        }
+
+        .resource-item-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .resource-item-title {
+            color: var(--text-primary);
+            font-size: 0.85em;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .resource-item-type {
+            color: var(--text-secondary);
+            font-size: 0.75em;
+        }
+
+        .resource-item-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .resource-delete-button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.7em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .resource-delete-button:hover {
+            background: #ff5252;
+        }
+
+        .resource-preview {
+            max-width: 100px;
+            max-height: 60px;
+        }
+
+        .save-notes-button {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            align-self: flex-end;
+            margin-top: 12px;
+        }
+
+        .save-notes-button:hover {
+            background: var(--accent-hover);
+        }
+
+        .notes-message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-size: 0.85em;
+        }
+
+        .notes-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notes-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -682,6 +912,10 @@
                 flex-direction: column;
                 gap: 10px;
                 align-items: flex-start;
+            }
+
+            .notes-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1807,6 +2041,7 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     <button class="tab-button active" onclick="switchTab('concepts')">■ Concepts</button>
                     <button class="tab-button" onclick="switchTab('samples')">■ Sample Code</button>
                     <button class="tab-button" onclick="switchTab('challenges')">■ Challenges</button>
+                    <button class="tab-button" onclick="switchTab('notes')">📝 Notes</button>
                 `;
                 console.log('Content tabs built');
 
@@ -1828,6 +2063,49 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     <div class="tab-content" id="challenges">
                         <h2>${topic.icon} ${topic.name} - Challenges</h2>
                         <div class="concepts">${topic.challenges}</div>
+                    </div>
+                    <div class="tab-content" id="notes">
+                        <h2>📝 Study Notes - ${topic.name}</h2>
+                        <div id="notesMessage"></div>
+                        <div class="notes-container">
+                            <div class="notes-editor-section">
+                                <h3>📄 Your Notes</h3>
+                                <textarea id="notesText" class="notes-textarea" placeholder="Write your study notes here...&#10;- Key concepts to remember&#10;- Examples and explanations&#10;- Tips and tricks&#10;- Questions to review later"></textarea>
+                            </div>
+                            <div class="resources-section">
+                                <h3>📦 Resources</h3>
+                                
+                                <div class="resource-upload-group">
+                                    <label>📸 Add Image</label>
+                                    <div class="resource-upload-input">
+                                        <input type="file" id="imageInput" accept="image/*">
+                                        <button class="resource-upload-button" onclick="addImageResource(currentTopic)">Add Image</button>
+                                    </div>
+                                </div>
+
+                                <div class="resource-upload-group">
+                                    <label>🔗 Add Video Link</label>
+                                    <div class="resource-upload-input">
+                                        <input type="text" id="videoLinkInput" placeholder="Paste video URL (YouTube, Vimeo, etc.)">
+                                        <button class="resource-upload-button" onclick="addVideoLink(currentTopic)">Add Link</button>
+                                    </div>
+                                </div>
+
+                                <div class="resource-upload-group">
+                                    <label>📁 Add Document/File</label>
+                                    <div class="resource-upload-input">
+                                        <input type="file" id="fileInput" accept=".txt,.pdf,.doc,.docx,.xls,.xlsx">
+                                        <button class="resource-upload-button" onclick="addFileResource(currentTopic)">Add File</button>
+                                    </div>
+                                </div>
+
+                                <div class="resource-list" id="resourcesList" style="display: none;">
+                                    <h4>Attached Resources:</h4>
+                                    <div id="resourcesContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="save-notes-button" onclick="saveNotes(currentTopic)">💾 Save Notes</button>
                     </div>
                 `;
                 console.log('Tab contents built - Done!');
@@ -1856,9 +2134,15 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
 
             // Find and mark the clicked button as active
             const buttons = document.querySelectorAll('.tab-button');
-            const tabIndex = Array.from(buttons).findIndex(btn =>
-                btn.textContent.includes(tabName === 'concepts' ? 'Concepts' :
-                    tabName === 'samples' ? 'Sample' : 'Challenges')
+            const tabPatterns = {
+                'concepts': 'Concepts',
+                'samples': 'Sample',
+                'challenges': 'Challenges',
+                'notes': 'Notes'
+            };
+            const pattern = tabPatterns[tabName];
+            const tabIndex = Array.from(buttons).findIndex(btn => 
+                btn.textContent.includes(pattern)
             );
             if (tabIndex >= 0) buttons[tabIndex].classList.add('active');
 
@@ -1869,6 +2153,12 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             if (tabName === 'challenges' && typeof initializeUploadForms === 'function') {
                 console.log('🔄 Initializing upload forms for challenges tab');
                 initializeUploadForms();
+            }
+
+            // Load notes when switching to notes tab
+            if (tabName === 'notes') {
+                console.log('📝 Loading notes for topic:', currentTopic);
+                loadNotes(currentTopic);
             }
         }
 
@@ -2355,6 +2645,346 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             div.id = id;
             document.currentScript.parentElement.appendChild(div);
             return div;
+        }
+
+        // ========== NOTES MANAGEMENT ==========
+
+        /**
+         * Variables to track current note being edited
+         */
+        let currentNotesId = null;
+
+        /**
+         * Load notes from Supabase and display them
+         */
+        async function loadNotes(topicKey) {
+            try {
+                const user = window.getCurrentUser();
+                if (!user) {
+                    console.warn('⚠️ User not logged in, cannot load notes');
+                    return;
+                }
+
+                console.log('📝 Loading notes for topic:', topicKey, 'user:', user.username);
+
+                // Try to load from Supabase
+                if (window.supabaseGetStudyNotes) {
+                    const studyNote = await window.supabaseGetStudyNotes(user.username, topicKey);
+                    if (studyNote) {
+                        const notesTextarea = document.getElementById('notesText');
+                        if (notesTextarea) {
+                            notesTextarea.value = studyNote.notes_content || '';
+                            currentNotesId = studyNote.id;
+                            console.log('✅ Study notes loaded from Supabase');
+                        }
+                    }
+                } else {
+                    console.warn('⚠️ Supabase notes functions not available yet');
+                }
+
+                // Load resources
+                if (window.supabaseGetStudyResources) {
+                    const resources = await window.supabaseGetStudyResources(user.username, topicKey);
+                    displayResources(resources);
+                    console.log('✅ Study resources loaded:', resources.length, 'resources');
+                }
+            } catch (error) {
+                console.error('❌ Error loading notes:', error);
+                showNotesMessage('❌ Failed to load notes', 'error');
+            }
+        }
+
+        /**
+         * Save notes to Supabase
+         */
+        async function saveNotes(topicKey) {
+            try {
+                const user = window.getCurrentUser();
+                if (!user) {
+                    showNotesMessage('❌ Please log in to save notes', 'error');
+                    return;
+                }
+
+                const notesText = document.getElementById('notesText');
+                if (!notesText) {
+                    console.error('Notes textarea not found');
+                    return;
+                }
+
+                const content = notesText.value;
+
+                // Save to Supabase
+                if (window.supabaseSaveStudyNotes) {
+                    await window.supabaseSaveStudyNotes(user.username, topicKey, content);
+                    showNotesMessage('✅ Notes saved successfully!', 'success');
+                    console.log('📝 Notes saved to Supabase for topic:', topicKey, 'Length:', content.length);
+                } else {
+                    throw new Error('Supabase notes functions not available');
+                }
+            } catch (error) {
+                console.error('❌ Error saving notes:', error);
+                showNotesMessage('❌ Failed to save notes: ' + error.message, 'error');
+            }
+        }
+
+        /**
+         * Add image resource to Supabase
+         */
+        function addImageResource(topicKey) {
+            const user = window.getCurrentUser();
+            if (!user) {
+                showNotesMessage('❌ Please log in to add resources', 'error');
+                return;
+            }
+
+            const fileInput = document.getElementById('imageInput');
+            if (!fileInput || !fileInput.files.length) {
+                showNotesMessage('❌ Please select an image file', 'error');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = async (e) => {
+                try {
+                    const resourceData = {
+                        type: 'image',
+                        name: file.name,
+                        data: e.target.result,
+                        size: file.size
+                    };
+
+                    if (window.supabaseSaveStudyResource) {
+                        await window.supabaseSaveStudyResource(user.username, topicKey, resourceData);
+                        
+                        // Reload resources
+                        const resources = await window.supabaseGetStudyResources(user.username, topicKey);
+                        displayResources(resources);
+                        
+                        fileInput.value = '';
+                        showNotesMessage(`✅ Image "${file.name}" added successfully!`, 'success');
+                        console.log('📸 Image resource added:', file.name);
+                    }
+                } catch (error) {
+                    console.error('❌ Error adding image:', error);
+                    showNotesMessage('❌ Failed to add image: ' + error.message, 'error');
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        /**
+         * Add video link resource to Supabase
+         */
+        async function addVideoLink(topicKey) {
+            try {
+                const user = window.getCurrentUser();
+                if (!user) {
+                    showNotesMessage('❌ Please log in to add resources', 'error');
+                    return;
+                }
+
+                const linkInput = document.getElementById('videoLinkInput');
+                if (!linkInput || !linkInput.value.trim()) {
+                    showNotesMessage('❌ Please enter a video URL', 'error');
+                    return;
+                }
+
+                const url = linkInput.value.trim();
+                
+                // Validate URL
+                try {
+                    new URL(url);
+                } catch (e) {
+                    showNotesMessage('❌ Invalid URL format', 'error');
+                    return;
+                }
+
+                const resourceData = {
+                    type: 'video',
+                    name: url,
+                    url: url
+                };
+
+                if (window.supabaseSaveStudyResource) {
+                    await window.supabaseSaveStudyResource(user.username, topicKey, resourceData);
+                    
+                    // Reload resources
+                    const resources = await window.supabaseGetStudyResources(user.username, topicKey);
+                    displayResources(resources);
+                    
+                    linkInput.value = '';
+                    showNotesMessage('✅ Video link added successfully!', 'success');
+                    console.log('🎥 Video resource added:', url);
+                }
+            } catch (error) {
+                console.error('❌ Error adding video link:', error);
+                showNotesMessage('❌ Failed to add video link: ' + error.message, 'error');
+            }
+        }
+
+        /**
+         * Add file resource to Supabase
+         */
+        function addFileResource(topicKey) {
+            const user = window.getCurrentUser();
+            if (!user) {
+                showNotesMessage('❌ Please log in to add resources', 'error');
+                return;
+            }
+
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput || !fileInput.files.length) {
+                showNotesMessage('❌ Please select a file', 'error');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = async (e) => {
+                try {
+                    const resourceData = {
+                        type: 'file',
+                        name: file.name,
+                        data: e.target.result,
+                        size: file.size
+                    };
+
+                    if (window.supabaseSaveStudyResource) {
+                        await window.supabaseSaveStudyResource(user.username, topicKey, resourceData);
+                        
+                        // Reload resources
+                        const resources = await window.supabaseGetStudyResources(user.username, topicKey);
+                        displayResources(resources);
+                        
+                        fileInput.value = '';
+                        showNotesMessage(`✅ File "${file.name}" added successfully!`, 'success');
+                        console.log('📄 File resource added:', file.name);
+                    }
+                } catch (error) {
+                    console.error('❌ Error adding file:', error);
+                    showNotesMessage('❌ Failed to add file: ' + error.message, 'error');
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        /**
+         * Display resources in the resources list
+         */
+        function displayResources(resources) {
+            const container = document.getElementById('resourcesContainer');
+            const list = document.getElementById('resourcesList');
+
+            if (!container || !list) {
+                console.error('Resources container not found');
+                return;
+            }
+
+            if (!resources || resources.length === 0) {
+                list.style.display = 'none';
+                container.innerHTML = '';
+                return;
+            }
+
+            list.style.display = 'block';
+            container.innerHTML = resources.map(resource => createResourceItem(resource)).join('');
+        }
+
+        /**
+         * Create HTML for a resource item
+         */
+        function createResourceItem(resource) {
+            const icons = {
+                'image': '🖼️',
+                'video': '🎥',
+                'file': '📄'
+            };
+
+            let preview = '';
+            if (resource.resource_type === 'image' && resource.resource_data) {
+                preview = `<img src="${resource.resource_data}" class="resource-preview" alt="Resource preview">`;
+            }
+
+            const icon = icons[resource.resource_type] || '📦';
+            const fileSize = resource.resource_size ? `(${(resource.resource_size / 1024).toFixed(1)} KB)` : '';
+            const createdAt = resource.created_at ? new Date(resource.created_at).toLocaleString() : 'N/A';
+
+            return `
+                <div class="resource-item">
+                    <div class="resource-item-info">
+                        <div class="resource-item-icon">${icon}</div>
+                        <div class="resource-item-text">
+                            <div class="resource-item-title">${escapeHtml(resource.resource_name)}</div>
+                            <div class="resource-item-type">
+                                ${resource.resource_type === 'video' ? 'Video Link' : resource.resource_type === 'file' ? 'File' : 'Image'}
+                                ${fileSize ? ' • ' + fileSize : ''}
+                                • ${createdAt}
+                            </div>
+                        </div>
+                        ${preview}
+                    </div>
+                    <div class="resource-item-actions">
+                        ${resource.resource_type === 'video' ? `<a href="${resource.resource_url}" target="_blank" style="color: var(--accent); text-decoration: none; font-size: 0.85em; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 3px;">Open</a>` : ''}
+                        <button class="resource-delete-button" onclick="deleteResource('${resource.id}')">Delete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Delete a resource from Supabase
+         */
+        async function deleteResource(resourceId) {
+            try {
+                if (window.supabaseDeleteStudyResource) {
+                    await window.supabaseDeleteStudyResource(resourceId);
+                    
+                    // Reload resources for current topic
+                    const user = window.getCurrentUser();
+                    if (user && window.supabaseGetStudyResources) {
+                        const resources = await window.supabaseGetStudyResources(user.username, currentTopic);
+                        displayResources(resources);
+                    }
+                    
+                    showNotesMessage('✅ Resource deleted', 'success');
+                    console.log('🗑️ Resource deleted:', resourceId);
+                }
+            } catch (error) {
+                console.error('❌ Error deleting resource:', error);
+                showNotesMessage('❌ Failed to delete resource', 'error');
+            }
+        }
+
+        /**
+         * Show message in notes tab
+         */
+        function showNotesMessage(message, type) {
+            const messageDiv = document.getElementById('notesMessage');
+            if (!messageDiv) return;
+
+            messageDiv.innerHTML = `<div class="notes-message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        /**
+         * Utility to safely display text (prevent XSS)
+         */
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
         }
     </script>
 </body>
