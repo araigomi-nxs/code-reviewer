@@ -1906,62 +1906,75 @@ System.out.println("Count > 50: " + countGreater);</div>
                     </div>
                     <div class="challenge-item">
                         <strong>Challenge 5: Convert Loops to For-Each</strong>
-                        <div class="challenge-description">Below are three different loop types that do the same thing. Convert each one to use a for-each loop:</div>
+                        <div class="challenge-description">Below are three different loop types solving different real-world scenarios. Convert each one to use a for-each loop:</div>
                         
                         <div style="margin-top: 15px; padding: 12px; background: var(--bg-tertiary); border-radius: 4px;">
-                            <h4 style="margin-top: 0; color: var(--accent);">Problem 1: Convert FOR Loop</h4>
-                            <div class="code-block">int[] arr = {10, 20, 30, 40, 50};
-for (int i = 0; i < arr.length; i++) {
-    System.out.print(arr[i] + " ");
-}</div>
-                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Convert this traditional for loop to for-each</p>
+                            <h4 style="margin-top: 0; color: var(--accent);">Problem 1: FOR Loop (Calculate Sum)</h4>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 0 0 8px 0;"><strong>Scenario:</strong> Calculate the total score from an array of test scores</p>
+                            <div class="code-block">int[] scores = {85, 92, 78, 95, 88};
+int sum = 0;
+for (int i = 0; i < scores.length; i++) {
+    sum += scores[i];
+}
+System.out.println("Total Score: " + sum);</div>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Expected Output: Total Score: 438</p>
                         </div>
 
                         <div style="margin-top: 15px; padding: 12px; background: var(--bg-tertiary); border-radius: 4px;">
-                            <h4 style="margin-top: 0; color: var(--accent);">Problem 2: Convert WHILE Loop</h4>
-                            <div class="code-block">int[] arr = {10, 20, 30, 40, 50};
+                            <h4 style="margin-top: 0; color: var(--accent);">Problem 2: WHILE Loop (Greet Names)</h4>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 0 0 8px 0;"><strong>Scenario:</strong> Print a greeting for each name in a String array</p>
+                            <div class="code-block">String[] names = {"Alice", "Bob", "Charlie", "Diana"};
 int i = 0;
-while (i < arr.length) {
-    System.out.print(arr[i] + " ");
+while (i < names.length) {
+    System.out.println("Hello, " + names[i]);
     i++;
 }</div>
-                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Convert this while loop to for-each</p>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Expected Output: Hello, Alice / Hello, Bob / Hello, Charlie / Hello, Diana</p>
                         </div>
 
                         <div style="margin-top: 15px; padding: 12px; background: var(--bg-tertiary); border-radius: 4px;">
-                            <h4 style="margin-top: 0; color: var(--accent);">Problem 3: Convert DO-WHILE Loop</h4>
-                            <div class="code-block">int[] arr = {10, 20, 30, 40, 50};
+                            <h4 style="margin-top: 0; color: var(--accent);">Problem 3: DO-WHILE Loop (Display Temperatures)</h4>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 0 0 8px 0;"><strong>Scenario:</strong> Display temperature readings from a double array</p>
+                            <div class="code-block">double[] temperatures = {72.5, 68.3, 75.1, 69.8};
 int i = 0;
 do {
-    System.out.print(arr[i] + " ");
+    System.out.print(temperatures[i] + "°F ");
     i++;
-} while (i < arr.length);</div>
-                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Convert this do-while loop to for-each</p>
+} while (i < temperatures.length);</div>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Expected Output: 72.5°F 68.3°F 75.1°F 69.8°F</p>
                         </div>
 
-                        <div>
-                            <div class="expected-output-label" style="margin-top: 15px;">Expected Output (All Convert to Same Result):</div>
-                            <div class="expected-output">10 20 30 40 50</div>
-                        </div>
-                        <button class="preview-button" onclick="document.getElementById('foreach-solution5').style.display = document.getElementById('foreach-solution5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="foreach-solution5" class="code-block" style="display:none; margin-top: 12px;"><strong>✅ UNIFIED SOLUTION - For-Each Replaces All Three Problems:</strong>
-int[] arr = {10, 20, 30, 40, 50};
-for (int num : arr) {
-    System.out.print(num + " ");
+                        <button class="preview-button" onclick="document.getElementById('foreach-solution5').style.display = document.getElementById('foreach-solution5').style.display === 'none' ? 'block' : 'none';">💡 Show Solutions</button>
+                        <div id="foreach-solution5" class="code-block" style="display:none; margin-top: 12px;">
+<strong>✅ SOLUTION 1 - For-Each (Calculate Sum):</strong>
+int[] scores = {85, 92, 78, 95, 88};
+int sum = 0;
+for (int score : scores) {
+    sum += score;
 }
-// Output: 10 20 30 40 50
+System.out.println("Total Score: " + sum);
+// Output: Total Score: 438
 
-<strong>How It Replaces Each Problem:</strong>
-✓ Problem 1 (FOR loop): Removes manual index i and arr.length check
-✓ Problem 2 (WHILE loop): Eliminates int i = 0, i++ counter management
-✓ Problem 3 (DO-WHILE loop): Replaces entire index-based iteration pattern
+<strong>✅ SOLUTION 2 - For-Each (Greet Names):</strong>
+String[] names = {"Alice", "Bob", "Charlie", "Diana"};
+for (String name : names) {
+    System.out.println("Hello, " + name);
+}
+// Output: Hello, Alice / Hello, Bob / Hello, Charlie / Hello, Diana
+
+<strong>✅ SOLUTION 3 - For-Each (Display Temperatures):</strong>
+double[] temperatures = {72.5, 68.3, 75.1, 69.8};
+for (double temp : temperatures) {
+    System.out.print(temp + "°F ");
+}
+// Output: 72.5°F 68.3°F 75.1°F 69.8°F
 
 <strong>Key Takeaways:</strong>
-• All three original loop types solve the same problem differently
-• For-each is the simplest, cleanest, and most readable solution
-• It automatically handles iteration without index management
-• Use for-each whenever you need to access every element in an array/collection
-• Traditional loops still useful when you need the index value</div>
+• For-each works with any data type (int, String, double, custom objects)
+• For-each automatically eliminates index management and boundaries
+• Use for(Type element : array) syntax for cleaner, safer iteration
+• Perfect when you don't need the index value itself
+• Reduces errors from off-by-one mistakes and null pointer exceptions</div>
                     </div>
                 `
             },
