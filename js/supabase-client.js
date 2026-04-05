@@ -808,8 +808,11 @@ async function supabaseGetUserProfile(username) {
 
     // Check cache first
     if (profileLookupCache.hasOwnProperty(username)) {
+        console.log('📦 Cache hit for user:', username);
         return profileLookupCache[username];
     }
+
+    console.log('🔍 Fetching profile for:', username);
 
     try {
         const { data, error } = await supabaseInstance
@@ -819,15 +822,18 @@ async function supabaseGetUserProfile(username) {
             .single();
 
         if (error) {
+            console.warn('⚠️ Error fetching profile for', username, ':', error.message);
             // Cache the null result to avoid repeated requests
             profileLookupCache[username] = null;
             return null;
         }
 
+        console.log('✅ Profile fetched for', username, ':', data);
         // Cache successful result
         profileLookupCache[username] = data;
         return data;
     } catch (error) {
+        console.error('❌ Exception fetching profile for', username, ':', error.message);
         // Cache failure to avoid repeated requests
         profileLookupCache[username] = null;
         return null;

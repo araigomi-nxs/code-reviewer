@@ -3085,14 +3085,22 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             try {
                 if (window.supabaseGetUserProfile) {
                     const profile = await window.supabaseGetUserProfile(username);
+                    console.log('👤 Profile fetched for', username, ':', profile);
                     if (profile && profile.avatar_url) {
-                        return `<img src="${profile.avatar_url}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;" alt="${username}">`;
+                        // Ensure proper URL by checking if it's already absolute
+                        let imageSrc = profile.avatar_url;
+                        if (!imageSrc.startsWith('http') && !imageSrc.startsWith('/')) {
+                            imageSrc = '/' + imageSrc;
+                        }
+                        console.log('🖼️ Avatar URL for', username, ':', imageSrc);
+                        return `<img src="${imageSrc}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;" alt="${username}" onerror="this.replaceWith(createFallbackAvatar('${username}'))">`;
                     }
                 }
             } catch (e) {
                 console.error('Error getting user avatar:', e);
             }
             // Return fallback avatar if profile not found or error occurs
+            console.log('📍 Using fallback avatar for:', username);
             return createFallbackAvatar(username);
         }
 
@@ -3539,11 +3547,15 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
 
         // Load resource avatars asynchronously
         async function loadResourceAvatars(items) {
+            console.log('📦 Loading avatars for', items.length, 'items');
             for (const item of items) {
+                console.log('Item type:', item.type, 'Username:', item.username);
                 if (item.type === 'resource') {
                     const avatarHtml = await getUserAvatarHtml(item.username);
                     if (avatarHtml) {
-                        const element = document.querySelector(`#resource-${item.id} .resource-avatar-placeholder`);
+                        const selector = `#resource-${item.id} .resource-avatar-placeholder`;
+                        const element = document.querySelector(selector);
+                        console.log('Looking for:', selector, 'Found:', !!element);
                         if (element) {
                             element.outerHTML = avatarHtml;
                         }
