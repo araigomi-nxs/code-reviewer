@@ -1430,6 +1430,18 @@
 
         <div id="homeScreen" class="home-screen">
 
+            <div class="daily-java-tip-card">
+                <div class="daily-java-tip-header">
+                    <div>
+                        <div class="daily-java-tip-kicker">☕ Dashboard Tip</div>
+                        <h2 class="daily-java-tip-title">Today's Java Tip</h2>
+                    </div>
+                </div>
+                <div id="dailyJavaTipDashboard" class="daily-java-tip-loading">
+                    Loading today's Java tip...
+                </div>
+            </div>
+
             <div
                 style="grid-column: 1 / -1; background: var(--bg-tertiary); padding: 16px; margin-bottom: 20px; border-left: 4px solid #D5E339; border-radius: 4px;">
                 <h2 style="margin: 0; color: #D5E339; font-size: 1.3em;">EASY LEVEL - Fundamentals</h2>
@@ -1471,19 +1483,6 @@
                 <h3>OOP Basics</h3>
                 <p>Encapsulation, Inheritance, Polymorphism & Interfaces</p>
                 <div class="topic-card-users" data-topic="oop"><span class="topic-users-loading">Loading...</span></div>
-            </div>
-
-            <div class="daily-java-tip-card">
-                <div class="daily-java-tip-header">
-                    <div>
-                        <div class="daily-java-tip-kicker">☕ Dashboard Tip</div>
-                        <h2 class="daily-java-tip-title">Today's Java Tip</h2>
-                    </div>
-                    <button class="daily-java-tip-refresh" onclick="window.loadDailyJavaTip && window.loadDailyJavaTip(true)">Refresh Tip</button>
-                </div>
-                <div id="dailyJavaTipDashboard" class="daily-java-tip-loading">
-                    Loading today's Java tip...
-                </div>
             </div>
 
             <!-- Latest Submissions Dashboard -->

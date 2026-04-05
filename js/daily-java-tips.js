@@ -258,6 +258,8 @@ function setCachedDailyTip(tip) {
     }
 }
 
+const DAILY_JAVA_TIP_REFRESH_INTERVAL_MS = 12 * 60 * 60 * 1000;
+
 function renderDailyJavaTipLoading() {
     const container = document.getElementById('dailyJavaTipDashboard');
     if (!container) return;
@@ -403,16 +405,34 @@ async function loadDailyJavaTip(forceRefresh = false) {
     }
 }
 
+function startDailyJavaTipAutoRefresh() {
+    if (window.dailyJavaTipAutoRefreshTimer) {
+        clearTimeout(window.dailyJavaTipAutoRefreshTimer);
+    }
+
+    const scheduleNextRefresh = () => {
+        const delay = DAILY_JAVA_TIP_REFRESH_INTERVAL_MS;
+        window.dailyJavaTipAutoRefreshTimer = setTimeout(async () => {
+            await loadDailyJavaTip(true);
+            scheduleNextRefresh();
+        }, delay);
+    };
+
+    scheduleNextRefresh();
+}
+
 function initializeDailyJavaTipWidget() {
     const container = document.getElementById('dailyJavaTipDashboard');
     if (!container) return;
 
     loadDailyJavaTip(false);
+    startDailyJavaTipAutoRefresh();
 }
 
 window.loadDailyJavaTip = loadDailyJavaTip;
 window.renderDailyJavaTip = renderDailyJavaTip;
 window.initializeDailyJavaTipWidget = initializeDailyJavaTipWidget;
+window.startDailyJavaTipAutoRefresh = startDailyJavaTipAutoRefresh;
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeDailyJavaTipWidget);
