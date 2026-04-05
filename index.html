@@ -3193,6 +3193,36 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
         }
 
         /**
+         * Convert YouTube URL to embed URL
+         */
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return null;
+            
+            let videoId = null;
+            
+            // Handle various YouTube URL formats
+            if (url.includes('youtube.com/watch?v=')) {
+                // Format: https://www.youtube.com/watch?v=VIDEO_ID
+                const match = url.match(/[?&]v=([^&]+)/);
+                videoId = match ? match[1] : null;
+            } else if (url.includes('youtu.be/')) {
+                // Format: https://youtu.be/VIDEO_ID
+                const match = url.match(/youtu\.be\/([^\?&]+)/);
+                videoId = match ? match[1] : null;
+            } else if (url.includes('youtube.com/shorts/')) {
+                // Format: https://www.youtube.com/shorts/VIDEO_ID
+                const match = url.match(/shorts\/([^\?&]+)/);
+                videoId = match ? match[1] : null;
+            } else if (url.includes('youtube.com/embed/')) {
+                // Format: https://www.youtube.com/embed/VIDEO_ID
+                const match = url.match(/embed\/([^\?&]+)/);
+                videoId = match ? match[1] : null;
+            }
+            
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+        }
+
+        /**
          * Switch between creation tabs
          */
         function switchCreateTab(tab) {
