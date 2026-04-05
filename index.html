@@ -3079,9 +3079,15 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
         }
 
         /**
-         * Get user avatar HTML from Supabase profile
+         * Get user avatar HTML from Supabase profile or fallback
          */
         async function getUserAvatarHtml(username) {
+            // Always use fallback avatar - Supabase profiles table is not accessible (406 errors)
+            // If profiles become available in future, uncomment the code below and implement caching
+            return createFallbackAvatar(username);
+            
+            /*
+            // Future implementation when profiles table is accessible:
             try {
                 if (window.supabaseGetUserProfile) {
                     const profile = await window.supabaseGetUserProfile(username);
@@ -3092,8 +3098,8 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             } catch (e) {
                 console.error('Error getting user avatar:', e);
             }
-            // Return fallback avatar instead of empty string
             return createFallbackAvatar(username);
+            */
         }
 
         function createNoteItem(note) {
