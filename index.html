@@ -1876,6 +1876,62 @@ System.out.println();
 System.out.println("Largest: " + max);
 System.out.println("Count > 50: " + countGreater);</div>
                     </div>
+
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-top: 24px; margin-bottom: 20px; border-left: 4px solid #D5E339; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #D5E339; font-size: 1.1em;">MEDIUM LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 5: Convert Loops to For-Each</strong>
+                        <div class="challenge-description">Convert the following loop types to for-each: (1) FOR loop, (2) WHILE loop, (3) DO-WHILE loop. Use array {10, 20, 30, 40, 50}.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output (All Convert to Same Result):</div>
+                            <div class="expected-output">10 20 30 40 50</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('foreach-solution5').style.display = document.getElementById('foreach-solution5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="foreach-solution5" class="code-block" style="display:none; margin-top: 12px;"><strong>ORIGINAL - FOR LOOP:</strong>
+int[] arr = {10, 20, 30, 40, 50};
+for (int i = 0; i < arr.length; i++) {
+    System.out.print(arr[i] + " ");
+}
+
+<strong>CONVERTED - FOR-EACH:</strong>
+int[] arr = {10, 20, 30, 40, 50};
+for (int num : arr) {
+    System.out.print(num + " ");
+}
+
+---
+
+<strong>ORIGINAL - WHILE LOOP:</strong>
+int[] arr = {10, 20, 30, 40, 50};
+int i = 0;
+while (i < arr.length) {
+    System.out.print(arr[i] + " ");
+    i++;
+}
+
+<strong>CONVERTED - FOR-EACH:</strong>
+int[] arr = {10, 20, 30, 40, 50};
+for (int num : arr) {
+    System.out.print(num + " ");
+}
+
+---
+
+<strong>ORIGINAL - DO-WHILE LOOP:</strong>
+int[] arr = {10, 20, 30, 40, 50};
+int i = 0;
+do {
+    System.out.print(arr[i] + " ");
+    i++;
+} while (i < arr.length);
+
+<strong>CONVERTED - FOR-EACH:</strong>
+int[] arr = {10, 20, 30, 40, 50};
+for (int num : arr) {
+    System.out.print(num + " ");
+}</div>
+                    </div>
                 `
             },
             recursion: {
