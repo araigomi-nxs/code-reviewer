@@ -796,11 +796,20 @@ window.supabaseDeleteStudyResource = supabaseDeleteStudyResource;
 window.supabaseDeleteStudyResourcesByTopic = supabaseDeleteStudyResourcesByTopic;
 window.supabaseUploadImageToStorage = supabaseUploadImageToStorage;
 
+// Cache for user profile lookups to avoid repeated failed requests
+const profileLookupCache = {};
+
 /**
  * Get user profile by username - retrieves avatar_url from profiles table
+ * Uses cache to avoid repeated failed requests that trigger 406 errors
  */
 async function supabaseGetUserProfile(username) {
-    if (!supabaseInstance) return null;
+    if (!supabaseInstance || !username) return null;
+
+    // Check cache first
+    if (profileLookupCache.hasOwnProperty(username)) {
+        return profileLookupCache[username];
+    }
 
     try {
         const { data, error } = await supabaseInstance
@@ -810,15 +819,17 @@ async function supabaseGetUserProfile(username) {
             .single();
 
         if (error) {
-            // Silently fail - fallback avatar will be used in index.html
-            console.debug('Profile fetch for', username, 'returned:', error.status);
+            // Cache the null result to avoid repeated requests
+            profileLookupCache[username] = null;
             return null;
         }
 
+        // Cache successful result
+        profileLookupCache[username] = data;
         return data;
     } catch (error) {
-        // Silently fail - fallback avatar will be used in index.html
-        console.debug('Error fetching user profile:', username, error.message);
+        // Cache failure to avoid repeated requests that trigger 406 errors
+        profileLookupCache[username] = null;
         return null;
     }
 }
