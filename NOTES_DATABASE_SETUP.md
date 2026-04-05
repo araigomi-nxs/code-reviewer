@@ -359,6 +359,56 @@ DELETE FROM study_resources WHERE username = 'user@example.com';
 DELETE FROM study_notes WHERE username = 'user@example.com';
 ```
 
+## Daily Java Tips Storage
+
+The dashboard now saves one shared Java tip per UTC day in Supabase so every user sees the same tip.
+
+### Create `daily_java_tips` Table
+
+Run this SQL in Supabase SQL Editor:
+
+```sql
+CREATE TABLE daily_java_tips (
+   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+   date_key TEXT NOT NULL UNIQUE,
+   title TEXT NOT NULL,
+   difficulty TEXT NOT NULL DEFAULT 'Easy',
+   topic TEXT NOT NULL DEFAULT 'Java Basics',
+   use_case TEXT NOT NULL,
+   tip TEXT NOT NULL,
+   why_it_works TEXT NOT NULL,
+   code_block TEXT NOT NULL,
+   practice TEXT NOT NULL,
+   source TEXT NOT NULL DEFAULT 'groq',
+   generated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX idx_daily_java_tips_date_key ON daily_java_tips(date_key);
+CREATE INDEX idx_daily_java_tips_generated_at ON daily_java_tips(generated_at DESC);
+
+COMMENT ON TABLE daily_java_tips IS 'Stores one globally shared Java tip per day for the dashboard';
+```
+
+### RLS and Access
+
+Because the tip is now generated in the browser, the table needs public read and insert access:
+
+```sql
+ALTER TABLE daily_java_tips ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Daily tips are viewable by everyone"
+   ON daily_java_tips FOR SELECT
+   TO public
+   USING (true);
+
+CREATE POLICY "Daily tips can be created by everyone"
+   ON daily_java_tips FOR INSERT
+   TO public
+   WITH CHECK (true);
+```
+
+The dashboard uses the existing Supabase anon key plus the browser-loaded Groq key, so no service role secret is required for daily tips.
+
 ## Migration Steps
 
 1. **Open Supabase Dashboard**
