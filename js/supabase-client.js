@@ -800,7 +800,7 @@ window.supabaseUploadImageToStorage = supabaseUploadImageToStorage;
 const profileLookupCache = {};
 
 /**
- * Get user profile by username - retrieves avatar_url from users table
+ * Get user profile by username - retrieves avatar_url from profiles table or users.profile column
  * Uses cache to avoid repeated requests
  */
 async function supabaseGetUserProfile(username) {
@@ -815,23 +815,39 @@ async function supabaseGetUserProfile(username) {
     console.log('🔍 Fetching profile for:', username);
 
     try {
-        const { data, error } = await supabaseInstance
-            .from('users')
-            .select('avatar_url, username, avatar_color')
+        // Try profiles table first
+        const { data: profilesData, error: profilesError } = await supabaseInstance
+            .from('profiles')
+            .select('*')
             .eq('username', username)
             .single();
 
-        if (error) {
-            console.warn('⚠️ Error fetching profile for', username, ':', error.message);
-            // Cache the null result to avoid repeated requests
+        if (!profilesError && profilesData) {
+            console.log('✅ Profile fetched from profiles table for', username, ':', profilesData);
+            profileLookupCache[username] = profilesData;
+            return profilesData;
+        }
+
+        // Fallback: Try profile column in users table
+        console.log('⚠️ profiles table not available, trying users.profile column');
+        const { data: usersData, error: usersError } = await supabaseInstance
+            .from('users')
+            .select('profile')
+            .eq('username', username)
+            .single();
+
+        if (usersError) {
+            console.warn('⚠️ Error fetching profile for', username, ':', usersError.message);
             profileLookupCache[username] = null;
             return null;
         }
 
-        console.log('✅ Profile fetched for', username, ':', data);
+        // Extract profile data from the profile JSON column
+        const profileData = usersData?.profile || null;
+        console.log('✅ Profile fetched from users table for', username, ':', profileData);
         // Cache successful result
-        profileLookupCache[username] = data;
-        return data;
+        profileLookupCache[username] = profileData;
+        return profileData;
     } catch (error) {
         console.error('❌ Exception fetching profile for', username, ':', error.message);
         // Cache failure to avoid repeated requests
