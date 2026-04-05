@@ -573,9 +573,10 @@
             justify-content: flex-end;
             position: absolute;
             bottom: 12px;
-            right: 12px;
+            right: 8px;
             height: 24px;
             gap: 0;
+            padding-right: 6px;
         }
 
         .topic-user-avatar {
@@ -603,7 +604,7 @@
             margin-right: -8px;
         }
 
-        .topic-user-avatar:last-child {
+        .topic-user-avatar:first-child {
             margin-right: 0;
         }
 
@@ -1806,23 +1807,74 @@ for (int[] row : matrix) {
                     </div>
                     <div class="challenge-item">
                         <strong>Challenge 1: Sum All Elements</strong>
-                        
-                        <p style="margin-top: 10px;">Given array {5, 10, 15, 20, 25}, calculate sum using for-each. Expected: 75</p>
+                        <div class="challenge-description">Given array {5, 10, 15, 20, 25}, calculate sum using for-each loop.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">75</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('foreach-solution1').style.display = document.getElementById('foreach-solution1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="foreach-solution1" class="code-block" style="display:none; margin-top: 12px;">int[] numbers = {5, 10, 15, 20, 25};
+int sum = 0;
+for (int num : numbers) {
+    sum += num;
+}
+System.out.println("Sum: " + sum);  // Output: 75</div>
                     </div>
                     <div class="challenge-item">
                         <strong>Challenge 2: Find Average</strong>
-                        
-                        <p style="margin-top: 10px;">Given scores {88, 92, 76, 85}, calculate average. Expected: 85.25</p>
+                        <div class="challenge-description">Given scores {88, 92, 76, 85}, calculate and display the average.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">85.25</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('foreach-solution2').style.display = document.getElementById('foreach-solution2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="foreach-solution2" class="code-block" style="display:none; margin-top: 12px;">int[] scores = {88, 92, 76, 85};
+int sum = 0;
+for (int score : scores) {
+    sum += score;
+}
+double average = (double) sum / scores.length;
+System.out.println("Average: " + average);  // Output: 85.25</div>
                     </div>
                     <div class="challenge-item">
-                        <strong>Challenge 3: Count matches</strong>
-                        
-                        <p style="margin-top: 10px;">Count names starting with 'A' in {"Alice", "Bob", "Anna", "Amy"}. Expected: 3</p>
+                        <strong>Challenge 3: Count Matches</strong>
+                        <div class="challenge-description">Count how many names start with 'A' in {"Alice", "Bob", "Anna", "Amy"}.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">3</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('foreach-solution3').style.display = document.getElementById('foreach-solution3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="foreach-solution3" class="code-block" style="display:none; margin-top: 12px;">String[] names = {"Alice", "Bob", "Anna", "Amy"};
+int count = 0;
+for (String name : names) {
+    if (name.startsWith("A")) {
+        count++;
+    }
+}
+System.out.println("Count: " + count);  // Output: 3</div>
                     </div>
                     <div class="challenge-item">
                         <strong>Challenge 4: ArrayList Operations</strong>
-                        
-                        <p style="margin-top: 10px;">Create ArrayList with 5 numbers. Print, find largest, count > 50</p>
+                        <div class="challenge-description">Create ArrayList with values {45, 78, 92, 23, 67}. Print all, find largest, and count how many are > 50.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">All: 45 78 92 23 67  |  Largest: 92  |  Count > 50: 3</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('foreach-solution4').style.display = document.getElementById('foreach-solution4').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="foreach-solution4" class="code-block" style="display:none; margin-top: 12px;">ArrayList<Integer> numbers = new ArrayList<>();
+numbers.add(45); numbers.add(78); numbers.add(92); numbers.add(23); numbers.add(67);
+
+System.out.print("All: ");
+int max = numbers.get(0);
+int countGreater = 0;
+for (int num : numbers) {
+    System.out.print(num + " ");
+    if (num > max) max = num;
+    if (num > 50) countGreater++;
+}
+System.out.println();
+System.out.println("Largest: " + max);
+System.out.println("Count > 50: " + countGreater);</div>
                     </div>
                 `
             },
