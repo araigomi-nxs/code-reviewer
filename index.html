@@ -539,6 +539,8 @@
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
         }
 
         .topic-card:hover {
@@ -566,34 +568,43 @@
 
         .topic-card-users {
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
-            justify-content: center;
-            min-height: 32px;
-            align-items: center;
+            flex-direction: row-reverse;
+            align-items: flex-end;
+            justify-content: flex-end;
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            height: 24px;
+            gap: 0;
         }
 
         .topic-user-avatar {
-            width: 28px;
-            height: 28px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 9px;
             font-weight: bold;
             background: var(--accent);
             color: var(--bg-primary);
             cursor: pointer;
-            transition: transform 0.2s;
-            border: 1px solid var(--border-color);
+            transition: transform 0.2s, z-index 0.2s;
+            border: 2px solid var(--bg-secondary);
+            margin-right: -10px;
+            position: relative;
+            z-index: 1;
         }
 
         .topic-user-avatar:hover {
-            transform: scale(1.2);
+            transform: scale(1.3);
+            z-index: 10;
+            margin-right: -8px;
+        }
+
+        .topic-user-avatar:last-child {
+            margin-right: 0;
         }
 
         .topic-users-loading {
@@ -1413,6 +1424,7 @@
         /**
          * Load and display user avatars for a specific topic
          * Shows users who have submitted solutions for challenges in this topic
+         * Displays as stacked avatars in bottom right corner
          */
         async function loadTopicUsers(topicId) {
             try {
@@ -1437,27 +1449,32 @@
                     // Clear loading text
                     container.innerHTML = '';
 
-                    // Load and display avatars for each user
-                    for (const username of usernames.slice(0, 5)) { // Show max 5 avatars
+                    // Load and display avatars for each user (max 5 avatars)
+                    for (const username of usernames.slice(0, 5)) {
                         const avatarHtml = await getUserAvatarHtml(username);
-                        const avatarContainer = document.createElement('div');
-                        avatarContainer.title = username;
+                        const avatarDiv = document.createElement('div');
+                        avatarDiv.className = 'topic-user-avatar';
+                        avatarDiv.title = username;
                         
-                        // For topic cards, resize the avatar
+                        // Insert the avatar HTML (either img or colored circle)
                         if (avatarHtml.includes('<img')) {
-                            avatarContainer.innerHTML = avatarHtml.replace('style="width: 20px; height: 20px;', 'style="width: 28px; height: 28px;');
+                            // For image avatars, resize and style them
+                            avatarDiv.innerHTML = avatarHtml.replace('style="width: 20px; height: 20px;', 'style="width: 100%; height: 100%;');
                         } else {
-                            avatarContainer.innerHTML = avatarHtml.replace('style="width: 20px; height: 20px;', 'style="width: 28px; height: 28px;');
+                            // For colored initial avatars, adjust the size
+                            avatarDiv.innerHTML = avatarHtml.replace('style="width: 20px; height: 20px;', 'style="width: 100%; height: 100%;');
                         }
                         
-                        container.appendChild(avatarContainer);
+                        container.appendChild(avatarDiv);
                     }
 
                     // Show more indicator if there are more users
                     if (usernames.length > 5) {
                         const moreDiv = document.createElement('div');
-                        moreDiv.style.fontSize = '12px';
-                        moreDiv.style.color = 'var(--text-secondary)';
+                        moreDiv.className = 'topic-user-avatar';
+                        moreDiv.style.fontSize = '8px';
+                        moreDiv.style.fontWeight = 'bold';
+                        moreDiv.title = `+${usernames.length - 5} more`;
                         moreDiv.textContent = `+${usernames.length - 5}`;
                         container.appendChild(moreDiv);
                     }
