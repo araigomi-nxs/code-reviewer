@@ -1380,8 +1380,92 @@
 
             // Apply Java syntax highlighting
             initJavaSyntaxHighlighting();
+            
+            // Load user avatars for topic cards
+            loadTopicUserAvatars();
+            
             console.log('Page initialization complete');
         });
+
+        /**
+         * Load user avatars for topic cards on the dashboard
+         */
+        async function loadTopicUserAvatars() {
+            // Wait for Supabase to be ready
+            if (!window.supabaseInitPromise) {
+                console.warn('Supabase not available yet');
+                return;
+            }
+
+            try {
+                await window.supabaseInitPromise;
+                
+                const topics = ['loops', 'foreach', 'recursion', 'arrays2d', 'arraylist', 'oop'];
+                
+                for (const topic of topics) {
+                    await loadTopicUsers(topic);
+                }
+            } catch (error) {
+                console.error('Error loading topic users:', error);
+            }
+        }
+
+        /**
+         * Load and display user avatars for a specific topic
+         * Shows users who have submitted solutions for challenges in this topic
+         */
+        async function loadTopicUsers(topicId) {
+            try {
+                // Get all users who have submitted solutions for this topic
+                if (window.supabaseGetSubmissionsByTopic) {
+                    const usernames = await window.supabaseGetSubmissionsByTopic(topicId);
+                    
+                    if (!usernames || usernames.length === 0) {
+                        console.log('No submissions found for topic:', topicId);
+                        return;
+                    }
+
+                    console.log('📌 Users who submitted for topic', topicId, ':', usernames);
+
+                    // Find the topic card users container
+                    const container = document.querySelector(`[data-topic="${topicId}"]`);
+                    if (!container) {
+                        console.warn('Container not found for topic:', topicId);
+                        return;
+                    }
+
+                    // Clear loading text
+                    container.innerHTML = '';
+
+                    // Load and display avatars for each user
+                    for (const username of usernames.slice(0, 5)) { // Show max 5 avatars
+                        const avatarHtml = await getUserAvatarHtml(username);
+                        const avatarContainer = document.createElement('div');
+                        avatarContainer.title = username;
+                        
+                        // For topic cards, resize the avatar
+                        if (avatarHtml.includes('<img')) {
+                            avatarContainer.innerHTML = avatarHtml.replace('style="width: 20px; height: 20px;', 'style="width: 28px; height: 28px;');
+                        } else {
+                            avatarContainer.innerHTML = avatarHtml.replace('style="width: 20px; height: 20px;', 'style="width: 28px; height: 28px;');
+                        }
+                        
+                        container.appendChild(avatarContainer);
+                    }
+
+                    // Show more indicator if there are more users
+                    if (usernames.length > 5) {
+                        const moreDiv = document.createElement('div');
+                        moreDiv.style.fontSize = '12px';
+                        moreDiv.style.color = 'var(--text-secondary)';
+                        moreDiv.textContent = `+${usernames.length - 5}`;
+                        container.appendChild(moreDiv);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading users for topic', topicId, ':', error);
+            }
+        }
 
         const topicsData = {
             loops: {
@@ -3502,6 +3586,7 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             const fileSize = resource.resource_size ? `(${(resource.resource_size / 1024).toFixed(1)} KB)` : '';
             const createdAt = resource.created_at ? new Date(resource.created_at).toLocaleString() : 'N/A';
             const creator = resource.username || 'Unknown';
+            const resourceTitle = resource.resource_name || resource.resource_title || (resource.resource_type === 'video' ? '🎥 Video' : resource.resource_type === 'file' ? '📄 File' : '📸 Image');
             
             // Store profile icon retrieval for async loading
             const resourceItemId = `resource-${resource.id}`;
@@ -3531,10 +3616,12 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
 
             return `
                 <div class="note-item" id="${resourceItemId}">
-                    <div class="note-item-header" style="display: flex; align-items: center; gap: 8px;">
+                    <div class="note-item-header" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                         <span class="resource-avatar-placeholder"></span>
-                        <span class="note-item-author">${escapeHtml(creator)} • ${resource.resource_type === 'video' ? '🎥 Video' : resource.resource_type === 'file' ? '📄 File' : '📸 Image'} ${fileSize ? ' • ' + fileSize : ''}</span>
-                        <span class="note-item-date">${createdAt}</span>
+                        <span class="note-item-author" style="font-weight: 500;">${escapeHtml(creator)}</span>
+                        <span style="color: var(--text-secondary); font-size: 0.9em;">${escapeHtml(resourceTitle)}</span>
+                        ${fileSize ? `<span style="color: var(--text-tertiary); font-size: 0.85em;">${fileSize}</span>` : ''}
+                        <span class="note-item-date" style="margin-left: auto;">${createdAt}</span>
                     </div>
                     ${preview}
                     <div class="note-item-actions">

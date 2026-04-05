@@ -787,6 +787,32 @@ async function supabaseUploadImageToStorage(file, topicId, username) {
     }
 }
 
+/**
+ * Get all users who have submitted at least 1 solution for a specific topic
+ * Returns unique usernames of users with ANY submission count (1+) for this topic
+ */
+async function supabaseGetSubmissionsByTopic(topicId) {
+    if (!supabaseInstance) return [];
+
+    try {
+        const { data, error } = await supabaseInstance
+            .from('submissions')
+            .select('username, topic_id')
+            .eq('topic_id', topicId);
+
+        if (error) throw error;
+
+        // Get unique usernames - each user appears only once, regardless of how many submissions they have
+        const uniqueUsernames = [...new Set(data.map(sub => sub.username))];
+        console.log('👥 Users who have submitted for topic', topicId, ':', uniqueUsernames, '(total submissions:', data.length, ')');
+        
+        return uniqueUsernames;
+    } catch (error) {
+        console.error('❌ Error fetching submissions by topic:', error);
+        return [];
+    }
+}
+
 // Export notes functions to window
 window.supabaseSaveStudyNotes = supabaseSaveStudyNotes;
 window.supabaseGetStudyNotes = supabaseGetStudyNotes;
@@ -795,12 +821,13 @@ window.supabaseGetStudyResources = supabaseGetStudyResources;
 window.supabaseDeleteStudyResource = supabaseDeleteStudyResource;
 window.supabaseDeleteStudyResourcesByTopic = supabaseDeleteStudyResourcesByTopic;
 window.supabaseUploadImageToStorage = supabaseUploadImageToStorage;
+window.supabaseGetSubmissionsByTopic = supabaseGetSubmissionsByTopic;
 
 // Cache for user profile lookups to avoid repeated failed requests
 const profileLookupCache = {};
 
 /**
- * Get user profile by username - retrieves avatar_url from profiles table or users.profile column
+ * Get user profile by username - retrieves avatar_url from users.profile JSON column
  * Uses cache to avoid repeated requests
  */
 async function supabaseGetUserProfile(username) {
@@ -815,42 +842,26 @@ async function supabaseGetUserProfile(username) {
     console.log('🔍 Fetching profile for:', username);
 
     try {
-        // Try profiles table first
-        const { data: profilesData, error: profilesError } = await supabaseInstance
-            .from('profiles')
-            .select('*')
-            .eq('username', username)
-            .single();
-
-        if (!profilesError && profilesData) {
-            console.log('✅ Profile fetched from profiles table for', username, ':', profilesData);
-            profileLookupCache[username] = profilesData;
-            return profilesData;
-        }
-
-        // Fallback: Try profile column in users table
-        console.log('⚠️ profiles table not available, trying users.profile column');
-        const { data: usersData, error: usersError } = await supabaseInstance
+        const { data, error } = await supabaseInstance
             .from('users')
             .select('profile')
             .eq('username', username)
             .single();
 
-        if (usersError) {
-            console.warn('⚠️ Error fetching profile for', username, ':', usersError.message);
+        if (error) {
+            console.warn('⚠️ Error fetching profile for', username, ':', error.message);
             profileLookupCache[username] = null;
             return null;
         }
 
         // Extract profile data from the profile JSON column
-        const profileData = usersData?.profile || null;
-        console.log('✅ Profile fetched from users table for', username, ':', profileData);
+        const profileData = data?.profile || null;
+        console.log('✅ Profile fetched for', username, ':', profileData);
         // Cache successful result
         profileLookupCache[username] = profileData;
         return profileData;
     } catch (error) {
         console.error('❌ Exception fetching profile for', username, ':', error.message);
-        // Cache failure to avoid repeated requests
         profileLookupCache[username] = null;
         return null;
     }
