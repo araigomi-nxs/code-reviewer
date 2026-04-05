@@ -657,6 +657,149 @@
             background: var(--accent-hover);
         }
 
+        .daily-java-tip-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(214, 227, 57, 0.12), rgba(0, 0, 0, 0.03));
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .daily-java-tip-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(214, 227, 57, 0.18), transparent 40%);
+            pointer-events: none;
+        }
+
+        .daily-java-tip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .daily-java-tip-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .daily-java-tip-title {
+            margin: 0;
+            color: var(--accent);
+            font-size: 1.35em;
+        }
+
+        .daily-java-tip-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .daily-java-tip-panel {
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            backdrop-filter: blur(6px);
+        }
+
+        body.dark-mode .daily-java-tip-panel {
+            background: rgba(0, 0, 0, 0.14);
+        }
+
+        .daily-java-tip-label {
+            margin: 0 0 8px 0;
+            color: var(--text-secondary);
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .daily-java-tip-copy {
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        .daily-java-tip-copy p {
+            margin: 0 0 10px 0;
+        }
+
+        .daily-java-tip-code {
+            margin-top: 12px;
+            font-size: 0.88em;
+        }
+
+        .daily-java-tip-empty,
+        .daily-java-tip-loading {
+            color: var(--text-tertiary);
+            text-align: center;
+            padding: 18px 12px;
+        }
+
+        .daily-java-tip-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .daily-java-tip-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 0.78em;
+            font-weight: 600;
+        }
+
+        .daily-java-tip-refresh {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 999px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .daily-java-tip-refresh:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        @media (max-width: 900px) {
+            .daily-java-tip-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .daily-java-tip-header {
+                flex-direction: column;
+            }
+        }
+
         footer {
             text-align: center;
             color: var(--text-secondary);
@@ -1252,6 +1395,7 @@
     <script defer src="js/discord-webhook.js"></script>
     <script defer src="js/submissions.js"></script>
     <script defer src="js/code-runner.js"></script>
+    <script defer src="js/daily-java-tips.js"></script>
     <script defer src="js/ui-components.js"></script>
     <script defer src="js/admin-panel.js"></script>
 </head>
@@ -1327,6 +1471,19 @@
                 <h3>OOP Basics</h3>
                 <p>Encapsulation, Inheritance, Polymorphism & Interfaces</p>
                 <div class="topic-card-users" data-topic="oop"><span class="topic-users-loading">Loading...</span></div>
+            </div>
+
+            <div class="daily-java-tip-card">
+                <div class="daily-java-tip-header">
+                    <div>
+                        <div class="daily-java-tip-kicker">☕ Dashboard Tip</div>
+                        <h2 class="daily-java-tip-title">Today's Java Tip</h2>
+                    </div>
+                    <button class="daily-java-tip-refresh" onclick="window.loadDailyJavaTip && window.loadDailyJavaTip(true)">Refresh Tip</button>
+                </div>
+                <div id="dailyJavaTipDashboard" class="daily-java-tip-loading">
+                    Loading today's Java tip...
+                </div>
             </div>
 
             <!-- Latest Submissions Dashboard -->
