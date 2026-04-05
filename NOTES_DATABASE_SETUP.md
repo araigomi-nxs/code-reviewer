@@ -241,7 +241,7 @@ The following functions have been added to `js/supabase-client.js`:
    - Add public read access policy if needed
 
 2. **Open Supabase Dashboard**
-   - Go to your Supabase project
+   - Go to your Supabase project 
    - Click "SQL Editor" in the left sidebar
 
 3. **Create Tables**

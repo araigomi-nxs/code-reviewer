@@ -1944,18 +1944,24 @@ do {
                             <div class="expected-output">10 20 30 40 50</div>
                         </div>
                         <button class="preview-button" onclick="document.getElementById('foreach-solution5').style.display = document.getElementById('foreach-solution5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="foreach-solution5" class="code-block" style="display:none; margin-top: 12px;"><strong>✅ SOLUTION - For-Each for All Three Problems:</strong>
+                        <div id="foreach-solution5" class="code-block" style="display:none; margin-top: 12px;"><strong>✅ UNIFIED SOLUTION - For-Each Replaces All Three Problems:</strong>
 int[] arr = {10, 20, 30, 40, 50};
 for (int num : arr) {
     System.out.print(num + " ");
 }
 // Output: 10 20 30 40 50
 
+<strong>How It Replaces Each Problem:</strong>
+✓ Problem 1 (FOR loop): Removes manual index i and arr.length check
+✓ Problem 2 (WHILE loop): Eliminates int i = 0, i++ counter management
+✓ Problem 3 (DO-WHILE loop): Replaces entire index-based iteration pattern
+
 <strong>Key Takeaways:</strong>
-• All three original loop types can be simplified to a single for-each loop
-• For-each eliminates index management (int i = 0, i++, arr.length)
-• For-each is cleaner, more readable, and less error-prone
-• Use for-each whenever you iterate through all elements</div>
+• All three original loop types solve the same problem differently
+• For-each is the simplest, cleanest, and most readable solution
+• It automatically handles iteration without index management
+• Use for-each whenever you need to access every element in an array/collection
+• Traditional loops still useful when you need the index value</div>
                     </div>
                 `
             },
