@@ -810,13 +810,15 @@ async function supabaseGetUserProfile(username) {
             .single();
 
         if (error) {
-            console.warn('⚠️ User profile not found:', username);
+            // Silently fail - fallback avatar will be used in index.html
+            console.debug('Profile fetch for', username, 'returned:', error.status);
             return null;
         }
 
         return data;
     } catch (error) {
-        console.error('❌ Error fetching user profile:', error);
+        // Silently fail - fallback avatar will be used in index.html
+        console.debug('Error fetching user profile:', username, error.message);
         return null;
     }
 }

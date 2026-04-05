@@ -3068,6 +3068,17 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
          * Create HTML for a note item in the list
          */
         /**
+         * Create a fallback avatar with user initial
+         */
+        function createFallbackAvatar(username) {
+            const initial = (username || 'U')[0].toUpperCase();
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'];
+            const index = (username || '').charCodeAt(0) % colors.length;
+            const bgColor = colors[index];
+            return `<div style="width: 20px; height: 20px; border-radius: 50%; background-color: ${bgColor}; color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0;" title="${username}">${initial}</div>`;
+        }
+
+        /**
          * Get user avatar HTML from Supabase profile
          */
         async function getUserAvatarHtml(username) {
@@ -3081,7 +3092,8 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             } catch (e) {
                 console.error('Error getting user avatar:', e);
             }
-            return '';
+            // Return fallback avatar instead of empty string
+            return createFallbackAvatar(username);
         }
 
         function createNoteItem(note) {
