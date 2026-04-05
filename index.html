@@ -633,6 +633,30 @@
             font-size: 0.85em;
         }
 
+        /* Scrollable submissions dashboard */
+        #latestSubmissionsDashboard {
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--bg-tertiary);
+        }
+
+        #latestSubmissionsDashboard::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #latestSubmissionsDashboard::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        #latestSubmissionsDashboard::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        #latestSubmissionsDashboard::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-hover);
+        }
+
         footer {
             text-align: center;
             color: var(--text-secondary);
@@ -1312,7 +1336,7 @@
                     style="margin: 0 0 15px 0; color: var(--accent); font-size: 1.3em; display: flex; align-items: center; gap: 10px;">
                     Latest Submissions
                 </h2>
-                <div id="latestSubmissionsDashboard" style="min-height: 200px;">
+                <div id="latestSubmissionsDashboard" style="min-height: 200px; max-height: 600px; overflow-y: auto; padding-right: 8px;">
                     <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
                         <div style="font-size: 24px; margin-bottom: 10px;">⏳</div>
                         <div>Loading submissions...</div>
