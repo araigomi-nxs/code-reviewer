@@ -800,8 +800,8 @@ window.supabaseUploadImageToStorage = supabaseUploadImageToStorage;
 const profileLookupCache = {};
 
 /**
- * Get user profile by username - retrieves avatar_url from profiles table
- * Uses cache to avoid repeated failed requests that trigger 406 errors
+ * Get user profile by username - retrieves avatar_url from users table
+ * Uses cache to avoid repeated requests
  */
 async function supabaseGetUserProfile(username) {
     if (!supabaseInstance || !username) return null;
@@ -813,8 +813,8 @@ async function supabaseGetUserProfile(username) {
 
     try {
         const { data, error } = await supabaseInstance
-            .from('profiles')
-            .select('avatar_url, username')
+            .from('users')
+            .select('avatar_url, username, avatar_color')
             .eq('username', username)
             .single();
 
@@ -828,7 +828,7 @@ async function supabaseGetUserProfile(username) {
         profileLookupCache[username] = data;
         return data;
     } catch (error) {
-        // Cache failure to avoid repeated requests that trigger 406 errors
+        // Cache failure to avoid repeated requests
         profileLookupCache[username] = null;
         return null;
     }
