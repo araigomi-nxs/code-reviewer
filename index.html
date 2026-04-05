@@ -1906,55 +1906,56 @@ System.out.println("Count > 50: " + countGreater);</div>
                     </div>
                     <div class="challenge-item">
                         <strong>Challenge 5: Convert Loops to For-Each</strong>
-                        <div class="challenge-description">Convert the following loop types to for-each: (1) FOR loop, (2) WHILE loop, (3) DO-WHILE loop. Use array {10, 20, 30, 40, 50}.</div>
-                        <div>
-                            <div class="expected-output-label">Expected Output (All Convert to Same Result):</div>
-                            <div class="expected-output">10 20 30 40 50</div>
-                        </div>
-                        <button class="preview-button" onclick="document.getElementById('foreach-solution5').style.display = document.getElementById('foreach-solution5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="foreach-solution5" class="code-block" style="display:none; margin-top: 12px;"><strong>ORIGINAL - FOR LOOP:</strong>
-int[] arr = {10, 20, 30, 40, 50};
+                        <div class="challenge-description">Below are three different loop types that do the same thing. Convert each one to use a for-each loop:</div>
+                        
+                        <div style="margin-top: 15px; padding: 12px; background: var(--bg-tertiary); border-radius: 4px;">
+                            <h4 style="margin-top: 0; color: var(--accent);">Problem 1: Convert FOR Loop</h4>
+                            <div class="code-block">int[] arr = {10, 20, 30, 40, 50};
 for (int i = 0; i < arr.length; i++) {
     System.out.print(arr[i] + " ");
-}
+}</div>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Convert this traditional for loop to for-each</p>
+                        </div>
 
-<strong>CONVERTED - FOR-EACH:</strong>
-int[] arr = {10, 20, 30, 40, 50};
-for (int num : arr) {
-    System.out.print(num + " ");
-}
-
----
-
-<strong>ORIGINAL - WHILE LOOP:</strong>
-int[] arr = {10, 20, 30, 40, 50};
+                        <div style="margin-top: 15px; padding: 12px; background: var(--bg-tertiary); border-radius: 4px;">
+                            <h4 style="margin-top: 0; color: var(--accent);">Problem 2: Convert WHILE Loop</h4>
+                            <div class="code-block">int[] arr = {10, 20, 30, 40, 50};
 int i = 0;
 while (i < arr.length) {
     System.out.print(arr[i] + " ");
     i++;
-}
+}</div>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Convert this while loop to for-each</p>
+                        </div>
 
-<strong>CONVERTED - FOR-EACH:</strong>
-int[] arr = {10, 20, 30, 40, 50};
-for (int num : arr) {
-    System.out.print(num + " ");
-}
-
----
-
-<strong>ORIGINAL - DO-WHILE LOOP:</strong>
-int[] arr = {10, 20, 30, 40, 50};
+                        <div style="margin-top: 15px; padding: 12px; background: var(--bg-tertiary); border-radius: 4px;">
+                            <h4 style="margin-top: 0; color: var(--accent);">Problem 3: Convert DO-WHILE Loop</h4>
+                            <div class="code-block">int[] arr = {10, 20, 30, 40, 50};
 int i = 0;
 do {
     System.out.print(arr[i] + " ");
     i++;
-} while (i < arr.length);
+} while (i < arr.length);</div>
+                            <p style="font-size: 0.9em; color: var(--text-secondary); margin: 8px 0 0 0;">Convert this do-while loop to for-each</p>
+                        </div>
 
-<strong>CONVERTED - FOR-EACH:</strong>
+                        <div>
+                            <div class="expected-output-label" style="margin-top: 15px;">Expected Output (All Convert to Same Result):</div>
+                            <div class="expected-output">10 20 30 40 50</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('foreach-solution5').style.display = document.getElementById('foreach-solution5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="foreach-solution5" class="code-block" style="display:none; margin-top: 12px;"><strong>✅ SOLUTION - For-Each for All Three Problems:</strong>
 int[] arr = {10, 20, 30, 40, 50};
 for (int num : arr) {
     System.out.print(num + " ");
-}</div>
+}
+// Output: 10 20 30 40 50
+
+<strong>Key Takeaways:</strong>
+• All three original loop types can be simplified to a single for-each loop
+• For-each eliminates index management (int i = 0, i++, arr.length)
+• For-each is cleaner, more readable, and less error-prone
+• Use for-each whenever you iterate through all elements</div>
                     </div>
                 `
             },
