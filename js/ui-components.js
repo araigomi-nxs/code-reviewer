@@ -2127,7 +2127,8 @@ async function displayLatestSubmissionsDashboard() {
     if (!dashboardContainer) return;
 
     // Force fresh fetch from Supabase (skip localStorage cache)
-    const latestSubmissions = window.getLatestSubmissions ? await window.getLatestSubmissions(8) : [];
+    // Fetch more submissions so older ones are included in the scrollable list
+    const latestSubmissions = window.getLatestSubmissions ? await window.getLatestSubmissions(50) : [];
     console.log('📊 Latest submissions fetched:', latestSubmissions.length, 'items');
     latestSubmissions.forEach((sub, i) => {
         console.log(`  [${i}] ${sub.username} - ${sub.challengeId}: status=${sub.aiReviewStatus}, hasReview=${!!sub.aiReview}`);
