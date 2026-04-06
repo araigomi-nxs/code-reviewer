@@ -1803,32 +1803,8 @@ async function submitChallengeFile(challengeId, topicId = 'default') {
             updateUserStats();
         }
 
-        // Refresh the entire upload form to show submission in the list
-        const formElement = document.getElementById(`uploadForm_${challengeId}`);
-        if (formElement) {
-            const challengeItem = formElement.closest('.challenge-item');
-            if (challengeItem) {
-                // Remove old form
-                formElement.remove();
-                // Add new form with updated submissions list
-                const newForm = await createUploadForm(challengeId, topicId);
-                if (newForm) {
-                    challengeItem.appendChild(newForm);
-                }
-            }
-        }
-        
-        // Refresh the latest submissions dashboard to show new submission (with "No review yet")
-        if (window.displayLatestSubmissionsDashboard) {
-            setTimeout(() => {
-                window.displayLatestSubmissionsDashboard();
-            }, 300);
-        }
-        
-        // Refresh topic card user profiles
-        if (typeof loadTopicCardUsers === 'function') {
-            setTimeout(() => loadTopicCardUsers(), 300);
-        }
+        // Refresh the visible submission lists so the new upload appears immediately
+        await refreshSubmissionDisplays(challengeId, topicId, 300);
         
         // Automatically request AI review after submission
         showNotification('🤖 AI review in progress...', 'info');
@@ -1836,37 +1812,38 @@ async function submitChallengeFile(challengeId, topicId = 'default') {
             await window.requestAiReview(challengeId);
             showNotification('✅ AI review completed!', 'success');
             
-            // Refresh dashboard again after AI review completes with longer delay for Supabase sync
-            if (window.displayLatestSubmissionsDashboard) {
-                setTimeout(() => {
-                    console.log('🔄 Refreshing dashboard after AI review (Supabase sync delay)');
-                    window.displayLatestSubmissionsDashboard();
-                }, 2000);  // 2 second delay for Supabase to sync
-            }
-            
-            // Refresh topic card user profiles after AI review
-            if (typeof loadTopicCardUsers === 'function') {
-                setTimeout(() => loadTopicCardUsers(), 2000);
-            }
+            // Refresh the lists again after AI review updates the submission state
+            await refreshSubmissionDisplays(challengeId, topicId, 2000);
         } catch (aiError) {
             console.error('AI review failed:', aiError);
             showNotification('⚠️ AI review is being processed in the background', 'info');
             
-            // Refresh dashboard anyway to show processing status
-            if (window.displayLatestSubmissionsDashboard) {
-                setTimeout(() => {
-                    console.log('🔄 Refreshing dashboard after AI review error');
-                    window.displayLatestSubmissionsDashboard();
-                }, 2000);
-            }
-            
-            // Refresh topic card user profiles
-            if (typeof loadTopicCardUsers === 'function') {
-                setTimeout(() => loadTopicCardUsers(), 2000);
-            }
+            // Refresh the lists anyway to show the pending / processing state
+            await refreshSubmissionDisplays(challengeId, topicId, 2000);
         }
     } catch (error) {
         showNotification(`❌ Submission failed: ${error.message}`, 'error');
+    }
+}
+
+/**
+ * Refresh challenge submission UI elements after uploads or AI review updates.
+ */
+async function refreshSubmissionDisplays(challengeId, topicId, delayMs = 0) {
+    if (delayMs > 0) {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+
+    if (typeof initializeUploadForms === 'function') {
+        await initializeUploadForms();
+    }
+
+    if (window.displayLatestSubmissionsDashboard) {
+        window.displayLatestSubmissionsDashboard();
+    }
+
+    if (typeof loadTopicCardUsers === 'function') {
+        loadTopicCardUsers();
     }
 }
 

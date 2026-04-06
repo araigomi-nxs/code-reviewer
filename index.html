@@ -921,7 +921,7 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            height: 100%;
+            height: auto;
         }
 
         .notes-editor-section {
@@ -1179,12 +1179,12 @@
         }
 
         .notes-list {
-            flex: 1;
-            overflow-y: auto;
+            flex: 0 0 auto;
+            overflow: visible;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            max-height: 600px;
+            max-height: none;
         }
 
         .note-item {
@@ -3282,7 +3282,9 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             // Load notes when switching to notes tab
             if (tabName === 'notes') {
                 console.log('📝 Loading notes for topic:', currentTopic);
-                loadNotes(currentTopic);
+                if (currentTopic) {
+                    loadNotes(currentTopic);
+                }
             }
         }
 
