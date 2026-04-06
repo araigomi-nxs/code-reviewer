@@ -2444,6 +2444,9 @@ function updateUserStats() {
             if (completedEl && stats) completedEl.textContent = stats.completed || 0;
             if (pendingEl && stats) pendingEl.textContent = stats.pending || 0;
             if (rejectedEl && stats) rejectedEl.textContent = stats.rejected || 0;
+
+            const challengeTabCountEl = document.getElementById('challengeTabCount');
+            if (challengeTabCountEl && stats) challengeTabCountEl.textContent = stats.completed || 0;
             
             // Reload topic card users after status update
             if (typeof loadTopicCardUsers === 'function') {

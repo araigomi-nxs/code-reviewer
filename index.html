@@ -205,6 +205,22 @@
             position: relative;
         }
 
+        .tab-button .tab-count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            margin-left: 8px;
+            padding: 0 7px;
+            border-radius: 999px;
+            background: rgba(18, 21, 28, 0.14);
+            color: inherit;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+        }
+
         .tab-button:hover {
             color: var(--text-primary);
             background: #e4e6ea;
@@ -212,11 +228,15 @@
 
         .tab-button.active {
             color: #ffffff;
-            background: var(--bg-secondary);
             background: var(--accent);
             font-weight: 600;
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
             z-index: 2;
+        }
+
+        .tab-button.active .tab-count-badge {
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
         }
 
         .tab-content {
@@ -3081,7 +3101,7 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                     <button class="tab-button active" onclick="switchTab('concepts')">Concepts</button>
                     <button class="tab-button" onclick="switchTab('samples')">Sample Code</button>
                     <button class="tab-button" onclick="switchTab('notes')">📝 Notes</button>
-                    <button class="tab-button" onclick="switchTab('challenges')">Challenges</button>
+                    <button class="tab-button" onclick="switchTab('challenges')">Challenges <span class="tab-count-badge" id="challengeTabCount">0</span></button>
                 `;
                 console.log('Content tabs built');
 
