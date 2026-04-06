@@ -285,13 +285,7 @@ function createAuthModal() {
                         <p class="auth-left-subtitle">Practice daily. Build confidence. Write better code.</p>
                         <div class="auth-user-row">
                             <div class="auth-user-count" id="authUserCount">Curernt users: --</div>
-                            <div class="auth-user-stack" aria-label="Community avatars">
-                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon1.png" alt="User avatar 1">
-                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon2.png" alt="User avatar 2">
-                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon3.png" alt="User avatar 3">
-                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon4.png" alt="User avatar 4">
-                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon5.png" alt="User avatar 5">
-                            </div>
+                            <div class="auth-user-stack" aria-label="Community avatars"></div>
                         </div>
                         <div class="auth-quotes">
                             <p>"Code is like coffee. Better when it is strong and clean."</p>
@@ -394,14 +388,8 @@ async function loadAuthUserStack() {
     const stack = document.querySelector('#authModal .auth-user-stack');
     if (!stack) return;
 
-    const avatarEls = Array.from(stack.querySelectorAll('.auth-stack-avatar'));
-    if (avatarEls.length === 0) return;
-
-    // Default tooltip fallback in case DB data is unavailable.
-    avatarEls.forEach((avatarEl, index) => {
-        avatarEl.title = `Community user ${index + 1}`;
-        avatarEl.setAttribute('aria-label', `Community user ${index + 1}`);
-    });
+    const maxStackUsers = 20;
+    stack.innerHTML = '';
 
     try {
         if (!window.supabaseInstance && window.supabaseInitPromise) {
@@ -413,7 +401,7 @@ async function loadAuthUserStack() {
         const { data, error } = await window.supabaseInstance
             .from('users')
             .select('username, profile')
-            .limit(avatarEls.length);
+            .limit(maxStackUsers + 20);
 
         if (error || !data || data.length === 0) {
             if (error) {
@@ -422,9 +410,16 @@ async function loadAuthUserStack() {
             return;
         }
 
-        data.forEach((user, index) => {
-            const avatarEl = avatarEls[index];
-            if (!avatarEl) return;
+        const visibleUsers = data
+            .filter((user) => {
+                const username = String(user?.username || '').toLowerCase();
+                return username !== 'admin';
+            })
+            .slice(0, maxStackUsers);
+
+        visibleUsers.forEach((user, index) => {
+            const avatarEl = document.createElement('img');
+            avatarEl.className = 'topic-user-avatar auth-stack-avatar';
 
             const username = user?.username || `Community user ${index + 1}`;
             avatarEl.title = username;
@@ -433,7 +428,12 @@ async function loadAuthUserStack() {
             const avatarUrl = user?.profile?.avatar_url;
             if (typeof avatarUrl === 'string' && avatarUrl.trim()) {
                 avatarEl.src = avatarUrl;
+            } else {
+                avatarEl.src = `logo/usericon${(index % 5) + 1}.png`;
             }
+
+            avatarEl.alt = `${username} avatar`;
+            stack.appendChild(avatarEl);
         });
     } catch (error) {
         console.warn('Failed to load auth stack usernames:', error);
