@@ -2024,6 +2024,9 @@ function addCompletionIndicatorStyles() {
             padding: 15px 6px 6px 0;
             border-top: 1px solid var(--border-color);
             border-radius: 6px;
+            position: relative;
+            isolation: isolate;
+            background: var(--bg-primary);
             max-height: min(56vh, 520px);
             overflow-y: auto;
             overflow-x: hidden;
@@ -2038,16 +2041,20 @@ function addCompletionIndicatorStyles() {
             top: 0;
             background: var(--bg-secondary);
             padding: 8px 4px;
-            z-index: 10;
+            z-index: 50;
             border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 0 var(--bg-secondary);
         }
 
         .submission-item {
+            position: relative;
+            z-index: 1;
             transition: all 0.2s ease;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .submission-item:hover {
+            z-index: 2;
             background: var(--bg-secondary) !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
