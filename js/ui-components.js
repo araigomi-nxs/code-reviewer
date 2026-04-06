@@ -283,6 +283,7 @@ function createAuthModal() {
                     <div class="auth-left-main">
                         <h2>☕ Learn Java</h2>
                         <p class="auth-left-subtitle">Practice daily. Build confidence. Write better code.</p>
+                        <div class="auth-user-count" id="authUserCount">Total Users: --</div>
                         <div class="auth-quotes">
                             <p>"Code is like coffee. Better when it is strong and clean."</p>
                             <p>"Small improvements every day build great software."</p>
@@ -339,6 +340,41 @@ function createAuthModal() {
     document.body.appendChild(modal);
     console.log('✅ Auth modal added to DOM');
     addAuthModalStyles();
+    loadAuthUserCount();
+}
+
+/**
+ * Load and display total registered users in auth modal.
+ */
+async function loadAuthUserCount() {
+    const counter = document.getElementById('authUserCount');
+    if (!counter) return;
+
+    try {
+        if (!window.supabaseInstance && window.supabaseInitPromise) {
+            await window.supabaseInitPromise;
+        }
+
+        if (!window.supabaseInstance) {
+            counter.textContent = 'Total Users: --';
+            return;
+        }
+
+        const { count, error } = await window.supabaseInstance
+            .from('users')
+            .select('username', { count: 'exact', head: true });
+
+        if (error) {
+            console.warn('Unable to fetch total users:', error.message);
+            counter.textContent = 'Total Users: --';
+            return;
+        }
+
+        counter.textContent = `Total Users: ${count ?? 0}`;
+    } catch (error) {
+        console.warn('Failed to load total users for auth modal:', error);
+        counter.textContent = 'Total Users: --';
+    }
 }
 
 /**
@@ -423,6 +459,19 @@ function addAuthModalStyles() {
             font-size: 14px;
             line-height: 1.5;
             text-align: left;
+        }
+
+        .auth-user-count {
+            display: inline-block;
+            margin: 0 0 16px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(213, 227, 57, 0.4);
+            background: rgba(213, 227, 57, 0.12);
+            color: #D5E339;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
         }
 
         .auth-right-panel {
