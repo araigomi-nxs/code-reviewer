@@ -104,6 +104,9 @@ const TOPIC_MAP = {
     'loops': 'Loop Structures',
     'foreach': 'For-Each Loop',
     'recursion': 'Recursion',
+    'mathclass': 'Math Class',
+    'localdatetime': 'Local Date/Time',
+    'stringbuilder': 'StringBuilder',
     'arrays2d': '2D Arrays',
     'arraylist': 'ArrayList',
     'oop': 'OOP Basics',
@@ -119,7 +122,28 @@ const CHALLENGE_TO_TOPIC = {
     'challenge_3': 'loops',
     'challenge_4': 'loops',
     'challenge_5': 'loops',
-    'challenge_6': 'foreach'
+    'challenge_6': 'foreach',
+    'challenge_7': 'foreach',
+    'challenge_8': 'foreach',
+    'challenge_9': 'recursion',
+    'challenge_10': 'arrays2d',
+    'challenge_11': 'arrays2d',
+    'challenge_12': 'arrays2d',
+    'challenge_13': 'arraylist',
+    'challenge_14': 'arraylist',
+    'challenge_15': 'arraylist',
+    'challenge_16': 'oop',
+    'challenge_17': 'oop',
+    'challenge_18': 'oop',
+    'challenge_19': 'mathclass',
+    'challenge_20': 'mathclass',
+    'challenge_21': 'mathclass',
+    'challenge_22': 'localdatetime',
+    'challenge_23': 'localdatetime',
+    'challenge_24': 'localdatetime',
+    'challenge_25': 'stringbuilder',
+    'challenge_26': 'stringbuilder',
+    'challenge_27': 'stringbuilder'
 };
 
 /**
@@ -2376,7 +2400,10 @@ async function loadTopicCardUsers() {
             'challenge_7': 'recursion', 'challenge_8': 'recursion', 'challenge_9': 'recursion',
             'challenge_10': 'arrays2d', 'challenge_11': 'arrays2d', 'challenge_12': 'arrays2d',
             'challenge_13': 'arraylist', 'challenge_14': 'arraylist', 'challenge_15': 'arraylist',
-            'challenge_16': 'oop', 'challenge_17': 'oop', 'challenge_18': 'oop'
+            'challenge_16': 'oop', 'challenge_17': 'oop', 'challenge_18': 'oop',
+            'challenge_19': 'mathclass', 'challenge_20': 'mathclass', 'challenge_21': 'mathclass',
+            'challenge_22': 'localdatetime', 'challenge_23': 'localdatetime', 'challenge_24': 'localdatetime',
+            'challenge_25': 'stringbuilder', 'challenge_26': 'stringbuilder', 'challenge_27': 'stringbuilder'
         };
 
         // Group submissions by topic

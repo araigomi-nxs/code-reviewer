@@ -1446,7 +1446,7 @@
                 style="grid-column: 1 / -1; background: var(--bg-tertiary); padding: 16px; margin-bottom: 20px; border-left: 4px solid #D5E339; border-radius: 4px;">
                 <h2 style="margin: 0; color: #D5E339; font-size: 1.3em;">EASY LEVEL - Fundamentals</h2>
                 <p style="margin: 8px 0 0 0; color: var(--text-secondary); font-size: 0.95em;">Master the core
-                    programming concepts with these 6 foundational topics</p>
+                    programming concepts with these 9 foundational topics</p>
             </div>
             <div class="topic-card" onclick="selectTopic('loops')">
                 <div class="topic-number">☕</div>
@@ -1465,6 +1465,24 @@
                 <h3>Recursion</h3>
                 <p>Base cases, factorial, Fibonacci & algorithms</p>
                 <div class="topic-card-users" data-topic="recursion"><span class="topic-users-loading">Loading...</span></div>
+            </div>
+            <div class="topic-card" onclick="selectTopic('mathclass')">
+                <div class="topic-number">☕</div>
+                <h3>Math Class</h3>
+                <p>Rounding, powers, roots & numeric utilities</p>
+                <div class="topic-card-users" data-topic="mathclass"><span class="topic-users-loading">Loading...</span></div>
+            </div>
+            <div class="topic-card" onclick="selectTopic('localdatetime')">
+                <div class="topic-number">☕</div>
+                <h3>Local Date/Time</h3>
+                <p>Dates, times, formatting & date arithmetic</p>
+                <div class="topic-card-users" data-topic="localdatetime"><span class="topic-users-loading">Loading...</span></div>
+            </div>
+            <div class="topic-card" onclick="selectTopic('stringbuilder')">
+                <div class="topic-number">☕</div>
+                <h3>StringBuilder</h3>
+                <p>Efficient string building, edits & reverse</p>
+                <div class="topic-card-users" data-topic="stringbuilder"><span class="topic-users-loading">Loading...</span></div>
             </div>
             <div class="topic-card" onclick="selectTopic('arrays2d')">
                 <div class="topic-number">☕</div>
@@ -1502,7 +1520,7 @@
 
             <div class="stats" style="grid-column: 1 / -1;">
                 <div class="stat-box">
-                    <div class="number">6</div>
+                    <div class="number">9</div>
                     <div class="label">Topics</div>
                 </div>
                 <div class="stat-box">
@@ -1592,7 +1610,7 @@
             try {
                 await window.supabaseInitPromise;
                 
-                const topics = ['loops', 'foreach', 'recursion', 'arrays2d', 'arraylist', 'oop'];
+                const topics = ['loops', 'foreach', 'recursion', 'mathclass', 'localdatetime', 'stringbuilder', 'arrays2d', 'arraylist', 'oop'];
                 
                 for (const topic of topics) {
                     await loadTopicUsers(topic);
@@ -2248,6 +2266,281 @@ System.out.println(fibonacci(6));  // Output: 8</div>
                         <strong>Challenge 7: Binary Search</strong>
                         
                         <p style="margin-top: 10px;">Implement binary search recursively</p>
+                    </div>
+                `
+            },
+            mathclass: {
+                name: 'Math Class',
+                icon: '☕',
+                concepts: `
+                    <h3>1. WHAT IS MATH CLASS?</h3>
+                    <p>Java's built-in utility class for numeric calculations. All members are static, so you call them with <strong>Math.method()</strong>.</p>
+
+                    <h3>2. COMMON METHODS</h3>
+                    <div class="code-block">Math.abs(-12);      // 12
+Math.max(10, 20);   // 20
+Math.min(10, 20);   // 10
+Math.round(4.6);    // 5
+Math.ceil(4.1);     // 5
+Math.floor(4.9);    // 4</div>
+
+                    <h3>3. POW AND SQRT</h3>
+                    <div class="code-block">Math.pow(2, 3);     // 8.0
+Math.sqrt(81);      // 9.0</div>
+
+                    <h3>4. RANDOM VALUES</h3>
+                    <p>Use Math.random() to generate a decimal between 0.0 and 1.0, then scale it to your range.</p>
+                    <div class="code-block">int number = (int) (Math.random() * 100) + 1;  // 1 to 100</div>
+
+                    <h3>5. WHY IT MATTERS</h3>
+                    <p>Math class is used in grading, statistics, games, geometry, and any task that needs reliable numeric operations.</p>
+                `,
+                samples: `
+                    <h3>ROUNDING SCORES</h3>
+                    <div class="code-block">double score = 87.6;
+int rounded = (int) Math.round(score);
+System.out.println(rounded);  // 88</div>
+
+                    <h3>AREA AND ROOTS</h3>
+                    <div class="code-block">double radius = 5;
+double area = Math.PI * Math.pow(radius, 2);
+double root = Math.sqrt(144);
+System.out.println(area);
+System.out.println(root);</div>
+
+                    <h3>MAX, MIN, AND ABSOLUTE VALUE</h3>
+                    <div class="code-block">int a = -15;
+int b = 24;
+System.out.println(Math.abs(a));
+System.out.println(Math.max(a, b));
+System.out.println(Math.min(a, b));</div>
+
+                    <button class="run-button" onclick="runMathClass()">▶ Run Sample Code</button>
+                    <div id="mathclassOutput"></div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #D5E339; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #D5E339; font-size: 1.1em;">EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: Round the Marks</strong>
+                        <div class="challenge-description">Round these scores to the nearest integers: 72.4, 81.6, 90.5.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">72 82 91</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionMath1').style.display = document.getElementById('solutionMath1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionMath1" class="code-block" style="display:none; margin-top: 12px;">double[] scores = {72.4, 81.6, 90.5};
+for (double score : scores) {
+    System.out.print(Math.round(score) + " ");
+}</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Area of a Circle</strong>
+                        <div class="challenge-description">Calculate the area of a circle with radius 7 using Math.PI and Math.pow().</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">153.94</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionMath2').style.display = document.getElementById('solutionMath2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionMath2" class="code-block" style="display:none; margin-top: 12px;">double radius = 7;
+double area = Math.PI * Math.pow(radius, 2);
+System.out.printf("%.2f", area);</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Highest Score</strong>
+                        <div class="challenge-description">Find the highest value in {45, 92, 67, 88, 99} using Math.max().</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">99</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionMath3').style.display = document.getElementById('solutionMath3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionMath3" class="code-block" style="display:none; margin-top: 12px;">int[] scores = {45, 92, 67, 88, 99};
+int highest = scores[0];
+for (int score : scores) {
+    highest = Math.max(highest, score);
+}
+System.out.println(highest);</div>
+                    </div>
+                `
+            },
+            localdatetime: {
+                name: 'Local Date/Time',
+                icon: '☕',
+                concepts: `
+                    <h3>1. WHAT IS LOCAL DATE/TIME?</h3>
+                    <p>The java.time package provides modern date and time classes that are immutable, cleaner than old Date APIs, and easier to format.</p>
+
+                    <h3>2. MAIN CLASSES</h3>
+                    <div class="code-block">LocalDate date = LocalDate.now();
+LocalTime time = LocalTime.now();
+LocalDateTime dateTime = LocalDateTime.now();</div>
+
+                    <h3>3. FORMATTING</h3>
+                    <div class="code-block">DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+String formatted = date.format(formatter);</div>
+
+                    <h3>4. DATE ARITHMETIC</h3>
+                    <div class="code-block">LocalDate nextWeek = date.plusDays(7);
+LocalDate lastMonth = date.minusMonths(1);
+LocalDateTime later = dateTime.plusHours(2);</div>
+
+                    <h3>5. COMMON USES</h3>
+                    <p>Use these classes for schedules, deadlines, age calculations, timestamps, reminders, and formatted reports.</p>
+                `,
+                samples: `
+                    <h3>TODAY AND NEXT WEEK</h3>
+                    <div class="code-block">LocalDate today = LocalDate.of(2026, 4, 6);
+LocalDate nextWeek = today.plusDays(7);
+System.out.println(today);
+System.out.println(nextWeek);</div>
+
+                    <h3>FORMATTED DATE/TIME</h3>
+                    <div class="code-block">LocalDateTime meeting = LocalDateTime.of(2026, 4, 6, 14, 30);
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+System.out.println(meeting.format(formatter));</div>
+
+                    <h3>TIME ONLY</h3>
+                    <div class="code-block">LocalTime start = LocalTime.of(9, 15);
+LocalTime end = start.plusHours(2).plusMinutes(45);
+System.out.println(start);
+System.out.println(end);</div>
+
+                    <button class="run-button" onclick="runLocalDateTime()">▶ Run Sample Code</button>
+                    <div id="localdatetimeOutput"></div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #D5E339; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #D5E339; font-size: 1.1em;">EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: Format a Date</strong>
+                        <div class="challenge-description">Format LocalDate.of(2026, 4, 6) as 06/04/2026.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">06/04/2026</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionDate1').style.display = document.getElementById('solutionDate1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionDate1" class="code-block" style="display:none; margin-top: 12px;">LocalDate date = LocalDate.of(2026, 4, 6);
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+System.out.println(date.format(formatter));</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Add Days</strong>
+                        <div class="challenge-description">Start with 2026-04-06 and print the date 10 days later.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">2026-04-16</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionDate2').style.display = document.getElementById('solutionDate2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionDate2" class="code-block" style="display:none; margin-top: 12px;">LocalDate date = LocalDate.of(2026, 4, 6);
+System.out.println(date.plusDays(10));</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Build a Meeting Time</strong>
+                        <div class="challenge-description">Create a LocalDateTime for 2026-04-06 09:30 and add 90 minutes.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">2026-04-06T11:00</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionDate3').style.display = document.getElementById('solutionDate3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionDate3" class="code-block" style="display:none; margin-top: 12px;">LocalDateTime meeting = LocalDateTime.of(2026, 4, 6, 9, 30);
+System.out.println(meeting.plusMinutes(90));</div>
+                    </div>
+                `
+            },
+            stringbuilder: {
+                name: 'StringBuilder',
+                icon: '☕',
+                concepts: `
+                    <h3>1. WHAT IS STRINGBUILDER?</h3>
+                    <p>A mutable string class used when you need to build or edit text efficiently. It avoids creating many temporary String objects.</p>
+
+                    <h3>2. COMMON METHODS</h3>
+                    <div class="code-block">StringBuilder sb = new StringBuilder();
+sb.append("Hello");
+sb.insert(5, " Java");
+sb.delete(0, 1);
+sb.reverse();</div>
+
+                    <h3>3. CHAINING</h3>
+                    <p>Most StringBuilder methods return the same object, so you can chain calls together.</p>
+                    <div class="code-block">StringBuilder result = new StringBuilder()
+        .append("Java")
+        .append(" ")
+        .append("Practice");</div>
+
+                    <h3>4. WHEN TO USE IT</h3>
+                    <p>Use StringBuilder inside loops, when concatenating many pieces, or when you need insert/delete/reverse operations.</p>
+
+                    <h3>5. STRING VS STRINGBUILDER</h3>
+                    <p>String is immutable. StringBuilder is mutable and faster for repeated modifications.</p>
+                `,
+                samples: `
+                    <h3>BUILDING A SENTENCE</h3>
+                    <div class="code-block">StringBuilder sb = new StringBuilder();
+sb.append("I");
+sb.append(" love");
+sb.append(" Java");
+System.out.println(sb.toString());</div>
+
+                    <h3>INSERT AND DELETE</h3>
+                    <div class="code-block">StringBuilder text = new StringBuilder("Hello World");
+text.insert(5, ",");
+text.deleteCharAt(0);
+System.out.println(text);</div>
+
+                    <h3>REVERSE TEXT</h3>
+                    <div class="code-block">StringBuilder word = new StringBuilder("Builder");
+System.out.println(word.reverse());</div>
+
+                    <button class="run-button" onclick="runStringBuilder()">▶ Run Sample Code</button>
+                    <div id="stringbuilderOutput"></div>
+                `,
+                challenges: `
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #D5E339; border-radius: 4px;">
+                        <h3 style="margin: 0; color: #D5E339; font-size: 1.1em;">EASY LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 1: Build Full Name</strong>
+                        <div class="challenge-description">Use StringBuilder to combine "Java", " ", and "Learner".</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">Java Learner</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionSB1').style.display = document.getElementById('solutionSB1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionSB1" class="code-block" style="display:none; margin-top: 12px;">StringBuilder sb = new StringBuilder();
+sb.append("Java");
+sb.append(" ");
+sb.append("Learner");
+System.out.println(sb.toString());</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Reverse a Word</strong>
+                        <div class="challenge-description">Reverse the word "practice" using StringBuilder.reverse().</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">ecitcarp</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionSB2').style.display = document.getElementById('solutionSB2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionSB2" class="code-block" style="display:none; margin-top: 12px;">StringBuilder word = new StringBuilder("practice");
+System.out.println(word.reverse());</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 3: Build a List String</strong>
+                        <div class="challenge-description">Create the string "A, B, C, D" using StringBuilder in a loop.</div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">A, B, C, D</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionSB3').style.display = document.getElementById('solutionSB3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionSB3" class="code-block" style="display:none; margin-top: 12px;">char[] letters = {'A', 'B', 'C', 'D'};
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < letters.length; i++) {
+    sb.append(letters[i]);
+    if (i < letters.length - 1) sb.append(", ");
+}
+System.out.println(sb.toString());</div>
                     </div>
                 `
             },
@@ -3316,6 +3609,40 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
             output += "reverse('Java') = " + reverse('Java') + "\n";
 
             displayOutput(output, 'recursionOutput');
+        }
+
+        function runMathClass() {
+            let output = "Running sample code for Math Class...\n\n";
+            output += "ABS(-15) = " + Math.abs(-15) + "\n";
+            output += "ROUND(87.6) = " + Math.round(87.6) + "\n";
+            output += "CEIL(4.1) = " + Math.ceil(4.1) + "\n";
+            output += "FLOOR(4.9) = " + Math.floor(4.9) + "\n";
+            output += "POW(2, 3) = " + Math.pow(2, 3) + "\n";
+            output += "SQRT(144) = " + Math.sqrt(144) + "\n";
+            output += "MAX(18, 27) = " + Math.max(18, 27) + "\n";
+            output += "MIN(18, 27) = " + Math.min(18, 27);
+            displayOutput(output, 'mathclassOutput');
+        }
+
+        function runLocalDateTime() {
+            let output = "Running sample code for Local Date/Time...\n\n";
+            output += "LocalDate: 2026-04-06\n";
+            output += "Next week: 2026-04-13\n\n";
+            output += "LocalTime: 14:30\n";
+            output += "Meeting time: 2026-04-06T14:30\n\n";
+            output += "Formatted: 06 Apr 2026, 02:30 PM\n";
+            output += "Plus 2 hours: 2026-04-06T16:30\n";
+            displayOutput(output, 'localdatetimeOutput');
+        }
+
+        function runStringBuilder() {
+            let output = "Running sample code for StringBuilder...\n\n";
+            output += "Building sentence: I love Java\n";
+            output += "After insert/delete: ello, World\n";
+            output += "Reverse('Builder'): redliuB\n\n";
+            output += "Combined list string: A, B, C, D\n";
+            output += "Final length: 10\n";
+            displayOutput(output, 'stringbuilderOutput');
         }
 
         function run2DArrays() {
