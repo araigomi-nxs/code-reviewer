@@ -299,8 +299,6 @@ function renderDailyJavaTip(tip) {
                 <div class="daily-java-tip-meta">
                     <span class="daily-java-tip-chip">${escapeHtml(tip.difficulty || 'Easy')}</span>
                     <span class="daily-java-tip-chip">${escapeHtml(tip.topic || 'Java')}</span>
-                    ${tip.savedToDatabase ? '<span class="daily-java-tip-chip">Saved in DB</span>' : ''}
-                    ${tip.source ? `<span class="daily-java-tip-chip">${escapeHtml(tip.source === 'groq' ? 'Groq Qwen' : 'Fallback')}</span>` : ''}
                 </div>
             </div>
 

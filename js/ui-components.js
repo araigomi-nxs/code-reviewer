@@ -479,12 +479,20 @@ function addAuthModalStyles() {
         }
 
         .auth-left-footer a {
-            color: var(--accent);
+            color: #D5E339;
+            background: rgba(213, 227, 57, 0.14);
+            border: 1px solid rgba(213, 227, 57, 0.45);
+            padding: 2px 8px;
+            border-radius: 999px;
             text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
 
         .auth-left-footer a:hover {
-            text-decoration: underline;
+            background: rgba(213, 227, 57, 0.24);
+            border-color: #D5E339;
+            box-shadow: 0 0 0 2px rgba(213, 227, 57, 0.15);
         }
 
         .close-btn {
