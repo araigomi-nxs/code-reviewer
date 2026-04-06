@@ -284,6 +284,13 @@ function createAuthModal() {
                         <h2>☕ Learn Java</h2>
                         <p class="auth-left-subtitle">Practice daily. Build confidence. Write better code.</p>
                         <div class="auth-user-count" id="authUserCount">Total Users: --</div>
+                        <div class="auth-user-stack" aria-label="Community avatars">
+                            <img src="logo/usericon1.png" alt="User avatar 1">
+                            <img src="logo/usericon2.png" alt="User avatar 2">
+                            <img src="logo/usericon3.png" alt="User avatar 3">
+                            <img src="logo/usericon4.png" alt="User avatar 4">
+                            <img src="logo/usericon5.png" alt="User avatar 5">
+                        </div>
                         <div class="auth-quotes">
                             <p>"Code is like coffee. Better when it is strong and clean."</p>
                             <p>"Small improvements every day build great software."</p>
@@ -469,6 +476,28 @@ function addAuthModalStyles() {
             font-size: 12px;
             font-weight: 700;
             letter-spacing: 0.02em;
+        }
+
+        .auth-user-stack {
+            display: flex;
+            align-items: center;
+            margin: 0 0 18px;
+            padding-left: 2px;
+        }
+
+        .auth-user-stack img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #12151C;
+            background: #12151C;
+            box-shadow: 0 3px 8px rgba(18, 21, 28, 0.35);
+            margin-left: -10px;
+        }
+
+        .auth-user-stack img:first-child {
+            margin-left: 0;
         }
 
         .auth-right-panel {
