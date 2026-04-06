@@ -175,19 +175,18 @@
         .content-tabs {
             display: flex;
             align-items: flex-end;
-            gap: 6px;
-            padding: 10px 12px 0;
+            gap: 0;
+            padding: 10px 0 0;
             border-bottom: 1px solid var(--border-color);
             background: linear-gradient(180deg, var(--bg-tertiary), var(--bg-secondary));
-            overflow-x: auto;
+            overflow: hidden;
         }
 
         .tab-button {
-            flex: 0 0 auto;
+            flex: 1;
             padding: 10px 16px 11px;
             background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-bottom: none;
+            border: none;
             border-radius: 10px 10px 0 0;
             cursor: pointer;
             font-size: 0.9em;
@@ -195,23 +194,22 @@
             color: var(--text-secondary);
             transition: all 0.2s ease;
             transform: translateY(4px);
-            box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.03);
-            white-space: nowrap;
+            box-shadow: none;
+            white-space: normal;
         }
 
         .tab-button:hover {
             color: var(--text-primary);
             transform: translateY(2px);
-            border-color: var(--accent);
+            background: var(--bg-primary);
         }
 
         .tab-button.active {
             color: var(--accent);
             background: var(--bg-secondary);
-            border-color: var(--accent);
             transform: translateY(1px);
             font-weight: 600;
-            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: none;
         }
 
         .tab-content {
