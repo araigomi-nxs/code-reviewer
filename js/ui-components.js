@@ -350,6 +350,7 @@ function createAuthModal() {
     console.log('✅ Auth modal added to DOM');
     addAuthModalStyles();
     loadAuthUserCount();
+    loadAuthUserStack();
 }
 
 /**
@@ -383,6 +384,59 @@ async function loadAuthUserCount() {
     } catch (error) {
         console.warn('Failed to load total users for auth modal:', error);
         counter.textContent = 'Curernt users: --';
+    }
+}
+
+/**
+ * Load and attach usernames to auth modal avatar stack for hover tooltips.
+ */
+async function loadAuthUserStack() {
+    const stack = document.querySelector('#authModal .auth-user-stack');
+    if (!stack) return;
+
+    const avatarEls = Array.from(stack.querySelectorAll('.auth-stack-avatar'));
+    if (avatarEls.length === 0) return;
+
+    // Default tooltip fallback in case DB data is unavailable.
+    avatarEls.forEach((avatarEl, index) => {
+        avatarEl.title = `Community user ${index + 1}`;
+        avatarEl.setAttribute('aria-label', `Community user ${index + 1}`);
+    });
+
+    try {
+        if (!window.supabaseInstance && window.supabaseInitPromise) {
+            await window.supabaseInitPromise;
+        }
+
+        if (!window.supabaseInstance) return;
+
+        const { data, error } = await window.supabaseInstance
+            .from('users')
+            .select('username, profile')
+            .limit(avatarEls.length);
+
+        if (error || !data || data.length === 0) {
+            if (error) {
+                console.warn('Unable to fetch users for auth tooltip stack:', error.message);
+            }
+            return;
+        }
+
+        data.forEach((user, index) => {
+            const avatarEl = avatarEls[index];
+            if (!avatarEl) return;
+
+            const username = user?.username || `Community user ${index + 1}`;
+            avatarEl.title = username;
+            avatarEl.setAttribute('aria-label', username);
+
+            const avatarUrl = user?.profile?.avatar_url;
+            if (typeof avatarUrl === 'string' && avatarUrl.trim()) {
+                avatarEl.src = avatarUrl;
+            }
+        });
+    } catch (error) {
+        console.warn('Failed to load auth stack usernames:', error);
     }
 }
 

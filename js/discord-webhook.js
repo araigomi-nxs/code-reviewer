@@ -366,6 +366,43 @@ async function notifySubmissionRejected(username, challengeId, feedback = '') {
 }
 
 /**
+ * Notify when a new user signs up.
+ */
+async function notifyUserJoined(username) {
+    const webhookUrl = getDiscordWebhookUrl();
+    if (!webhookUrl) {
+        console.log('ℹ️ Discord webhook not configured - skipping joined notification');
+        return false;
+    }
+
+    try {
+        const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: `${username} joined`,
+                username: 'Coding Reviewer Bot',
+                avatar_url: 'https://github.com/favicon.ico'
+            })
+        });
+
+        if (response.ok) {
+            console.log(`✅ Discord joined notification sent for ${username}`);
+            return true;
+        }
+
+        const errorText = await response.text();
+        console.error(`❌ Discord joined notification failed: ${response.status} - ${errorText}`);
+        return false;
+    } catch (error) {
+        console.error('❌ Error sending Discord joined notification:', error);
+        return false;
+    }
+}
+
+/**
  * Notify submission deletion
  */
 async function notifySubmissionDeleted(username, challengeId, fileName = '') {
@@ -446,6 +483,7 @@ window.discord.notifyAIReview = notifyAIReview;
 window.discord.notifyCompleted = notifySubmissionCompleted;
 window.discord.notifyRejected = notifySubmissionRejected;
 window.discord.notifyDeleted = notifySubmissionDeleted;
+window.discord.notifyUserJoined = notifyUserJoined;
 window.discord.extractRating = extractRatingFromReview;
 window.discord.extractReview = extractReviewContent;
 

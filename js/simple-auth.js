@@ -153,6 +153,13 @@ async function signUp(username, password, selectedAvatar) {
 
         console.log('✅ User created in Supabase:', username);
 
+        // Fire-and-forget Discord notification for new user signup.
+        if (window.discord && window.discord.notifyUserJoined) {
+            window.discord.notifyUserJoined(username).catch((discordError) => {
+                console.warn('⚠️ Discord signup notification failed (non-critical):', discordError);
+            });
+        }
+
         // Auto-login after signup
         window.currentUser = {
             username: username,
