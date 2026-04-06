@@ -275,45 +275,63 @@ function createAuthModal() {
     modal.className = 'auth-modal';
     modal.innerHTML = `
         <div class="auth-container">
-            <div class="auth-header">
-                <h2>🔐 Coding Reviewer</h2>
-                <button onclick="closeAuthModal()" class="close-btn">✕</button>
-            </div>
-
-            <!-- Login Tab -->
-            <div id="loginTab" class="auth-tab active">
-                <h3>Login</h3>
-                <form onsubmit="handleLogin(event)">
-                    <input type="text" id="loginUsername" placeholder="Username" required>
-                    <input type="password" id="loginPassword" placeholder="Password" required>
-                    <button type="submit" class="btn-primary">Login</button>
-                </form>
-                <p class="auth-switch">Don't have an account? <a onclick="switchAuthTab('signup')">Sign up</a></p>
-            </div>
-
-            <!-- Signup Tab -->
-            <div id="signupTab" class="auth-tab">
-                <h3>Create Account</h3>
-                <form onsubmit="handleSignup(event)">
-                    <input type="text" id="signupUsername" placeholder="Username (3+ chars)" required>
-                    <input type="password" id="signupPassword" placeholder="Password (6+ chars)" required>
-                    <input type="password" id="signupConfirm" placeholder="Confirm Password" required>
-                    
-                    <div style="margin: 15px 0;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--text-primary); font-size: 14px;">Choose Your Avatar:</label>
-                        <div style="display: flex; gap: 8px; justify-content: space-around; flex-wrap: wrap;" id="avatarSelector">
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon1.png" onclick="selectAvatar('logo/usericon1.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon1.png" alt="avatar1" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon2.png" onclick="selectAvatar('logo/usericon2.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon2.png" alt="avatar2" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon3.png" onclick="selectAvatar('logo/usericon3.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon3.png" alt="avatar3" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon4.png" onclick="selectAvatar('logo/usericon4.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon4.png" alt="avatar4" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                            <button type="button" class="avatar-btn" data-avatar="logo/usericon5.png" onclick="selectAvatar('logo/usericon5.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon5.png" alt="avatar5" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
-                        </div>
-                        <input type="hidden" id="selectedAvatar" value="">
+            <div class="auth-layout">
+                <div class="auth-left-panel">
+                    <div class="auth-left-logo">
+                        <img src="logo/usericon1.png" alt="Learn Java logo">
                     </div>
-                    
-                    <button type="submit" class="btn-primary">Sign Up</button>
-                </form>
-                <p class="auth-switch">Already have an account? <a onclick="switchAuthTab('login')">Login</a></p>
+                    <div class="auth-left-main">
+                        <h2>☕ Learn Java</h2>
+                        <p class="auth-left-subtitle">Practice daily. Build confidence. Write better code.</p>
+                        <div class="auth-quotes">
+                            <p>"Code is like coffee. Better when it is strong and clean."</p>
+                            <p>"Small improvements every day build great software."</p>
+                        </div>
+                    </div>
+                    <div class="auth-left-footer">
+                        Created by Kape.dev Team •
+                        <a href="https://discord.gg/qAgtEFjNTU" target="_blank" rel="noopener noreferrer">Discord Server</a>
+                    </div>
+                </div>
+
+                <div class="auth-right-panel">
+                    <!-- Login Tab -->
+                    <div id="loginTab" class="auth-tab active">
+                        <h3>Login</h3>
+                        <form onsubmit="handleLogin(event)">
+                            <input type="text" id="loginUsername" placeholder="Username" required>
+                            <input type="password" id="loginPassword" placeholder="Password" required>
+                            <button type="submit" class="btn-primary">Login</button>
+                        </form>
+                        <p class="auth-switch">Don't have an account? <a onclick="switchAuthTab('signup')">Sign up</a></p>
+                    </div>
+
+                    <!-- Signup Tab -->
+                    <div id="signupTab" class="auth-tab">
+                        <h3>Create Account</h3>
+                        <form onsubmit="handleSignup(event)">
+                            <input type="text" id="signupUsername" placeholder="Username (3+ chars)" required>
+                            <input type="password" id="signupPassword" placeholder="Password (6+ chars)" required>
+                            <input type="password" id="signupConfirm" placeholder="Confirm Password" required>
+
+                            <div style="margin: 15px 0;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--text-primary); font-size: 14px;">Choose Your Avatar:</label>
+                                <div style="display: flex; gap: 8px; justify-content: space-around; flex-wrap: wrap;" id="avatarSelector">
+                                    <button type="button" class="avatar-btn" data-avatar="logo/usericon1.png" onclick="selectAvatar('logo/usericon1.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon1.png" alt="avatar1" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                                    <button type="button" class="avatar-btn" data-avatar="logo/usericon2.png" onclick="selectAvatar('logo/usericon2.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon2.png" alt="avatar2" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                                    <button type="button" class="avatar-btn" data-avatar="logo/usericon3.png" onclick="selectAvatar('logo/usericon3.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon3.png" alt="avatar3" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                                    <button type="button" class="avatar-btn" data-avatar="logo/usericon4.png" onclick="selectAvatar('logo/usericon4.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon4.png" alt="avatar4" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                                    <button type="button" class="avatar-btn" data-avatar="logo/usericon5.png" onclick="selectAvatar('logo/usericon5.png', event)" style="width: 50px; height: 50px; padding: 4px; border: 2px solid var(--border-color); border-radius: 50%; background: var(--bg-primary); cursor: pointer; transition: all 0.2s; overflow: hidden;"><img src="logo/usericon5.png" alt="avatar5" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"></button>
+                                </div>
+                                <input type="hidden" id="selectedAvatar" value="">
+                            </div>
+
+                            <button type="submit" class="btn-primary">Sign Up</button>
+                        </form>
+                        <p class="auth-switch">Already have an account? <a onclick="switchAuthTab('login')">Login</a></p>
+                    </div>
+
+                </div>
             </div>
         </div>
     `;
@@ -338,7 +356,7 @@ function addAuthModalStyles() {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(18, 21, 28, 0.82);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -349,17 +367,77 @@ function addAuthModalStyles() {
         .auth-container {
             background: var(--bg-secondary);
             border-radius: 12px;
-            padding: 30px;
+            padding: 0;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 920px;
+            box-shadow: 0 10px 40px rgba(18, 21, 28, 0.45);
+            overflow: hidden;
+        }
+
+        .auth-layout {
+            display: flex;
+            min-height: 500px;
+        }
+
+        .auth-left-panel {
+            flex: 1;
+            padding: 38px 32px;
+            background: linear-gradient(160deg, #12151C, #12151C);
+            border-right: 1px solid #2a2f3a;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-left-main {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .auth-left-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid #2a2f3a;
+            background: #12151C;
+            box-shadow: 0 6px 14px rgba(18, 21, 28, 0.35);
+        }
+
+        .auth-left-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .auth-left-panel h2 {
+            margin: 0;
+            color: #D5E339;
+            font-size: 2rem;
+            text-align: left;
+        }
+
+        .auth-left-subtitle {
+            margin: 10px 0 22px;
+            color: #c8ced8;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .auth-right-panel {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .auth-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
             border-bottom: 2px solid var(--accent);
             padding-bottom: 15px;
         }
@@ -367,6 +445,46 @@ function addAuthModalStyles() {
         .auth-header h2 {
             margin: 0;
             color: var(--accent);
+            text-align: left;
+            flex: 1;
+        }
+
+        .auth-quotes {
+            margin-bottom: 0;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: rgba(213, 227, 57, 0.08);
+            border-left: 3px solid #D5E339;
+            border: 1px solid rgba(213, 227, 57, 0.35);
+        }
+
+        .auth-quotes p {
+            margin: 0;
+            color: #D5E339;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .auth-quotes p + p {
+            margin-top: 6px;
+        }
+
+        .auth-left-footer {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid #2a2f3a;
+            color: #9da7b7;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .auth-left-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .auth-left-footer a:hover {
+            text-decoration: underline;
         }
 
         .close-btn {
@@ -414,23 +532,25 @@ function addAuthModalStyles() {
         .auth-tab input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 4px rgba(18, 21, 28, 0.35);
             background: var(--bg-primary);
         }
 
         .auth-tab .btn-primary {
             padding: 10px;
-            background: var(--accent);
-            color: var(--bg-primary);
-            border: none;
+            background: #12151C;
+            color: #D5E339;
+            border: 1px solid #2a2f3a;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
         }
 
         .auth-tab .btn-primary:hover {
-            background: var(--accent-hover);
+            background: #1b1f28;
+            border-color: #D5E339;
+            color: #eef57d;
         }
 
         .auth-switch {
@@ -450,6 +570,32 @@ function addAuthModalStyles() {
         .auth-switch a:hover {
             text-decoration: underline;
             color: var(--accent-hover);
+        }
+
+        @media (max-width: 860px) {
+            .auth-container {
+                max-width: 560px;
+                margin: 0 14px;
+            }
+
+            .auth-layout {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            .auth-left-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 24px;
+            }
+
+            .auth-left-panel h2 {
+                font-size: 1.7rem;
+            }
+
+            .auth-right-panel {
+                padding: 24px;
+            }
         }
     `;
 
