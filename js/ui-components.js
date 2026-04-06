@@ -938,8 +938,8 @@ async function createUploadForm(challengeId, topicId = 'default') {
     const allSubmissions = window.getChallengeSubmissions ? await window.getChallengeSubmissions(challengeId) : [];
     
     if (allSubmissions.length > 0) {
-        submissionsListHTML = '<div class="submissions-list" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); max-height: 500px; overflow-y: auto; border-radius: 4px;">';
-        submissionsListHTML += `<h5 style="margin: 0 0 10px 0; position: sticky; top: 0; background: var(--bg-primary); padding: 5px 0; z-index: 10;">📋 Submissions (${allSubmissions.length})</h5>`;
+        submissionsListHTML = '<div class="submissions-list">';
+        submissionsListHTML += `<h5 class="submissions-list-header">📋 Submissions (${allSubmissions.length})</h5>`;
         
         for (const sub of allSubmissions) {
             const statusColor = sub.status === 'pending' ? '#FFA500' : 
@@ -2017,6 +2017,29 @@ function addCompletionIndicatorStyles() {
             margin: 5px 0;
             font-size: 12px;
             color: var(--text-tertiary);
+        }
+
+        .submissions-list {
+            margin-top: 20px;
+            padding: 15px 6px 6px 0;
+            border-top: 1px solid var(--border-color);
+            border-radius: 6px;
+            max-height: min(56vh, 520px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-gutter: stable;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .submissions-list-header {
+            margin: 0 0 10px;
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            padding: 8px 4px;
+            z-index: 10;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .submission-item {
