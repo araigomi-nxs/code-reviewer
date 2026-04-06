@@ -462,12 +462,9 @@ function addAuthModalStyles() {
         }
 
         .auth-user-count {
-            display: inline-block;
+            display: block;
             margin: 0 0 16px;
-            padding: 5px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(213, 227, 57, 0.4);
-            background: rgba(213, 227, 57, 0.12);
+            padding: 0;
             color: #D5E339;
             font-size: 12px;
             font-weight: 700;
@@ -529,19 +526,13 @@ function addAuthModalStyles() {
 
         .auth-left-footer a {
             color: #D5E339;
-            background: rgba(213, 227, 57, 0.14);
-            border: 1px solid rgba(213, 227, 57, 0.45);
-            padding: 2px 8px;
-            border-radius: 999px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.2s ease;
+            transition: color 0.2s ease;
         }
 
         .auth-left-footer a:hover {
-            background: rgba(213, 227, 57, 0.24);
-            border-color: #D5E339;
-            box-shadow: 0 0 0 2px rgba(213, 227, 57, 0.15);
+            text-decoration: underline;
         }
 
         .close-btn {
