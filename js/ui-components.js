@@ -283,13 +283,15 @@ function createAuthModal() {
                     <div class="auth-left-main">
                         <h2>☕ Learn Java</h2>
                         <p class="auth-left-subtitle">Practice daily. Build confidence. Write better code.</p>
-                        <div class="auth-user-count" id="authUserCount">Total Users: --</div>
-                        <div class="auth-user-stack" aria-label="Community avatars">
-                            <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon1.png" alt="User avatar 1">
-                            <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon2.png" alt="User avatar 2">
-                            <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon3.png" alt="User avatar 3">
-                            <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon4.png" alt="User avatar 4">
-                            <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon5.png" alt="User avatar 5">
+                        <div class="auth-user-row">
+                            <div class="auth-user-count" id="authUserCount">Curernt users: --</div>
+                            <div class="auth-user-stack" aria-label="Community avatars">
+                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon1.png" alt="User avatar 1">
+                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon2.png" alt="User avatar 2">
+                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon3.png" alt="User avatar 3">
+                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon4.png" alt="User avatar 4">
+                                <img class="topic-user-avatar auth-stack-avatar" src="logo/usericon5.png" alt="User avatar 5">
+                            </div>
                         </div>
                         <div class="auth-quotes">
                             <p>"Code is like coffee. Better when it is strong and clean."</p>
@@ -363,7 +365,7 @@ async function loadAuthUserCount() {
         }
 
         if (!window.supabaseInstance) {
-            counter.textContent = 'Total Users: --';
+            counter.textContent = 'Curernt users: --';
             return;
         }
 
@@ -373,14 +375,14 @@ async function loadAuthUserCount() {
 
         if (error) {
             console.warn('Unable to fetch total users:', error.message);
-            counter.textContent = 'Total Users: --';
+            counter.textContent = 'Curernt users: --';
             return;
         }
 
-        counter.textContent = `Total Users: ${count ?? 0}`;
+        counter.textContent = `Curernt users: ${count ?? 0}`;
     } catch (error) {
         console.warn('Failed to load total users for auth modal:', error);
-        counter.textContent = 'Total Users: --';
+        counter.textContent = 'Curernt users: --';
     }
 }
 
@@ -468,9 +470,16 @@ function addAuthModalStyles() {
             text-align: left;
         }
 
+        .auth-user-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 16px;
+        }
+
         .auth-user-count {
             display: block;
-            margin: 0 0 16px;
+            margin: 0;
             padding: 0;
             color: #D5E339;
             font-size: 12px;
@@ -482,7 +491,7 @@ function addAuthModalStyles() {
             display: flex;
             flex-direction: row-reverse;
             align-items: center;
-            margin: 0 0 18px;
+            margin: 0;
             padding-left: 0;
         }
 
