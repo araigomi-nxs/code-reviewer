@@ -126,6 +126,29 @@
             font-size: 0.9em;
             transition: all 0.2s ease;
             color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .menu-topic-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .menu-wip-tag {
+            flex-shrink: 0;
+            font-size: 0.66em;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            background: #D5E339;
+            color: #12151C;
+            padding: 2px 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(213, 227, 57, 0.75);
+            text-transform: uppercase;
         }
 
         .menu-items button:hover {
@@ -541,6 +564,23 @@
             border: 1px solid var(--border-color);
             position: relative;
             overflow: hidden;
+        }
+
+        .topic-card.wip::after {
+            content: 'WIP';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.66em;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            background: #D5E339;
+            color: #12151C;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(213, 227, 57, 0.75);
+            text-transform: uppercase;
+            z-index: 2;
         }
 
         .topic-card:hover {
@@ -1460,43 +1500,43 @@
                 <p>Enhanced loops, arrays & collections iteration</p>
                 <div class="topic-card-users" data-topic="foreach"><span class="topic-users-loading">Loading...</span></div>
             </div>
-            <div class="topic-card" onclick="selectTopic('recursion')">
+            <div class="topic-card wip" onclick="selectTopic('recursion')">
                 <div class="topic-number">☕</div>
                 <h3>Recursion</h3>
                 <p>Base cases, factorial, Fibonacci & algorithms</p>
                 <div class="topic-card-users" data-topic="recursion"><span class="topic-users-loading">Loading...</span></div>
             </div>
-            <div class="topic-card" onclick="selectTopic('mathclass')">
+            <div class="topic-card wip" onclick="selectTopic('mathclass')">
                 <div class="topic-number">☕</div>
                 <h3>Math Class</h3>
                 <p>Rounding, powers, roots & numeric utilities</p>
                 <div class="topic-card-users" data-topic="mathclass"><span class="topic-users-loading">Loading...</span></div>
             </div>
-            <div class="topic-card" onclick="selectTopic('localdatetime')">
+            <div class="topic-card wip" onclick="selectTopic('localdatetime')">
                 <div class="topic-number">☕</div>
                 <h3>Local Date/Time</h3>
                 <p>Dates, times, formatting & date arithmetic</p>
                 <div class="topic-card-users" data-topic="localdatetime"><span class="topic-users-loading">Loading...</span></div>
             </div>
-            <div class="topic-card" onclick="selectTopic('stringbuilder')">
+            <div class="topic-card wip" onclick="selectTopic('stringbuilder')">
                 <div class="topic-number">☕</div>
                 <h3>StringBuilder</h3>
                 <p>Efficient string building, edits & reverse</p>
                 <div class="topic-card-users" data-topic="stringbuilder"><span class="topic-users-loading">Loading...</span></div>
             </div>
-            <div class="topic-card" onclick="selectTopic('arrays2d')">
+            <div class="topic-card wip" onclick="selectTopic('arrays2d')">
                 <div class="topic-number">☕</div>
                 <h3>2D Arrays</h3>
                 <p>Matrix operations, traversal & transformations</p>
                 <div class="topic-card-users" data-topic="arrays2d"><span class="topic-users-loading">Loading...</span></div>
             </div>
-            <div class="topic-card" onclick="selectTopic('arraylist')">
+            <div class="topic-card wip" onclick="selectTopic('arraylist')">
                 <div class="topic-number">☕</div>
                 <h3>ArrayList</h3>
                 <p>Dynamic arrays, collections & common operations</p>
                 <div class="topic-card-users" data-topic="arraylist"><span class="topic-users-loading">Loading...</span></div>
             </div>
-            <div class="topic-card" onclick="selectTopic('oop')">
+            <div class="topic-card wip" onclick="selectTopic('oop')">
                 <div class="topic-number">☕</div>
                 <h3>OOP Basics</h3>
                 <p>Encapsulation, Inheritance, Polymorphism & Interfaces</p>
@@ -3001,7 +3041,8 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                 for (const [key, data] of Object.entries(topicsData)) {
                     const li = document.createElement('li');
                     const button = document.createElement('button');
-                    button.textContent = `${data.icon} ${data.name}`;
+                    const showWip = key !== 'loops' && key !== 'foreach';
+                    button.innerHTML = `<span class="menu-topic-label">${data.icon} ${data.name}</span>${showWip ? '<span class="menu-wip-tag">WIP</span>' : ''}`;
                     button.onclick = () => selectTopic(key);
                     if (key === topicKey) button.classList.add('active');
                     li.appendChild(button);
