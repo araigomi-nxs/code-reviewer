@@ -376,13 +376,36 @@ async function notifyUserJoined(username) {
     }
 
     try {
+        const embed = {
+            title: '👋 New User Joined',
+            description: `**${username}** joined`,
+            color: 65280,
+            fields: [
+                {
+                    name: 'User',
+                    value: username || 'Unknown',
+                    inline: true
+                },
+                {
+                    name: 'Event',
+                    value: 'Signup',
+                    inline: true
+                }
+            ],
+            footer: {
+                text: 'Coding Reviewer Platform',
+                icon_url: 'https://github.com/favicon.ico'
+            },
+            timestamp: new Date().toISOString()
+        };
+
         const response = await fetch(webhookUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                content: `${username} joined`,
+                embeds: [embed],
                 username: 'Coding Reviewer Bot',
                 avatar_url: 'https://github.com/favicon.ico'
             })
