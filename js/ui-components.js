@@ -366,7 +366,7 @@ async function loadAuthUserCount() {
         }
 
         if (!window.supabaseInstance) {
-            counter.textContent = 'Curernt users: --';
+            counter.textContent = 'Current users: --';
             return;
         }
 
