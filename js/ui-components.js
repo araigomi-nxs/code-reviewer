@@ -1229,7 +1229,7 @@ async function showCodePreview(username, challengeId) {
             ">✅ Approve</button>
         `;
         rejectButtonHtml = `
-            <button onclick="if(window.rejectAdminSubmissionDialog) { window.rejectAdminSubmissionDialog('${challengeId}', '${username}'); setTimeout(() => document.getElementById('${modal.id}').remove(), 500); } else { alert('Admin tools not loaded.'); }" style="
+            <button onclick="if(window.showRejectCommentDialog) { window.showRejectCommentDialog('${challengeId}', '${username}'); setTimeout(() => document.getElementById('${modal.id}').remove(), 500); } else if(window.rejectAdminSubmission) { window.rejectAdminSubmission('${challengeId}', '${username}'); setTimeout(() => document.getElementById('${modal.id}').remove(), 500); } else { alert('Admin tools not loaded.'); }" style="
                 background: #f44336;
                 color: white;
                 border: none;
