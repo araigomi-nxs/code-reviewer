@@ -2378,8 +2378,28 @@ System.out.println(fibonacci(6));  // Output: 8</div>
                     </div>
                     <div class="challenge-item">
                         <strong>Challenge 7: Binary Search</strong>
-                        
-                        <p style="margin-top: 10px;">Implement binary search recursively</p>
+
+                        <div class="challenge-description">Write a recursive method <strong>binarySearch(int[] arr, int left, int right, int target)</strong> that returns the index of <strong>target</strong> in a sorted array. If the value does not exist, return <strong>-1</strong>.</div>
+                        <div class="expected-output-label">Expected Output:</div>
+                        <div class="expected-output">Array: [2, 5, 9, 12, 17, 23, 31]
+Target 17 -> Index 4
+Target 8 -> Index -1</div>
+                        <button class="preview-button" onclick="document.getElementById('solutionREC7').style.display = document.getElementById('solutionREC7').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionREC7" class="code-block" style="display:none; margin-top: 12px;">public static int binarySearch(int[] arr, int left, int right, int target) {
+    if (left > right) return -1; // Base case: not found
+
+    int mid = left + (right - left) / 2;
+
+    if (arr[mid] == target) return mid; // Base case: found
+    if (target < arr[mid]) {
+        return binarySearch(arr, left, mid - 1, target);
+    }
+    return binarySearch(arr, mid + 1, right, target);
+}
+
+int[] arr = {2, 5, 9, 12, 17, 23, 31};
+System.out.println("Target 17 -> Index " + binarySearch(arr, 0, arr.length - 1, 17));
+System.out.println("Target 8 -> Index " + binarySearch(arr, 0, arr.length - 1, 8));</div>
                     </div>
                 `
             },
