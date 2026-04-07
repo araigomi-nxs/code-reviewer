@@ -1125,6 +1125,10 @@ async function showCodePreview(username, challengeId) {
         
         submission = normalizedSubmission;
 
+        const challengeContext = window.getChallengeSolution
+            ? window.getChallengeSolution(challengeId)
+            : null;
+
         // Create modal
         const modal = document.createElement('div');
     modal.id = `codePreviewModal_${username}_${challengeId}`;
@@ -1411,8 +1415,95 @@ async function showCodePreview(username, challengeId) {
         margin-bottom: 10px;
         font-size: 12px;
     `;
-    reviewLabel.textContent = '🤖 AI REVIEW';
+    reviewLabel.textContent = '📌 CHALLENGE CONTEXT';
     reviewContainer.appendChild(reviewLabel);
+
+    const challengePanel = document.createElement('div');
+    challengePanel.style.cssText = `
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 12px;
+        margin-bottom: 14px;
+        color: var(--text-primary);
+    `;
+
+    if (challengeContext) {
+        const titleDiv = document.createElement('div');
+        titleDiv.style.cssText = 'font-weight: bold; margin-bottom: 8px; font-size: 13px;';
+        titleDiv.textContent = challengeContext.title || challengeId;
+        challengePanel.appendChild(titleDiv);
+
+        if (challengeContext.problem) {
+            const problemLabel = document.createElement('div');
+            problemLabel.style.cssText = 'font-weight: bold; margin-bottom: 6px; font-size: 12px; color: var(--text-secondary);';
+            problemLabel.textContent = 'Problem';
+            challengePanel.appendChild(problemLabel);
+
+            const problemBox = document.createElement('div');
+            problemBox.style.cssText = 'background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px; padding: 10px; white-space: pre-wrap; line-height: 1.5; margin-bottom: 10px;';
+            problemBox.textContent = challengeContext.problem;
+            challengePanel.appendChild(problemBox);
+        }
+
+        if (challengeContext.expectedOutput) {
+            const outputLabel = document.createElement('div');
+            outputLabel.style.cssText = 'font-weight: bold; margin-bottom: 6px; font-size: 12px; color: var(--text-secondary);';
+            outputLabel.textContent = 'Expected Output';
+            challengePanel.appendChild(outputLabel);
+
+            const outputBox = document.createElement('div');
+            outputBox.style.cssText = 'background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px; padding: 10px; white-space: pre-wrap; line-height: 1.5; margin-bottom: 10px;';
+            outputBox.textContent = challengeContext.expectedOutput;
+            challengePanel.appendChild(outputBox);
+        }
+
+        const solutionLabel = document.createElement('div');
+        solutionLabel.style.cssText = 'font-weight: bold; margin-bottom: 6px; font-size: 12px; color: var(--text-secondary);';
+        solutionLabel.textContent = 'Reference Solution';
+        challengePanel.appendChild(solutionLabel);
+
+        if (challengeContext.solution) {
+            const solutionCode = document.createElement('pre');
+            solutionCode.className = 'code-block';
+            solutionCode.style.cssText = `
+                background: #2d2d2d;
+                color: #f8f8f2;
+                padding: 12px;
+                border-radius: 4px;
+                margin: 0;
+                font-family: 'Courier New', monospace;
+                font-size: 12px;
+                line-height: 1.5;
+                overflow-y: auto;
+                overflow-x: hidden;
+                max-height: 240px;
+                white-space: pre-wrap;
+                word-break: break-word;
+            `;
+            solutionCode.textContent = challengeContext.solution;
+            challengePanel.appendChild(solutionCode);
+        } else {
+            const noSolution = document.createElement('div');
+            noSolution.style.cssText = 'background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px; padding: 10px; color: var(--text-tertiary);';
+            noSolution.textContent = 'No reference solution available.';
+            challengePanel.appendChild(noSolution);
+        }
+    } else {
+        challengePanel.style.borderLeft = '3px solid #ff9800';
+        challengePanel.innerHTML = `<div style="font-size: 13px;">Challenge details could not be loaded for <strong>${challengeId}</strong>.</div>`;
+    }
+    reviewContainer.appendChild(challengePanel);
+
+    const aiSectionLabel = document.createElement('div');
+    aiSectionLabel.style.cssText = `
+        font-weight: bold;
+        color: var(--text-primary);
+        margin-bottom: 10px;
+        font-size: 12px;
+    `;
+    aiSectionLabel.textContent = '🤖 AI REVIEW';
+    reviewContainer.appendChild(aiSectionLabel);
 
     // Get AI review from normalized submission data (Supabase only)
     const aiReviewContent = submission.aiReview;
