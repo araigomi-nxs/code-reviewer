@@ -2368,40 +2368,60 @@ System.out.println(sumOfDigits(345));  // Output: 12</div>
 System.out.println(power(2, 4));  // Output: 16</div>
                     </div>
                     <div class="challenge-item">
-                        <strong>Challenge 5: Fibonacci Sequence</strong>
+                        <strong>Challenge 4: Fibonacci Sequence</strong>
                         
                         <p style="margin-top: 10px;">Find nth Fibonacci - Example: fib(6) = 8</p>
-                        <button class="preview-button" onclick="document.getElementById('solutionREC5').style.display = document.getElementById('solutionREC5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="solutionREC5" class="code-block" style="display:none; margin-top: 12px;">public static int fibonacci(int n) {
+                        <button class="preview-button" onclick="document.getElementById('solutionREC4').style.display = document.getElementById('solutionREC4').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionREC4" class="code-block" style="display:none; margin-top: 12px;">public static int fibonacci(int n) {
     if (n <= 1) return n;  // Base case
     return fibonacci(n - 1) + fibonacci(n - 2);  // Recursive
 }
 System.out.println(fibonacci(6));  // Output: 8</div>
                     </div>
                     <div class="challenge-item">
-                        <strong>Challenge 7: Binary Search</strong>
+                        <strong>Challenge 5: Binary Search Tree (Recursive)</strong>
 
-                        <div class="challenge-description">Write a recursive method <strong>binarySearch(int[] arr, int left, int right, int target)</strong> that returns the index of <strong>target</strong> in a sorted array. If the value does not exist, return <strong>-1</strong>.</div>
-                        <div class="expected-output-label">Expected Output:</div>
-                        <div class="expected-output">Array: [2, 5, 9, 12, 17, 23, 31]
-Target 17 -> Index 4
-Target 8 -> Index -1</div>
-                        <button class="preview-button" onclick="document.getElementById('solutionREC7').style.display = document.getElementById('solutionREC7').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="solutionREC7" class="code-block" style="display:none; margin-top: 12px;">public static int binarySearch(int[] arr, int left, int right, int target) {
-    if (left > right) return -1; // Base case: not found
+                        <div class="challenge-description">Write a recursive method that searches a <strong>sorted array</strong> efficiently using binary search. The method signature is: <strong>binarySearch(int[] arr, int left, int right, int target)</strong>. It should return the index of the target value if found, or <strong>-1</strong> if not found.</div>
+                        <div style="margin-top: 10px; padding: 10px; background: var(--bg-primary); border-left: 3px solid #2196F3; border-radius: 4px;">
+                            <strong>How Binary Search Works (Divide & Conquer):</strong>
+                            <ul style="margin: 8px 0; padding-left: 20px;">
+                                <li>Find the middle element of the array range</li>
+                                <li><strong>Base cases:</strong> If middle equals target → return index; If left > right → return -1 (not found)</li>
+                                <li><strong>Recursive cases:</strong> If target < middle, search left half; If target > middle, search right half</li>
+                                <li>Each step eliminates half the remaining elements → O(log n) time complexity</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">Array: [2, 5, 9, 12, 17, 23, 31]
+Search for 17: Found at index 4
+Search for 8: Not found (index -1)
+Search for 2: Found at index 0
+Search for 31: Found at index 6</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionREC5').style.display = document.getElementById('solutionREC5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionREC5" class="code-block" style="display:none; margin-top: 12px;">public static int binarySearch(int[] arr, int left, int right, int target) {
+    // Base case: element not found
+    if (left > right) return -1;
 
+    // Calculate middle without overflow
     int mid = left + (right - left) / 2;
 
-    if (arr[mid] == target) return mid; // Base case: found
+    // Base case: element found
+    if (arr[mid] == target) return mid;
+
+    // Recursive case: search in appropriate half
     if (target < arr[mid]) {
-        return binarySearch(arr, left, mid - 1, target);
+        return binarySearch(arr, left, mid - 1, target);  // Search left
     }
-    return binarySearch(arr, mid + 1, right, target);
+    return binarySearch(arr, mid + 1, right, target);  // Search right
 }
 
 int[] arr = {2, 5, 9, 12, 17, 23, 31};
-System.out.println("Target 17 -> Index " + binarySearch(arr, 0, arr.length - 1, 17));
-System.out.println("Target 8 -> Index " + binarySearch(arr, 0, arr.length - 1, 8));</div>
+System.out.println("Search for 17: " + binarySearch(arr, 0, arr.length - 1, 17));
+System.out.println("Search for 8: " + binarySearch(arr, 0, arr.length - 1, 8));
+System.out.println("Search for 2: " + binarySearch(arr, 0, arr.length - 1, 2));
+System.out.println("Search for 31: " + binarySearch(arr, 0, arr.length - 1, 31));</div>
                     </div>
                 `
             },
