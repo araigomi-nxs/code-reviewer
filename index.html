@@ -2379,49 +2379,43 @@ System.out.println(power(2, 4));  // Output: 16</div>
 System.out.println(fibonacci(6));  // Output: 8</div>
                     </div>
                     <div class="challenge-item">
-                        <strong>Challenge 5: Binary Search Tree (Recursive)</strong>
+                        <strong>Challenge 5: Binary Search (Recursive)</strong>
 
-                        <div class="challenge-description">Write a recursive method that searches a <strong>sorted array</strong> efficiently using binary search. The method signature is: <strong>binarySearch(int[] arr, int left, int right, int target)</strong>. It should return the index of the target value if found, or <strong>-1</strong> if not found.</div>
+                        <div class="challenge-description">Write a recursive method with signature: <strong>binarySearch(int[] arr, int left, int right, int target)</strong></div>
                         <div style="margin-top: 10px; padding: 10px; background: var(--bg-primary); border-left: 3px solid #2196F3; border-radius: 4px;">
-                            <strong>How Binary Search Works (Divide & Conquer):</strong>
+                            <strong>What You Need to Implement:</strong>
                             <ul style="margin: 8px 0; padding-left: 20px;">
-                                <li>Find the middle element of the array range</li>
-                                <li><strong>Base cases:</strong> If middle equals target → return index; If left > right → return -1 (not found)</li>
-                                <li><strong>Recursive cases:</strong> If target < middle, search left half; If target > middle, search right half</li>
-                                <li>Each step eliminates half the remaining elements → O(log n) time complexity</li>
+                                <li>Calculate the middle index: <strong>mid = left + (right - left) / 2</strong></li>
+                                <li><strong>Base case 1:</strong> If target found at mid, return mid</li>
+                                <li><strong>Base case 2:</strong> If left > right (range exhausted), return -1</li>
+                                <li><strong>Recursive case:</strong> Call method again on left or right half based on target comparison</li>
                             </ul>
+                        </div>
+                        <div style="margin-top: 10px; padding: 10px; background: #fff8e1; border-left: 3px solid #ffb300; border-radius: 4px;">
+                            <strong>💡 Alternative:</strong> Java provides <strong>Arrays.binarySearch(int[] arr, int target)</strong> which requires a sorted array. Your method replicates this functionality recursively.
                         </div>
                         <div>
                             <div class="expected-output-label">Expected Output:</div>
-                            <div class="expected-output">Array: [2, 5, 9, 12, 17, 23, 31]
-Search for 17: Found at index 4
-Search for 8: Not found (index -1)
-Search for 2: Found at index 0
-Search for 31: Found at index 6</div>
+                            <div class="expected-output">binarySearch([2, 5, 9, 12, 17, 23, 31], 0, 6, 17) → 4
+binarySearch([2, 5, 9, 12, 17, 23, 31], 0, 6, 8) → -1</div>
                         </div>
                         <button class="preview-button" onclick="document.getElementById('solutionREC5').style.display = document.getElementById('solutionREC5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
                         <div id="solutionREC5" class="code-block" style="display:none; margin-top: 12px;">public static int binarySearch(int[] arr, int left, int right, int target) {
-    // Base case: element not found
-    if (left > right) return -1;
-
-    // Calculate middle without overflow
+    if (left > right) return -1;  // Not found
     int mid = left + (right - left) / 2;
-
-    // Base case: element found
-    if (arr[mid] == target) return mid;
-
-    // Recursive case: search in appropriate half
-    if (target < arr[mid]) {
-        return binarySearch(arr, left, mid - 1, target);  // Search left
-    }
-    return binarySearch(arr, mid + 1, right, target);  // Search right
+    if (arr[mid] == target) return mid;  // Found
+    if (target < arr[mid]) return binarySearch(arr, left, mid - 1, target);
+    return binarySearch(arr, mid + 1, right, target);
 }
 
-int[] arr = {2, 5, 9, 12, 17, 23, 31};
-System.out.println("Search for 17: " + binarySearch(arr, 0, arr.length - 1, 17));
-System.out.println("Search for 8: " + binarySearch(arr, 0, arr.length - 1, 8));
-System.out.println("Search for 2: " + binarySearch(arr, 0, arr.length - 1, 2));
-System.out.println("Search for 31: " + binarySearch(arr, 0, arr.length - 1, 31));</div>
+// Test
+int[] sorted = {2, 5, 9, 12, 17, 23, 31};
+System.out.println(binarySearch(sorted, 0, sorted.length - 1, 17));  // Output: 4
+System.out.println(binarySearch(sorted, 0, sorted.length - 1, 8));   // Output: -1
+
+// Using Java's built-in method (requires sort first):
+Arrays.sort(sorted);
+System.out.println(Arrays.binarySearch(sorted, 17));  // Output: 4</div>
                     </div>
                 `
             },
