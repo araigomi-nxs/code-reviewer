@@ -151,6 +151,12 @@ const CHALLENGE_TO_TOPIC = {
  * Maps new format (loops_challenge_2) to actual challenge details
  */
 function getChallengeSolution(challengeId) {
+    const cleanText = (text) => String(text || '')
+        .replace(/\r/g, '')
+        .replace(/[ \t]+\n/g, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
     // First check legacy CHALLENGE_SOLUTIONS
     if (CHALLENGE_SOLUTIONS[challengeId]) {
         return CHALLENGE_SOLUTIONS[challengeId];
@@ -182,26 +188,37 @@ function getChallengeSolution(challengeId) {
             // Extract challenge details
             const titleElement = item.querySelector('strong');
             const title = titleElement ? titleElement.textContent : `Challenge ${challengeNum}`;
-            
-            const descElement = item.querySelector('.challenge-description');
-            const problem = descElement ? descElement.textContent.trim() : '';
-            
-            let expectedOutput = '';
-            const outputElement = item.querySelector('.expected-output');
-            if (outputElement) {
-                expectedOutput = outputElement.textContent.trim();
-            }
+
+            // Build full problem text from the challenge block (not just .challenge-description)
+            // Keep rich scenario text/code snippets, but remove toggle button, hidden solution, and expected-output blocks.
+            const problemClone = item.cloneNode(true);
+
+            problemClone.querySelectorAll('button.preview-button').forEach(el => el.remove());
+            problemClone.querySelectorAll('[id*="solution"], [id*="Solution"]').forEach(el => el.remove());
+            problemClone.querySelectorAll('.code-block[style*="display:none"], .code-block[style*="display: none"]').forEach(el => el.remove());
+            problemClone.querySelectorAll('.expected-output-label, .expected-output').forEach(el => el.remove());
+            problemClone.querySelectorAll('strong').forEach(el => el.remove());
+
+            const problem = cleanText(problemClone.textContent);
+
+            // Collect all expected output blocks for multi-part challenges
+            const expectedOutput = cleanText(
+                Array.from(item.querySelectorAll('.expected-output'))
+                    .map(el => el.textContent)
+                    .filter(Boolean)
+                    .join('\n\n')
+            );
             
             // Try to extract solution from the code block
             let solution = '';
             const solutionElement = item.querySelector('.code-block[style*="display"]');
             if (solutionElement) {
-                solution = solutionElement.textContent.trim();
+                solution = cleanText(solutionElement.textContent);
             } else {
                 // Look for any code block
                 const codeBlock = item.querySelector('.code-block');
                 if (codeBlock) {
-                    solution = codeBlock.textContent.trim();
+                    solution = cleanText(codeBlock.textContent);
                 }
             }
             
@@ -1326,7 +1343,32 @@ async function showCodePreview(username, challengeId) {
         challengeTopSection.appendChild(solutionLabel);
 
         if (isAiReviewCompleted && challengeContext.solution) {
+            const solutionBlockId = `solutionBlock_${modal.id}`;
+
+            const toggleSolutionBtn = document.createElement('button');
+            toggleSolutionBtn.style.cssText = `
+                background: #607d8b;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 8px 12px;
+                cursor: pointer;
+                font-size: 12px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            `;
+            toggleSolutionBtn.textContent = '👁️ Show Solution';
+            toggleSolutionBtn.onclick = function () {
+                const solutionEl = document.getElementById(solutionBlockId);
+                if (!solutionEl) return;
+                const shouldShow = solutionEl.style.display === 'none';
+                solutionEl.style.display = shouldShow ? 'block' : 'none';
+                toggleSolutionBtn.textContent = shouldShow ? '🙈 Hide Solution' : '👁️ Show Solution';
+            };
+            challengeTopSection.appendChild(toggleSolutionBtn);
+
             const solutionCode = document.createElement('pre');
+            solutionCode.id = solutionBlockId;
             solutionCode.className = 'code-block';
             solutionCode.style.cssText = `
                 background: #2d2d2d;
@@ -1342,6 +1384,7 @@ async function showCodePreview(username, challengeId) {
                 max-height: 220px;
                 white-space: pre-wrap;
                 word-break: break-word;
+                display: none;
             `;
             solutionCode.textContent = challengeContext.solution;
             challengeTopSection.appendChild(solutionCode);
