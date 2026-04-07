@@ -2796,6 +2796,7 @@ if (typeof window !== 'undefined') {
     window.handleSubmitChallenge = handleSubmitChallenge;
     window.handleDeleteSubmission = handleDeleteSubmission;
     window.loadTopicCardUsers = loadTopicCardUsers;
+    window.getChallengeSolution = getChallengeSolution;
 }
 
 // Auto-initialize when DOM is ready
