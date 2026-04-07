@@ -1267,6 +1267,13 @@ function displayAdminSubmissionViewModal(submission) {
         const codeSection = submission.file_content
             ? `<div class="code-preview"><pre><code>${escapeHtml(submission.file_content)}</code></pre></div>`
             : '<div style="color: #999; padding: 10px;">⚠️ No code provided</div>';
+
+        const challenge = window.getChallengeSolution ? window.getChallengeSolution(submission.challenge_id) : null;
+        const challengeSection = challenge
+            ? `<div class="detail-section challenge-section"><h4>📌 Challenge Details</h4><p><strong>Title:</strong> ${escapeHtml(challenge.title || submission.challenge_id)}</p><p><strong>Problem:</strong></p><div class="challenge-text-box">${escapeHtml(challenge.problem || 'No problem statement available')}</div>${challenge.expectedOutput ? `<p><strong>Expected Output:</strong></p><div class="challenge-text-box challenge-output">${escapeHtml(challenge.expectedOutput)}</div>` : ''}</div>`
+            : `<div class="detail-section challenge-section" style="background: #fff8e1; border-left: 3px solid #ffb300;"><h4>📌 Challenge Details</h4><p>Challenge context could not be loaded for <strong>${escapeHtml(submission.challenge_id)}</strong>.</p></div>`;
+
+        const comparisonSection = `<div class="detail-section comparison-section"><h4>🔍 Compare Submission</h4><div class="comparison-grid"><div class="comparison-panel"><h5>Submitted Code</h5>${codeSection}</div><div class="comparison-panel"><h5>Reference Solution</h5>${challenge && challenge.solution ? `<div class="code-preview reference-code"><pre><code>${escapeHtml(challenge.solution)}</code></pre></div>` : '<div class="challenge-text-box">No reference solution available.</div>'}</div></div></div>`;
         
         const reviewSection = submission.ai_review
             ? `<div class="detail-section"><h4>🤖 AI Feedback</h4><div class="ai-feedback-box">${submission.ai_review}</div></div>`
@@ -1304,10 +1311,9 @@ function displayAdminSubmissionViewModal(submission) {
                         <p><strong>Submitted:</strong> ${new Date(submission.submitted_at).toLocaleString()}</p>
                     </div>
 
-                    <div class="detail-section">
-                        <h4>💻 Submitted Code</h4>
-                        ${codeSection}
-                    </div>
+                    ${challengeSection}
+
+                    ${comparisonSection}
 
                     ${reviewSection}
                     ${adminFeedbackSection}
@@ -1441,6 +1447,53 @@ function addSubmissionViewModalStyles() {
             font-size: 14px;
         }
 
+        .challenge-section .challenge-text-box {
+            margin-top: 8px;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            color: #444;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .challenge-section .challenge-output {
+            background: #f8fafc;
+        }
+
+        .comparison-section {
+            background: #f8f9fa;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .comparison-panel h5 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .comparison-panel .code-preview {
+            height: 100%;
+        }
+
+        .comparison-panel .code-preview pre {
+            max-height: 420px;
+            overflow: auto;
+        }
+
+        .comparison-panel .challenge-text-box {
+            margin-top: 0;
+            height: 100%;
+            max-height: 420px;
+            overflow: auto;
+        }
+
         .code-preview {
             background: #1e1e1e;
             color: #d4d4d4;
@@ -1501,6 +1554,12 @@ function addSubmissionViewModalStyles() {
 
         .btn-secondary:hover {
             background: #d0d0d0;
+        }
+
+        @media (max-width: 720px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
         }
     `;
 
