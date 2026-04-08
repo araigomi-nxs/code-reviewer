@@ -858,7 +858,7 @@ async function confirmRejectWithComment(challengeId, username) {
 }
 
 /**
- * Approve submission (keeps modal open in approved state)
+ * Approve submission (closes modal and refreshes submissions list)
  */
 async function approveAdminSubmission(challengeId, username, comment = '') {
 
@@ -879,34 +879,19 @@ async function approveAdminSubmission(challengeId, username, comment = '') {
         // Mark challenge as completed for user
         await markChallengeCompleted(challengeId, username);
 
-        // Update modal to show approved state
-        const statusBadge = document.querySelector('.status-badge');
-        if (statusBadge) {
-            statusBadge.textContent = 'completed';
-            statusBadge.className = 'status-badge status-completed';
-        }
-
-        // Disable action buttons
-        const approveBtn = document.querySelector('.btn-approve');
-        const rejectBtn = document.querySelector('.btn-reject');
-        if (approveBtn) {
-            approveBtn.disabled = true;
-            approveBtn.style.opacity = '0.5';
-            approveBtn.style.cursor = 'not-allowed';
-        }
-        if (rejectBtn) {
-            rejectBtn.disabled = true;
-            rejectBtn.style.opacity = '0.5';
-            rejectBtn.style.cursor = 'not-allowed';
-        }
-
         console.log('✅ === APPROVAL COMPLETE ===\n');
         showNotification('✅ Submission approved', 'success');
         
+        // Close the preview modal
+        closeAdminSubmissionViewModal();
+        
+        // Reload admin submissions list
+        const submissions = await getAdminPendingSubmissions();
+        displayAdminSubmissions(submissions);
+        
         // Update user stats counter
-        if (typeof updateUserStats === 'function') {
-            updateUserStats();
-        }
+        const stats = await getAdminStatistics();
+        displayAdminStats(stats);
     } catch (error) {
         console.error('❌ Error approving submission:', error);
         showNotification(`❌ Error approving submission: ${error.message}`, 'error');
@@ -914,7 +899,7 @@ async function approveAdminSubmission(challengeId, username, comment = '') {
 }
 
 /**
- * Reject submission (keeps modal open in rejected state)
+ * Reject submission (closes modal and refreshes submissions list)
  */
 async function rejectAdminSubmission(challengeId, username, feedback = '') {
     try {
@@ -930,34 +915,19 @@ async function rejectAdminSubmission(challengeId, username, feedback = '') {
             feedback || 'Rejected by admin reviewer. Please resubmit.'
         );
 
-        // Update modal to show rejected state
-        const statusBadge = document.querySelector('.status-badge');
-        if (statusBadge) {
-            statusBadge.textContent = 'rejected';
-            statusBadge.className = 'status-badge status-rejected';
-        }
-
-        // Disable action buttons
-        const approveBtn = document.querySelector('.btn-approve');
-        const rejectBtn = document.querySelector('.btn-reject');
-        if (approveBtn) {
-            approveBtn.disabled = true;
-            approveBtn.style.opacity = '0.5';
-            approveBtn.style.cursor = 'not-allowed';
-        }
-        if (rejectBtn) {
-            rejectBtn.disabled = true;
-            rejectBtn.style.opacity = '0.5';
-            rejectBtn.style.cursor = 'not-allowed';
-        }
-
         console.log('❌ === REJECTION COMPLETE ===\n');
         showNotification('❌ Submission rejected', 'success');
         
+        // Close the preview modal
+        closeAdminSubmissionViewModal();
+        
+        // Reload admin submissions list
+        const submissions = await getAdminPendingSubmissions();
+        displayAdminSubmissions(submissions);
+        
         // Update user stats counter
-        if (typeof updateUserStats === 'function') {
-            updateUserStats();
-        }
+        const stats = await getAdminStatistics();
+        displayAdminStats(stats);
     } catch (error) {
         console.error('❌ Error rejecting submission:', error);
         showNotification(`❌ Error rejecting submission: ${error.message}`, 'error');
