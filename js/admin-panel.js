@@ -661,6 +661,12 @@ async function getAdminStatistics() {
 function displayAdminSubmissions(submissions) {
     const container = document.getElementById('adminSubmissionsList');
 
+    // Return early if container doesn't exist (modal closed)
+    if (!container) {
+        console.log('ℹ️ Submissions container not found - admin panel may be closed');
+        return;
+    }
+
     if (!submissions || submissions.length === 0) {
         container.innerHTML = '<div class="loading">✅ No submissions pending review</div>';
         return;
@@ -880,18 +886,15 @@ async function approveAdminSubmission(challengeId, username, comment = '') {
         await markChallengeCompleted(challengeId, username);
 
         console.log('✅ === APPROVAL COMPLETE ===\n');
-        showNotification('✅ Submission approved', 'success');
         
-        // Close the preview modal
+        // Close the preview modal FIRST
         closeAdminSubmissionViewModal();
         
-        // Reload admin submissions list
-        const submissions = await getAdminPendingSubmissions();
-        displayAdminSubmissions(submissions);
+        // Show success notification
+        showNotification('✅ Submission approved', 'success');
         
-        // Update user stats counter
-        const stats = await getAdminStatistics();
-        displayAdminStats(stats);
+        // Reload admin dashboard to refresh the list
+        await loadAdminDashboard();
     } catch (error) {
         console.error('❌ Error approving submission:', error);
         showNotification(`❌ Error approving submission: ${error.message}`, 'error');
@@ -916,18 +919,15 @@ async function rejectAdminSubmission(challengeId, username, feedback = '') {
         );
 
         console.log('❌ === REJECTION COMPLETE ===\n');
-        showNotification('❌ Submission rejected', 'success');
         
-        // Close the preview modal
+        // Close the preview modal FIRST
         closeAdminSubmissionViewModal();
         
-        // Reload admin submissions list
-        const submissions = await getAdminPendingSubmissions();
-        displayAdminSubmissions(submissions);
+        // Show success notification
+        showNotification('❌ Submission rejected', 'success');
         
-        // Update user stats counter
-        const stats = await getAdminStatistics();
-        displayAdminStats(stats);
+        // Reload admin dashboard to refresh the list
+        await loadAdminDashboard();
     } catch (error) {
         console.error('❌ Error rejecting submission:', error);
         showNotification(`❌ Error rejecting submission: ${error.message}`, 'error');
