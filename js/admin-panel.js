@@ -4,36 +4,196 @@
  */
 
 /**
- * Show notification (non-blocking toast instead of alert)
+ * Refresh all submission displays after approval/rejection
  */
-function showNotification(message, type = 'info') {
-    console.log(`[${type.toUpperCase()}] ${message}`);
-    
-    // Create toast notification
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        background: ${type === 'error' ? '#f44336' : type === 'success' ? '#4CAF50' : '#2196F3'};
-        color: white;
-        border-radius: 4px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        z-index: 99999;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        max-width: 400px;
-        animation: slideIn 0.3s ease-in-out;
-    `;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    // Auto remove after 4 seconds
-    setTimeout(() => {
-        toast.style.animation = 'slideOut 0.3s ease-in-out';
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
+async function refreshAllSubmissionLists(challengeId) {
+    try {
+        // Refresh challenge-specific submissions list
+        await refreshChallengeSubmissionsList(challengeId);
+        
+        // Refresh latest submissions dashboard
+        await refreshLatestSubmissionsDashboard();
+        
+        // Update header stats
+        await updateHeaderStats();
+    } catch (error) {
+        console.error('Error refreshing submission lists:', error);
+    }
+}
+
+/**
+ * Refresh submissions list for a specific challenge
+ */
+async function refreshChallengeSubmissionsList(challengeId) {
+    try {
+        console.log('🔄 Refreshing submissions for challenge:', challengeId);
+        
+        // Get updated submissions for this challenge
+        const allSubmissions = window.getChallengeSubmissions ? 
+            await window.getChallengeSubmissions(challengeId) : [];
+        
+        // Find the submissions list container
+        const uploadForm = document.getElementById(`uploadForm_${challengeId}`);
+        if (!uploadForm) return;
+        
+        // Remove old submissions list
+        const oldList = uploadForm.querySelector('.submissions-list');
+        if (oldList) oldList.remove();
+        
+        // Create new submissions list
+        let submissionsListHTML = '';
+        if (allSubmissions.length > 0) {
+            submissionsListHTML = '<div class="submissions-list">';
+            submissionsListHTML += `<h5 class="submissions-list-header">📋 Submissions (${allSubmissions.length})</h5>`;
+            
+            for (const sub of allSubmissions) {
+                const statusColor = sub.status === 'pending' ? '#FFA500' : 
+                                   (sub.status === 'completed') ? '#4CAF50' : 
+                                   '#f44336';
+                const dateStr = new Date(sub.submittedAt).toLocaleDateString() + ' ' + 
+                              new Date(sub.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                // AI Review indicator
+                let ratingDisplay = '';
+                let avatarHtml = '';
+                
+                try {
+                    const avatarUrl = window.getUserAvatarUrl ? await window.getUserAvatarUrl(sub.username) : null;
+                    if (avatarUrl) {
+                        avatarHtml = `<img src="${avatarUrl}" alt="avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                    }
+                } catch (e) {
+                    console.error('Error loading avatar:', e);
+                }
+                
+                if (sub.aiReviewStatus === 'completed') {
+                    const ratingMatch = sub.aiReview?.match(/Rating:\s*(.+?)(?:\n|$)/i);
+                    if (ratingMatch && ratingMatch[1]) {
+                        ratingDisplay = ` - 🤖 ${ratingMatch[1].trim()}`;
+                    }
+                }
+                
+                submissionsListHTML += `
+                    <div class="submission-item" data-username="${sub.username}" data-challengeid="${challengeId}" onclick="handleShowCodePreview(this)" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s; user-select: none; display: flex; flex-direction: column; gap: 8px; position: relative;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            ${avatarHtml ? `<div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 50%;">${avatarHtml}</div>` : ''}
+                            <div style="flex: 1; min-width: 0; font-size: 13px; color: var(--text-primary);">
+                                <span style="font-weight: bold;">${sub.username}</span> - <span style="color: var(--text-secondary);">${sub.fileName}</span> - <span style="color: var(--text-secondary);">${dateStr}${ratingDisplay}</span>
+                            </div>
+                            <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: ${statusColor}; border-radius: 50%; color: white; font-size: 16px; font-weight: bold;" title="${sub.status === 'pending' ? 'Pending Review' : (sub.status === 'completed') ? 'Completed' : 'Rejected'}">${sub.status === 'pending' ? '⏳' : (sub.status === 'completed') ? '✓' : '✕'}</div>
+                        </div>
+                        ${sub.feedback ? `<div style="font-size: 12px; color: var(--text-primary); background: ${sub.status === 'completed' ? 'rgba(76, 175, 80, 0.15)' : 'rgba(244, 67, 54, 0.15)'}; padding: 8px 10px; border-radius: 3px; border-left: 3px solid ${sub.status === 'completed' ? '#4CAF50' : '#f44336'}; margin-top: 4px;">
+                            <strong>${sub.status === 'completed' ? '✅ Approved' : '❌ Rejected'}:</strong> ${sub.feedback.substring(0, 100)}${sub.feedback.length > 100 ? '...' : ''}
+                        </div>` : ''}
+                    </div>
+                `;
+            }
+            
+            submissionsListHTML += '</div>';
+        }
+        
+        // Append new submissions list
+        if (submissionsListHTML) {
+            const newListDiv = document.createElement('div');
+            newListDiv.innerHTML = submissionsListHTML;
+            uploadForm.appendChild(newListDiv.firstChild);
+        }
+        
+        console.log('✅ Submissions list refreshed for challenge:', challengeId);
+    } catch (error) {
+        console.error('Error refreshing challenge submissions:', error);
+    }
+}
+
+/**
+ * Refresh latest submissions in dashboard
+ */
+async function refreshLatestSubmissionsDashboard() {
+    try {
+        console.log('🔄 Refreshing latest submissions dashboard');
+        
+        const dashboard = document.getElementById('latestSubmissionsDashboard');
+        if (!dashboard) return;
+        
+        // Get latest submissions
+        if (!window.supabaseGetLatestSubmissions) {
+            console.warn('supabaseGetLatestSubmissions not available');
+            return;
+        }
+        
+        const submissions = await window.supabaseGetLatestSubmissions(10);
+        
+        if (!submissions || submissions.length === 0) {
+            dashboard.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-tertiary);">No submissions yet</div>';
+            return;
+        }
+        
+        // Build HTML for submissions
+        let html = '';
+        for (const sub of submissions) {
+            const statusColor = sub.status === 'pending' ? '#FFA500' : 
+                               (sub.status === 'completed') ? '#4CAF50' : 
+                               '#f44336';
+            const statusEmoji = sub.status === 'pending' ? '⏳' : 
+                               (sub.status === 'completed') ? '✅' : 
+                               '❌';
+            const dateStr = new Date(sub.submitted_at).toLocaleDateString();
+            
+            html += `
+                <div style="background: var(--bg-secondary); padding: 12px; margin: 8px 0; border-radius: 4px; border-left: 4px solid ${statusColor};">
+                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 10px;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500; font-size: 0.95em; color: var(--text-primary);">
+                                ${sub.username} - <span style="color: var(--text-secondary);">Challenge ${sub.challenge_id}</span>
+                            </div>
+                            <div style="font-size: 0.85em; color: var(--text-secondary); margin-top: 4px;">
+                                📅 ${dateStr}
+                            </div>
+                        </div>
+                        <div style="font-size: 1.2em;">${statusEmoji}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        dashboard.innerHTML = html;
+        console.log('✅ Latest submissions dashboard refreshed');
+    } catch (error) {
+        console.error('Error refreshing dashboard submissions:', error);
+    }
+}
+
+/**
+ * Update header stats
+ */
+async function updateHeaderStats() {
+    try {
+        const user = window.getCurrentUser?.();
+        if (!user) return;
+        
+        const submissions = await window.getUserSubmissions?.(user.username);
+        if (!submissions) return;
+        
+        let completed = 0;
+        let pending = 0;
+        let rejected = 0;
+        
+        Object.values(submissions).forEach(sub => {
+            if (sub.status === 'completed') completed++;
+            else if (sub.status === 'pending') pending++;
+            else if (sub.status === 'rejected') rejected++;
+        });
+        
+        const completedEl = document.getElementById('headerCompleted');
+        const pendingEl = document.getElementById('headerPending');
+        const rejectedEl = document.getElementById('headerRejected');
+        
+        if (completedEl) completedEl.textContent = completed;
+        if (pendingEl) pendingEl.textContent = pending;
+        if (rejectedEl) rejectedEl.textContent = rejected;
+    } catch (error) {
+        console.error('Error updating header stats:', error);
+    }
 }
 
 // Add CSS animations for toast
@@ -864,7 +1024,7 @@ async function confirmRejectWithComment(challengeId, username) {
 }
 
 /**
- * Approve submission (closes modal and refreshes submissions list)
+ * Approve submission (closes modal and refreshes submission lists)
  */
 async function approveAdminSubmission(challengeId, username, comment = '') {
 
@@ -893,8 +1053,8 @@ async function approveAdminSubmission(challengeId, username, comment = '') {
         // Show success notification
         showNotification('✅ Submission approved', 'success');
         
-        // Reload admin dashboard to refresh the list
-        await loadAdminDashboard();
+        // Refresh all submission displays
+        await refreshAllSubmissionLists(challengeId);
     } catch (error) {
         console.error('❌ Error approving submission:', error);
         showNotification(`❌ Error approving submission: ${error.message}`, 'error');
@@ -902,7 +1062,7 @@ async function approveAdminSubmission(challengeId, username, comment = '') {
 }
 
 /**
- * Reject submission (closes modal and refreshes submissions list)
+ * Reject submission (closes modal and refreshes submission lists)
  */
 async function rejectAdminSubmission(challengeId, username, feedback = '') {
     try {
@@ -926,8 +1086,8 @@ async function rejectAdminSubmission(challengeId, username, feedback = '') {
         // Show success notification
         showNotification('❌ Submission rejected', 'success');
         
-        // Reload admin dashboard to refresh the list
-        await loadAdminDashboard();
+        // Refresh all submission displays
+        await refreshAllSubmissionLists(challengeId);
     } catch (error) {
         console.error('❌ Error rejecting submission:', error);
         showNotification(`❌ Error rejecting submission: ${error.message}`, 'error');
@@ -1579,3 +1739,7 @@ window.updateSubmissionStatus = updateSubmissionStatus;
 window.markChallengeCompleted = markChallengeCompleted;
 window.displayAdminSubmissionViewModal = displayAdminSubmissionViewModal;
 window.closeAdminSubmissionViewModal = closeAdminSubmissionViewModal;
+window.refreshAllSubmissionLists = refreshAllSubmissionLists;
+window.refreshChallengeSubmissionsList = refreshChallengeSubmissionsList;
+window.refreshLatestSubmissionsDashboard = refreshLatestSubmissionsDashboard;
+window.updateHeaderStats = updateHeaderStats;
