@@ -3162,7 +3162,7 @@ emp.name = "John"; emp.raiseSalary(5000);</div>
                 for (const [key, data] of Object.entries(topicsData)) {
                     const li = document.createElement('li');
                     const button = document.createElement('button');
-                    const showWip = key !== 'loops' && key !== 'foreach';
+                    const showWip = key !== 'loops' && key !== 'foreach' && key !== 'recursion';
                     button.innerHTML = `<span class="menu-topic-label">${data.icon} ${data.name}</span>${showWip ? '<span class="menu-wip-tag">WIP</span>' : ''}`;
                     button.onclick = () => selectTopic(key);
                     if (key === topicKey) button.classList.add('active');
