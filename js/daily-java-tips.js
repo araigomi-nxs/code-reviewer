@@ -288,12 +288,21 @@ function renderDailyJavaTip(tip) {
         return;
     }
 
+    // Format the date nicely (convert YYYY-MM-DD to "April 12, 2026" style)
+    const dateObj = new Date(tip.dateKey + 'T00:00:00Z');
+    const formattedDate = dateObj.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+
     container.className = 'daily-java-tip-content';
     container.innerHTML = `
         <div class="daily-java-tip-grid">
             <div class="daily-java-tip-panel">
                 <p class="daily-java-tip-label">Use Case</p>
                 <div style="margin-bottom: 8px; font-size: 1.05em; font-weight: 700; color: var(--text-primary);">${escapeHtml(tip.title || "Today's Java Tip")}</div>
+                <div style="margin-bottom: 12px; font-size: 0.85em; color: var(--text-secondary);">📅 ${formattedDate}</div>
                 <div class="daily-java-tip-copy">${formatText(tip.useCase || '')}</div>
 
                 <div class="daily-java-tip-meta">

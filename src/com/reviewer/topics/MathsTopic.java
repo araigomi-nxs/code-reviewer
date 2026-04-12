@@ -166,20 +166,16 @@ public class MathsTopic implements StudyTopic {
 
                 Your Task:
                 1. Generate a random number between 0.0 and 1.0 using Math.random()
-                   Display the result with 4 decimal places
+                   Output the random decimal value
                 2. Generate a random integer between 0 and 10 (inclusive)
-                   Formula: (int) (Math.random() * 11)
                 3. Generate a random integer between 1 and 100 (inclusive)
-                   Formula: (int) (Math.random() * 100) + 1
                 4. Generate a random integer between 0 and 100 (inclusive)
-                   Formula: (int) (Math.random() * 101)
                 5. Generate a random integer between 50 and 100 (inclusive)
-                   Formula: (int) (Math.random() * 51) + 50
                 6. Create a method: void generateRandomNumbers()
                    That displays all five types of random numbers
 
                 Expected Results:
-                - Random decimal (0.0-1.0): 0.7234 (or any value in range)
+                - Random decimal (0.0-1.0): 0.17843265 (or any value in range)
                 - Random 0-10: 7 (or any value 0-10)
                 - Random 1-100: 45 (or any value 1-100)
                 - Random 0-100: 67 (or any value 0-100)
@@ -295,7 +291,7 @@ public class MathsTopic implements StudyTopic {
 
     // Helper method for Challenge 5
     private void generateRandomNumbers() {
-        System.out.println("Random decimal (0.0-1.0): " + String.format("%.4f", Math.random()));
+        System.out.println("Random decimal (0.0-1.0): " + Math.random());
         System.out.println("Random 0-10: " + (int) (Math.random() * 11));
         System.out.println("Random 1-100: " + (int) (Math.random() * 100) + 1);
         System.out.println("Random 0-100: " + (int) (Math.random() * 101));
