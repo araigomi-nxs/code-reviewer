@@ -2704,11 +2704,11 @@ System.out.println(isPythagoreanTriple(6, 8, 10));    // true</div>
                             <br/><br/>
                             <strong style="color: var(--accent);">Your Task:</strong>
                             <ol style="margin: 8px 0 0 20px;">
-                                <li>Generate a random number between 0.0 and 1.0 using Math.random()<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Display with 4 decimal places</code></li>
-                                <li>Generate a random integer between 0 and 10 (inclusive)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: (int) (Math.random() * 11)</code></li>
-                                <li>Generate a random integer between 1 and 100 (inclusive)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: (int) (Math.random() * 100) + 1</code></li>
-                                <li>Generate a random integer between 0 and 100 (inclusive)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: (int) (Math.random() * 101)</code></li>
-                                <li>Generate a random integer between 50 and 100 (inclusive)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: (int) (Math.random() * 51) + 50</code></li>
+                                <li>Generate a random number between 0.0 and 1.0 using Math.random()<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Output the random decimal value</code></li>
+                                <li>Generate a random integer between 0 and 10 (inclusive)</li>
+                                <li>Generate a random integer between 1 and 100 (inclusive)</li>
+                                <li>Generate a random integer between 0 and 100 (inclusive)</li>
+                                <li>Generate a random integer between 50 and 100 (inclusive)</li>
                                 <li>Create a method: <code>void generateRandomNumbers()</code> that displays all five types</li>
                             </ol>
                             <div style="margin: 12px 0; padding: 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 0.9em;">
@@ -2717,7 +2717,7 @@ System.out.println(isPythagoreanTriple(6, 8, 10));    // true</div>
                         </div>
                         <div>
                             <div class="expected-output-label">Expected Output:</div>
-                            <div class="expected-output">Random decimal (0.0-1.0): 0.7234 (or any value in range)<br/>
+                            <div class="expected-output">Random decimal (0.0-1.0): 0.17843265 (or any value in range)<br/>
 Random 0-10: 7 (or any value 0-10)<br/>
 Random 1-100: 45 (or any value 1-100)<br/>
 Random 0-100: 67 (or any value 0-100)<br/>
@@ -2725,8 +2725,7 @@ Random 50-100: 78 (or any value 50-100)</div>
                         </div>
                         <button class="preview-button" onclick="document.getElementById('solutionMath5').style.display = document.getElementById('solutionMath5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
                         <div id="solutionMath5" class="code-block" style="display:none; margin-top: 12px;">public void generateRandomNumbers() {
-    System.out.println("Random decimal (0.0-1.0): " + 
-        String.format("%.4f", Math.random()));
+    System.out.println("Random decimal (0.0-1.0): " + Math.random());
     
     System.out.println("Random 0-10: " + 
         (int) (Math.random() * 11));
