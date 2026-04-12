@@ -189,8 +189,40 @@ public class MathsTopic implements StudyTopic {
                 CONCEPTS: Math.random(), type casting, mathematical formulas, range calculation
                 ESTIMATED TIME: 20 minutes
 
+                ✨ MEDIUM CHALLENGE 6: Precision Rounding
+                ================================================================
+                Round decimal numbers to various decimal places using Math.round().
+                Formula: Math.round(value * 10^places) / 10^places
+
+                Your Task:
+                Use a test value: 3.14159265
+                1. Round to nearest whole number (0 decimal places)
+                   Formula: (int) Math.round(value)
+                   Expected: 3
+                2. Round to nearest 10th place (1 decimal place)
+                   Formula: Math.round(value * 10) / 10.0
+                   Expected: 3.1
+                3. Round to nearest 100th place (2 decimal places)
+                   Formula: Math.round(value * 100) / 100.0
+                   Expected: 3.14
+                4. Round to nearest 1000th place (3 decimal places)
+                   Formula: Math.round(value * 1000) / 1000.0
+                   Expected: 3.142
+                5. Create a method: void demonstratePrecisionRounding()
+                   That shows all four rounding levels
+
+                Expected Results:
+                - Whole number: 3
+                - 10th place: 3.1
+                - 100th place: 3.14
+                - 1000th place: 3.142
+
+                DIFFICULTY: Medium
+                CONCEPTS: Math.round(), decimal precision, mathematical scaling
+                ESTIMATED TIME: 20 minutes
+
                 OVERALL DIFFICULTY: Easy to Medium
-                ESTIMATED TIME: 120 minutes
+                ESTIMATED TIME: 140 minutes
                 """;
     }
 
@@ -252,9 +284,13 @@ public class MathsTopic implements StudyTopic {
         System.out.println("9² = " + (9 * 9));
         System.out.println("Result: " + isTriple789);
 
-        // DISTANCE MATRIX EXAMPLE
+        // RANDOM NUMBER GENERATION
         System.out.println("\n=== Random Number Generation ===");
         generateRandomNumbers();
+
+        // PRECISION ROUNDING
+        System.out.println("\n=== Precision Rounding ===");
+        demonstratePrecisionRounding();
     }
 
     // Helper method for Challenge 5
@@ -264,6 +300,28 @@ public class MathsTopic implements StudyTopic {
         System.out.println("Random 1-100: " + (int) (Math.random() * 100) + 1);
         System.out.println("Random 0-100: " + (int) (Math.random() * 101));
         System.out.println("Random 50-100: " + (int) (Math.random() * 51) + 50);
+    }
+
+    // Helper method for Challenge 6
+    private void demonstratePrecisionRounding() {
+        double value = 3.14159265;
+        System.out.println("Original value: " + value);
+
+        // Round to whole number
+        double whole = Math.round(value);
+        System.out.println("Rounded to whole number: " + whole);
+
+        // Round to 10th place (1 decimal)
+        double tenth = Math.round(value * 10) / 10.0;
+        System.out.println("Rounded to 10th place: " + tenth);
+
+        // Round to 100th place (2 decimals)
+        double hundredth = Math.round(value * 100) / 100.0;
+        System.out.println("Rounded to 100th place: " + hundredth);
+
+        // Round to 1000th place (3 decimals)
+        double thousandth = Math.round(value * 1000) / 1000.0;
+        System.out.println("Rounded to 1000th place: " + thousandth);
     }
 
     // Helper method for Challenge 4

@@ -2653,6 +2653,55 @@ Random 50-100: 78 (or any value 50-100)</div>
         (int) (Math.random() * 51) + 50);
 }</div>
                     </div>
+
+                    <div class="challenge-item">
+                        <strong>Challenge 6: Precision Rounding</strong>
+                        <div class="challenge-description">Round decimal numbers to various decimal places using Math.round().</div>
+                        <div style="margin: 12px 0; padding: 12px; background: var(--bg-secondary); border-radius: 4px;">
+                            <strong style="color: var(--accent);">Formula:</strong> <code>Math.round(value * 10<sup>places</sup>) / 10<sup>places</sup></code>
+                            <br/><br/>
+                            <strong style="color: var(--accent);">Your Task:</strong>
+                            <p>Use test value: <code>3.14159265</code></p>
+                            <ol style="margin: 8px 0 0 20px;">
+                                <li>Round to nearest whole number (0 decimal places)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: (int) Math.round(value) → Expected: 3</code></li>
+                                <li>Round to nearest 10th place (1 decimal place)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: Math.round(value * 10) / 10.0 → Expected: 3.1</code></li>
+                                <li>Round to nearest 100th place (2 decimal places)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: Math.round(value * 100) / 100.0 → Expected: 3.14</code></li>
+                                <li>Round to nearest 1000th place (3 decimal places)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: Math.round(value * 1000) / 1000.0 → Expected: 3.142</code></li>
+                                <li>Create a method: <code>void demonstratePrecisionRounding()</code> that shows all four rounding levels</li>
+                            </ol>
+                            <div style="margin: 12px 0; padding: 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 0.9em;">
+                                <strong>DIFFICULTY:</strong> Medium | <strong>CONCEPTS:</strong> Math.round(), decimal precision, mathematical scaling | <strong>TIME:</strong> 20 minutes
+                            </div>
+                        </div>
+                        <div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">Whole number: 3<br/>
+10th place: 3.1<br/>
+100th place: 3.14<br/>
+1000th place: 3.142</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionMath6').style.display = document.getElementById('solutionMath6').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionMath6" class="code-block" style="display:none; margin-top: 12px;">public void demonstratePrecisionRounding() {
+    double value = 3.14159265;
+    System.out.println("Original value: " + value);
+    
+    // Round to whole number
+    double whole = Math.round(value);
+    System.out.println("Whole number: " + whole);
+    
+    // Round to 10th place
+    double tenth = Math.round(value * 10) / 10.0;
+    System.out.println("10th place: " + tenth);
+    
+    // Round to 100th place
+    double hundredth = Math.round(value * 100) / 100.0;
+    System.out.println("100th place: " + hundredth);
+    
+    // Round to 1000th place
+    double thousandth = Math.round(value * 1000) / 1000.0;
+    System.out.println("1000th place: " + thousandth);
+}</div>
+                    </div>
                 `
             },
             localdatetime: {

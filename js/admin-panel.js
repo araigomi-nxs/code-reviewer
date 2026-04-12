@@ -466,13 +466,29 @@ function addAdminPanelStyles() {
         }
 
         .ai-feedback {
-            background: #f0f7ff;
+            background: linear-gradient(135deg, rgba(18, 21, 28, 0.08) 0%, rgba(213, 227, 57, 0.12) 100%);
             padding: 10px;
-            border-left: 3px solid #2196F3;
+            border-left: 3px solid var(--accent);
             margin-top: 10px;
             font-size: 13px;
-            color: #555;
-            border-radius: 2px;
+            color: var(--text-primary);
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .ai-feedback:hover {
+            background: linear-gradient(135deg, rgba(18, 21, 28, 0.12) 0%, rgba(213, 227, 57, 0.15) 100%);
+            box-shadow: 0 2px 8px rgba(213, 227, 57, 0.15);
+        }
+
+        body.dark-mode .ai-feedback {
+            background: linear-gradient(135deg, rgba(213, 227, 57, 0.15) 0%, rgba(213, 227, 57, 0.08) 100%);
+        }
+
+        body.dark-mode .ai-feedback:hover {
+            background: linear-gradient(135deg, rgba(213, 227, 57, 0.2) 0%, rgba(213, 227, 57, 0.12) 100%);
+            box-shadow: 0 2px 8px rgba(213, 227, 57, 0.2);
         }
 
         .submission-actions {
