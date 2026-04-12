@@ -1520,7 +1520,6 @@ async function showCodePreview(username, challengeId) {
     // AI Review display (right side)
     const reviewContainer = document.createElement('div');
     const isDarkModeReview = document.body.classList.contains('dark-mode');
-    reviewContainer.className = 'ai-review-container-scrollbar';
     reviewContainer.style.cssText = `
         flex: 1;
         overflow-y: auto;
@@ -1532,49 +1531,6 @@ async function showCodePreview(username, challengeId) {
         min-width: 0;
         backdrop-filter: blur(10px);
     `;
-
-    // Inject custom scrollbar styles
-    if (!document.getElementById('customScrollbarStyles')) {
-        const scrollbarStyle = document.createElement('style');
-        scrollbarStyle.id = 'customScrollbarStyles';
-        scrollbarStyle.textContent = `
-            .ai-review-container-scrollbar {
-                scrollbar-width: thin;
-                scrollbar-color: rgba(213, 227, 57, 0.6) transparent;
-            }
-            
-            .ai-review-container-scrollbar::-webkit-scrollbar {
-                width: 8px;
-            }
-            
-            .ai-review-container-scrollbar::-webkit-scrollbar-track {
-                background: transparent;
-            }
-            
-            .ai-review-container-scrollbar::-webkit-scrollbar-thumb {
-                background: rgba(213, 227, 57, 0.6);
-                border-radius: 4px;
-                border: 2px solid transparent;
-                background-clip: content-box;
-            }
-            
-            .ai-review-container-scrollbar::-webkit-scrollbar-thumb:hover {
-                background: rgba(213, 227, 57, 0.9);
-                background-clip: content-box;
-            }
-            
-            body.dark-mode .ai-review-container-scrollbar::-webkit-scrollbar-thumb {
-                background: rgba(213, 227, 57, 0.7);
-                background-clip: content-box;
-            }
-            
-            body.dark-mode .ai-review-container-scrollbar::-webkit-scrollbar-thumb:hover {
-                background: rgba(213, 227, 57, 1);
-                background-clip: content-box;
-            }
-        `;
-        document.head.appendChild(scrollbarStyle);
-    }
 
     const reviewLabel = document.createElement('div');
     reviewLabel.style.cssText = `
