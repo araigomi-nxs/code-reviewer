@@ -2483,44 +2483,149 @@ System.out.println(Math.min(a, b));</div>
                         <h3 style="margin: 0; color: #D5E339; font-size: 1.1em;">EASY LEVEL</h3>
                     </div>
                     <div class="challenge-item">
-                        <strong>Challenge 1: Round the Marks</strong>
-                        <div class="challenge-description">Round these scores to the nearest integers: 72.4, 81.6, 90.5.</div>
+                        <strong>Challenge 1: Circle Area Calculator</strong>
+                        <div class="challenge-description">Write a method to calculate the area of a circle. Formula: area = π * r²</div>
                         <div>
-                            <div class="expected-output-label">Expected Output:</div>
-                            <div class="expected-output">72 82 91</div>
+                            <div class="expected-output-label">Your Task:</div>
+                            <div class="expected-output">1. Create method: double calculateCircleArea(double radius)<br/>
+2. Use Math.PI for the constant<br/>
+3. Use Math.pow(radius, 2) for radius squared<br/>
+4. Test with radius = 5, 10, 3.5<br/><br/>
+Expected Results:<br/>
+- radius 5 → area ≈ 78.54<br/>
+- radius 10 → area ≈ 314.16<br/>
+- radius 3.5 → area ≈ 38.48</div>
                         </div>
                         <button class="preview-button" onclick="document.getElementById('solutionMath1').style.display = document.getElementById('solutionMath1').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="solutionMath1" class="code-block" style="display:none; margin-top: 12px;">double[] scores = {72.4, 81.6, 90.5};
-for (double score : scores) {
-    System.out.print(Math.round(score) + " ");
+                        <div id="solutionMath1" class="code-block" style="display:none; margin-top: 12px;">public double calculateCircleArea(double radius) {
+    return Math.PI * Math.pow(radius, 2);
+}
+
+// Test
+System.out.println(calculateCircleArea(5));    // ≈ 78.54
+System.out.println(calculateCircleArea(10));   // ≈ 314.16
+System.out.println(calculateCircleArea(3.5));  // ≈ 38.48</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 2: Find Min and Max in Array</strong>
+                        <div class="challenge-description">Write methods to find the minimum and maximum values in an array.</div>
+                        <div>
+                            <div class="expected-output-label">Your Task:</div>
+                            <div class="expected-output">1. Create method: int findMin(int[] numbers)<br/>
+2. Create method: int findMax(int[] numbers)<br/>
+3. Use Math.min() and Math.max() methods<br/>
+4. Test with arrays: {5, 10, 3, 8, 1}, {100, 50, 75}<br/><br/>
+Expected Results:<br/>
+- Array {5, 10, 3, 8, 1} → min = 1, max = 10<br/>
+- Array {100, 50, 75} → min = 50, max = 100</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionMath2').style.display = document.getElementById('solutionMath2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionMath2" class="code-block" style="display:none; margin-top: 12px;">public int findMin(int[] numbers) {
+    int min = numbers[0];
+    for (int num : numbers) {
+        min = Math.min(min, num);
+    }
+    return min;
+}
+
+public int findMax(int[] numbers) {
+    int max = numbers[0];
+    for (int num : numbers) {
+        max = Math.max(max, num);
+    }
+    return max;
 }</div>
                     </div>
                     <div class="challenge-item">
-                        <strong>Challenge 2: Area of a Circle</strong>
-                        <div class="challenge-description">Calculate the area of a circle with radius 7 using Math.PI and Math.pow().</div>
+                        <strong>Challenge 3: Distance Formula</strong>
+                        <div class="challenge-description">Calculate the distance between two points using the distance formula.</div>
                         <div>
-                            <div class="expected-output-label">Expected Output:</div>
-                            <div class="expected-output">153.94</div>
-                        </div>
-                        <button class="preview-button" onclick="document.getElementById('solutionMath2').style.display = document.getElementById('solutionMath2').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="solutionMath2" class="code-block" style="display:none; margin-top: 12px;">double radius = 7;
-double area = Math.PI * Math.pow(radius, 2);
-System.out.printf("%.2f", area);</div>
-                    </div>
-                    <div class="challenge-item">
-                        <strong>Challenge 3: Highest Score</strong>
-                        <div class="challenge-description">Find the highest value in {45, 92, 67, 88, 99} using Math.max().</div>
-                        <div>
-                            <div class="expected-output-label">Expected Output:</div>
-                            <div class="expected-output">99</div>
+                            <div class="expected-output-label">Your Task:</div>
+                            <div class="expected-output">Formula: distance = √((x₂ - x₁)² + (y₂ - y₁)²)<br/><br/>
+1. Create method: double calculateDistance(int x1, int y1, int x2, int y2)<br/>
+2. Use Math.sqrt() and Math.pow()<br/>
+3. Test with points: (0,0) to (3,4), (1,1) to (4,5)<br/><br/>
+Expected Results:<br/>
+- (0,0) to (3,4) → distance = 5.0<br/>
+- (1,1) to (4,5) → distance ≈ 5.0</div>
                         </div>
                         <button class="preview-button" onclick="document.getElementById('solutionMath3').style.display = document.getElementById('solutionMath3').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="solutionMath3" class="code-block" style="display:none; margin-top: 12px;">int[] scores = {45, 92, 67, 88, 99};
-int highest = scores[0];
-for (int score : scores) {
-    highest = Math.max(highest, score);
+                        <div id="solutionMath3" class="code-block" style="display:none; margin-top: 12px;">public double calculateDistance(int x1, int y1, int x2, int y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
-System.out.println(highest);</div>
+
+// Test
+System.out.println(calculateDistance(0, 0, 3, 4)); // 5.0
+System.out.println(calculateDistance(1, 1, 4, 5)); // ≈ 5.0</div>
+                    </div>
+
+                    <div style="background: var(--bg-tertiary); padding: 12px 16px; margin-bottom: 20px; border-left: 4px solid #ff9800; border-radius: 4px; margin-top: 30px;">
+                        <h3 style="margin: 0; color: #ff9800; font-size: 1.1em;">⚡ HARD LEVEL</h3>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 4: Pythagorean Triple Validator</strong>
+                        <div class="challenge-description">A Pythagorean triple is a set of three positive integers a, b, c such that a² + b² = c² (e.g., 3, 4, 5 or 5, 12, 13)</div>
+                        <div>
+                            <div class="expected-output-label">Your Task:</div>
+                            <div class="expected-output">1. Create a method: boolean isPythagoreanTriple(int a, int b, int c)<br/>
+2. Use Math.pow() to calculate a², b², c²<br/>
+3. Return true if it's a valid triple, false otherwise<br/>
+4. Test with multiple values<br/><br/>
+Test Cases:<br/>
+- isPythagoreanTriple(3, 4, 5) → true (3² + 4² = 9 + 16 = 25 = 5²)<br/>
+- isPythagoreanTriple(5, 12, 13) → true<br/>
+- isPythagoreanTriple(7, 8, 9) → false<br/>
+- isPythagoreanTriple(6, 8, 10) → true<br/><br/>
+DIFFICULTY: Hard | CONCEPTS: Math.pow(), conditional logic | TIME: 30 minutes</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionMath4').style.display = document.getElementById('solutionMath4').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionMath4" class="code-block" style="display:none; margin-top: 12px;">public boolean isPythagoreanTriple(int a, int b, int c) {
+    return Math.pow(a, 2) + Math.pow(b, 2) == Math.pow(c, 2);
+}
+
+// Test
+System.out.println(isPythagoreanTriple(3, 4, 5));     // true
+System.out.println(isPythagoreanTriple(5, 12, 13));   // true
+System.out.println(isPythagoreanTriple(7, 8, 9));     // false
+System.out.println(isPythagoreanTriple(6, 8, 10));    // true</div>
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Challenge 5: Distance Matrix Calculator</strong>
+                        <div class="challenge-description">Given an array of points with coordinates (x, y), calculate the distance between ALL pairs of points.</div>
+                        <div>
+                            <div class="expected-output-label">Your Task:</div>
+                            <div class="expected-output">1. Create a method to calculate distance between two 2D points<br/>
+   double calculateDistance(int x1, int y1, int x2, int y2)<br/>
+2. Create a method to build a distance matrix for n points<br/>
+   double[][] buildDistanceMatrix(int[][] points)<br/>
+3. Use Math.sqrt() and Math.pow()<br/>
+4. Return a 2D array showing distances between all point pairs<br/><br/>
+Example Input: Points: (0,0), (3,4), (6,0)<br/>
+Distance Matrix Output:<br/>
+[0.0,  5.0,  6.0]<br/>
+[5.0,  0.0,  5.0]<br/>
+[6.0,  5.0,  0.0]<br/><br/>
+DIFFICULTY: Hard | CONCEPTS: Math.sqrt(), Math.pow(), nested loops, 2D arrays | TIME: 45 minutes</div>
+                        </div>
+                        <button class="preview-button" onclick="document.getElementById('solutionMath5').style.display = document.getElementById('solutionMath5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
+                        <div id="solutionMath5" class="code-block" style="display:none; margin-top: 12px;">public double calculateDistance(int x1, int y1, int x2, int y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+}
+
+public double[][] buildDistanceMatrix(int[][] points) {
+    int n = points.length;
+    double[][] matrix = new double[n][n];
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            matrix[i][j] = calculateDistance(
+                points[i][0], points[i][1],
+                points[j][0], points[j][1]
+            );
+        }
+    }
+    return matrix;
+}</div>
                     </div>
                 `
             },
