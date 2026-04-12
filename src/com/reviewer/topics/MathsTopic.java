@@ -97,13 +97,13 @@ public class MathsTopic implements StudyTopic {
                 ================================================================
                 Write a method to calculate the area of a circle.
                 Formula: area = π * r²
-                
+
                 Your Task:
                 1. Create method: double calculateCircleArea(double radius)
                 2. Use Math.PI for the constant
                 3. Use Math.pow(radius, 2) for radius squared
                 4. Test with radius = 5, 10, 3.5
-                
+
                 Expected Results:
                 - radius 5 → area ≈ 78.54
                 - radius 10 → area ≈ 314.16
@@ -112,13 +112,13 @@ public class MathsTopic implements StudyTopic {
                 Challenge 2: Find Min and Max in Array
                 ================================================================
                 Write methods to find the minimum and maximum values in an array.
-                
+
                 Your Task:
                 1. Create method: int findMin(int[] numbers)
                 2. Create method: int findMax(int[] numbers)
                 3. Use Math.min() and Math.max() methods
                 4. Test with arrays: {5, 10, 3, 8, 1}, {100, 50, 75}
-                
+
                 Expected Results:
                 - Array {5, 10, 3, 8, 1} → min = 1, max = 10
                 - Array {100, 50, 75} → min = 50, max = 100
@@ -127,12 +127,12 @@ public class MathsTopic implements StudyTopic {
                 ================================================================
                 Calculate the distance between two points using the distance formula.
                 Formula: distance = √((x₂ - x₁)² + (y₂ - y₁)²)
-                
+
                 Your Task:
                 1. Create method: double calculateDistance(int x1, int y1, int x2, int y2)
                 2. Use Math.sqrt() and Math.pow()
                 3. Test with points: (0,0) to (3,4), (1,1) to (4,5)
-                
+
                 Expected Results:
                 - (0,0) to (3,4) → distance = 5.0
                 - (1,1) to (4,5) → distance ≈ 5.0
