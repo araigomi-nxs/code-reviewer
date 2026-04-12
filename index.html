@@ -2609,46 +2609,38 @@ System.out.println(isPythagoreanTriple(7, 8, 9));     // false
 System.out.println(isPythagoreanTriple(6, 8, 10));    // true</div>
                     </div>
                     <div class="challenge-item">
-                        <strong>Challenge 5: Distance Matrix Calculator</strong>
-                        <div class="challenge-description">Given an array of points with coordinates (x, y), calculate the distance between ALL pairs of points.</div>
+                        <strong>Challenge 5: Random Number Generator</strong>
+                        <div class="challenge-description">Use Math.random() to generate random numbers in different ranges.</div>
                         <div style="margin: 12px 0; padding: 12px; background: var(--bg-secondary); border-radius: 4px;">
+                            <strong style="color: var(--accent);">Info:</strong> Math.random() generates a random decimal between 0.0 (inclusive) and 1.0 (exclusive)
+                            <br/><br/>
                             <strong style="color: var(--accent);">Your Task:</strong>
                             <ol style="margin: 8px 0 0 20px;">
-                                <li>Create a method to calculate distance between two 2D points<br/><code>&nbsp;&nbsp;&nbsp;&nbsp;double calculateDistance(int x1, int y1, int x2, int y2)</code></li>
-                                <li>Create a method to build a distance matrix for n points<br/><code>&nbsp;&nbsp;&nbsp;&nbsp;double[][] buildDistanceMatrix(int[][] points)</code></li>
-                                <li>Use Math.sqrt() and Math.pow()</li>
-                                <li>Return a 2D array showing distances between all point pairs</li>
+                                <li>Generate a random number between 0.0 and 1.0 using Math.random()<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Display with 4 decimal places</code></li>
+                                <li>Generate a random integer between 0 and 10 (inclusive)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: (int) (Math.random() * 11)</code></li>
+                                <li>Generate a random integer between 1 and 100 (inclusive)<br/><code style="font-size: 0.9em;">&nbsp;&nbsp;&nbsp;&nbsp;Formula: (int) (Math.random() * 100) + 1</code></li>
+                                <li>Create a method: <code>void generateRandomNumbers()</code> that displays all three types</li>
                             </ol>
                             <div style="margin: 12px 0; padding: 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 0.9em;">
-                                <strong>DIFFICULTY:</strong> Hard | <strong>CONCEPTS:</strong> Math.sqrt(), Math.pow(), nested loops, 2D arrays | <strong>TIME:</strong> 45 minutes
+                                <strong>DIFFICULTY:</strong> Medium | <strong>CONCEPTS:</strong> Math.random(), type casting, formulas | <strong>TIME:</strong> 20 minutes
                             </div>
                         </div>
                         <div>
-                            <div class="expected-output-label">Example Output:</div>
-                            <div class="expected-output"><strong>Input:</strong> Points: (0,0), (3,4), (6,0)<br/><br/>
-<strong>Distance Matrix:</strong><br/>
-[0.0,  5.0,  6.0]<br/>
-[5.0,  0.0,  5.0]<br/>
-[6.0,  5.0,  0.0]</div>
+                            <div class="expected-output-label">Expected Output:</div>
+                            <div class="expected-output">Random decimal (0.0-1.0): 0.7234 (or any value in range)<br/>
+Random 0-10: 7 (or any value 0-10)<br/>
+Random 1-100: 45 (or any value 1-100)</div>
                         </div>
                         <button class="preview-button" onclick="document.getElementById('solutionMath5').style.display = document.getElementById('solutionMath5').style.display === 'none' ? 'block' : 'none';">💡 Show Solution</button>
-                        <div id="solutionMath5" class="code-block" style="display:none; margin-top: 12px;">public double calculateDistance(int x1, int y1, int x2, int y2) {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
-
-public double[][] buildDistanceMatrix(int[][] points) {
-    int n = points.length;
-    double[][] matrix = new double[n][n];
+                        <div id="solutionMath5" class="code-block" style="display:none; margin-top: 12px;">public void generateRandomNumbers() {
+    System.out.println("Random decimal (0.0-1.0): " + 
+        String.format("%.4f", Math.random()));
     
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            matrix[i][j] = calculateDistance(
-                points[i][0], points[i][1],
-                points[j][0], points[j][1]
-            );
-        }
-    }
-    return matrix;
+    System.out.println("Random 0-10: " + 
+        (int) (Math.random() * 11));
+    
+    System.out.println("Random 1-100: " + 
+        (int) (Math.random() * 100) + 1);
 }</div>
                     </div>
                 `

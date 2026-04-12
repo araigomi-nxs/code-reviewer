@@ -159,35 +159,32 @@ public class MathsTopic implements StudyTopic {
                 ESTIMATED TIME: 30 minutes
 
 
-                ✨ HARD CHALLENGE 5: Distance Matrix Calculator
+                ✨ MEDIUM CHALLENGE 5: Random Number Generator
                 ================================================================
-                Given an array of points with coordinates (x, y), calculate the
-                distance between ALL pairs of points using the distance formula:
-                distance = √((x₂ - x₁)² + (y₂ - y₁)²)
+                Use Math.random() to generate random numbers in different ranges.
+                Math.random() generates a random decimal between 0.0 (inclusive) and 1.0 (exclusive)
 
                 Your Task:
-                1. Create a method to calculate distance between two 2D points
-                   double calculateDistance(int x1, int y1, int x2, int y2)
-                2. Create a method to build a distance matrix for n points
-                   double[][] buildDistanceMatrix(int[][] points)
-                3. Use Math.sqrt() and Math.pow()
-                4. Return a 2D array showing distances between all point pairs
+                1. Generate a random number between 0.0 and 1.0 using Math.random()
+                   Display the result with 4 decimal places
+                2. Generate a random integer between 0 and 10 (inclusive)
+                   Formula: (int) (Math.random() * 11)
+                3. Generate a random integer between 1 and 100 (inclusive)
+                   Formula: (int) (Math.random() * 100) + 1
+                4. Create a method: void generateRandomNumbers()
+                   That displays all three types of random numbers
 
-                Example:
-                Points: (0,0), (3,4), (6,0)
-                Distance Matrix Output:
-                [
-                    [0.0,   5.0,   6.0],    // distances from (0,0)
-                    [5.0,   0.0,   5.0],    // distances from (3,4)
-                    [6.0,   5.0,   0.0]     // distances from (6,0)
-                ]
+                Expected Results:
+                - Random decimal (0.0-1.0): 0.7234 (or any value in range)
+                - Random 0-10: 7 (or any value 0-10)
+                - Random 1-100: 45 (or any value 1-100)
 
-                DIFFICULTY: Hard
-                CONCEPTS: Math.sqrt(), Math.pow(), nested loops, 2D arrays
-                ESTIMATED TIME: 45 minutes
+                DIFFICULTY: Medium
+                CONCEPTS: Math.random(), type casting, mathematical formulas
+                ESTIMATED TIME: 20 minutes
 
-                OVERALL DIFFICULTY: Easy to Hard
-                ESTIMATED TIME: 150 minutes
+                OVERALL DIFFICULTY: Easy to Medium
+                ESTIMATED TIME: 120 minutes
                 """;
     }
 
@@ -250,21 +247,18 @@ public class MathsTopic implements StudyTopic {
         System.out.println("Result: " + isTriple789);
 
         // DISTANCE MATRIX EXAMPLE
-        System.out.println("\n=== Distance Matrix Example ===");
-        int[][] points = { { 0, 0 }, { 3, 4 }, { 6, 0 } };
-        double[][] distanceMatrix = buildDistanceMatrix(points);
-        System.out.println("Points: (0,0), (3,4), (6,0)");
-        System.out.println("Distance Matrix:");
-        for (int i = 0; i < distanceMatrix.length; i++) {
-            System.out.print("[ ");
-            for (int j = 0; j < distanceMatrix[i].length; j++) {
-                System.out.printf("%.1f ", distanceMatrix[i][j]);
-            }
-            System.out.println("]");
-        }
+        System.out.println("\n=== Random Number Generation ===");
+        generateRandomNumbers();
     }
 
-    // Helper method for Challenge 1
+    // Helper method for Challenge 5
+    private void generateRandomNumbers() {
+        System.out.println("Random decimal (0.0-1.0): " + String.format("%.4f", Math.random()));
+        System.out.println("Random 0-10: " + (int) (Math.random() * 11));
+        System.out.println("Random 1-100: " + (int) (Math.random() * 100) + 1);
+    }
+
+    // Helper method for Challenge 4
     private boolean isPythagoreanTriple(int a, int b, int c) {
         double aSq = Math.pow(a, 2);
         double bSq = Math.pow(b, 2);
@@ -272,33 +266,10 @@ public class MathsTopic implements StudyTopic {
         return aSq + bSq == cSq;
     }
 
-    // Helper method for Challenge 2
+    // Helper method for Challenge 3
     private double calculateDistance(int x1, int y1, int x2, int y2) {
         double dx = x2 - x1;
         double dy = y2 - y1;
         return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-    }
-
-    // Helper method for Challenge 2
-    private double[][] buildDistanceMatrix(int[][] points) {
-        int n = points.length;
-        double[][] matrix = new double[n][n];
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == j) {
-                    matrix[i][j] = 0.0;
-                } else {
-                    int x1 = points[i][0];
-                    int y1 = points[i][1];
-                    int x2 = points[j][0];
-                    int y2 = points[j][1];
-
-                    matrix[i][j] = calculateDistance(x1, y1, x2, y2);
-                }
-            }
-        }
-
-        return matrix;
     }
 }
