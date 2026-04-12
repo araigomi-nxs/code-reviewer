@@ -1663,26 +1663,29 @@ function addSubmissionViewModalStyles() {
             background: linear-gradient(135deg, rgba(18, 21, 28, 0.08) 0%, rgba(213, 227, 57, 0.12) 100%);
             padding: 12px;
             border-radius: 4px;
-            border-left: 3px solid var(--accent);
-            color: var(--text-primary);
+            border-left: 3px solid #12151C;
+            color: #1a1a1a;
             font-size: 13px;
             line-height: 1.6;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
+            !important;
         }
 
         .ai-feedback-box:hover {
-            background: linear-gradient(135deg, rgba(18, 21, 28, 0.12) 0%, rgba(213, 227, 57, 0.15) 100%);
-            box-shadow: 0 2px 8px rgba(213, 227, 57, 0.15);
+            background: linear-gradient(135deg, rgba(18, 21, 28, 0.12) 0%, rgba(213, 227, 57, 0.15) 100%) !important;
+            box-shadow: 0 2px 8px rgba(213, 227, 57, 0.15) !important;
         }
 
         body.dark-mode .ai-feedback-box {
-            background: linear-gradient(135deg, rgba(213, 227, 57, 0.15) 0%, rgba(213, 227, 57, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(213, 227, 57, 0.15) 0%, rgba(213, 227, 57, 0.08) 100%) !important;
+            border-left-color: #D5E339 !important;
+            color: #ffffff !important;
         }
 
         body.dark-mode .ai-feedback-box:hover {
-            background: linear-gradient(135deg, rgba(213, 227, 57, 0.2) 0%, rgba(213, 227, 57, 0.12) 100%);
-            box-shadow: 0 2px 8px rgba(213, 227, 57, 0.2);
+            background: linear-gradient(135deg, rgba(213, 227, 57, 0.2) 0%, rgba(213, 227, 57, 0.12) 100%) !important;
+            box-shadow: 0 2px 8px rgba(213, 227, 57, 0.2) !important;
         }
 
         .admin-feedback-box {
