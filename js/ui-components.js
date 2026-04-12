@@ -1519,16 +1519,62 @@ async function showCodePreview(username, challengeId) {
 
     // AI Review display (right side)
     const reviewContainer = document.createElement('div');
+    const isDarkModeReview = document.body.classList.contains('dark-mode');
+    reviewContainer.className = 'ai-review-container-scrollbar';
     reviewContainer.style.cssText = `
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
         padding: 20px;
-        background: #fafafa;
+        background: ${isDarkModeReview ? 'linear-gradient(135deg, rgba(213, 227, 57, 0.15) 0%, rgba(213, 227, 57, 0.08) 100%)' : 'linear-gradient(135deg, rgba(18, 21, 28, 0.08) 0%, rgba(213, 227, 57, 0.12) 100%)'};
         display: flex;
         flex-direction: column;
         min-width: 0;
+        backdrop-filter: blur(10px);
     `;
+
+    // Inject custom scrollbar styles
+    if (!document.getElementById('customScrollbarStyles')) {
+        const scrollbarStyle = document.createElement('style');
+        scrollbarStyle.id = 'customScrollbarStyles';
+        scrollbarStyle.textContent = `
+            .ai-review-container-scrollbar {
+                scrollbar-width: thin;
+                scrollbar-color: rgba(213, 227, 57, 0.6) transparent;
+            }
+            
+            .ai-review-container-scrollbar::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            .ai-review-container-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            
+            .ai-review-container-scrollbar::-webkit-scrollbar-thumb {
+                background: rgba(213, 227, 57, 0.6);
+                border-radius: 4px;
+                border: 2px solid transparent;
+                background-clip: content-box;
+            }
+            
+            .ai-review-container-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: rgba(213, 227, 57, 0.9);
+                background-clip: content-box;
+            }
+            
+            body.dark-mode .ai-review-container-scrollbar::-webkit-scrollbar-thumb {
+                background: rgba(213, 227, 57, 0.7);
+                background-clip: content-box;
+            }
+            
+            body.dark-mode .ai-review-container-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: rgba(213, 227, 57, 1);
+                background-clip: content-box;
+            }
+        `;
+        document.head.appendChild(scrollbarStyle);
+    }
 
     const reviewLabel = document.createElement('div');
     reviewLabel.style.cssText = `
@@ -1557,19 +1603,15 @@ async function showCodePreview(username, challengeId) {
         // Display review sentences
         if (review) {
             const reviewTextDiv = document.createElement('div');
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            
             reviewTextDiv.style.cssText = `
-                background: ${isDarkMode ? 'linear-gradient(135deg, rgba(213, 227, 57, 0.15) 0%, rgba(213, 227, 57, 0.08) 100%)' : 'linear-gradient(135deg, rgba(18, 21, 28, 0.08) 0%, rgba(213, 227, 57, 0.12) 100%)'};
+                background: var(--bg-secondary);
                 padding: 15px;
                 border-radius: 4px;
-                border-left: 3px solid ${isDarkMode ? '#D5E339' : '#12151C'};
+                border-left: 3px solid var(--accent);
                 margin-bottom: 15px;
                 font-size: 13px;
                 line-height: 1.6;
-                color: ${isDarkMode ? '#ffffff' : '#1a1a1a'};
-                backdrop-filter: blur(10px);
-                transition: all 0.3s ease;
+                color: var(--text-primary);
             `;
             reviewTextDiv.innerHTML = `<strong>💭 Review:</strong><br />` + review.replace(/\n/g, '<br />');
             reviewContainer.appendChild(reviewTextDiv);
