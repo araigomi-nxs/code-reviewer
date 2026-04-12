@@ -120,8 +120,41 @@ public class Recursion implements StudyTopic {
                 Challenge 7: Binary Search (HARDER)
                 Implement binary search recursively
 
+                Challenge 8: Pythagorean Triple Validator (HARD MATH)
+                A Pythagorean triple is a set of three positive integers a, b, c
+                such that a² + b² = c² (e.g., 3, 4, 5 or 5, 12, 13)
+
+                Your Task:
+                1. Create a method: boolean isPythagoreanTriple(int a, int b, int c)
+                2. Use Math.pow() to calculate a², b², c²
+                3. Return true if it's a valid triple, false otherwise
+
+                Test Cases:
+                - isPythagoreanTriple(3, 4, 5) → true
+                - isPythagoreanTriple(5, 12, 13) → true
+                - isPythagoreanTriple(7, 8, 9) → false
+                - isPythagoreanTriple(6, 8, 10) → true
+
+                Challenge 9: Distance Matrix Calculator (HARD MATH)
+                Given an array of points with coordinates (x, y), calculate the
+                distance between ALL pairs of points using the distance formula:
+                distance = √((x₂ - x₁)² + (y₂ - y₁)²)
+
+                Your Task:
+                1. Create a method: double calculateDistance(int x1, int y1, int x2, int y2)
+                2. Create a method: double[][] buildDistanceMatrix(int[][] points)
+                3. Use Math.sqrt() and Math.pow()
+                4. Return a 2D array showing distances between all point pairs
+
+                Example Output for points (0,0), (3,4), (6,0):
+                [
+                    [0.0,   5.0,   6.0],
+                    [5.0,   0.0,   5.0],
+                    [6.0,   5.0,   0.0]
+                ]
+
                 DIFFICULTY: Easy to Hard
-                ESTIMATED TIME: 90 minutes
+                ESTIMATED TIME: 120 minutes
                 """;
     }
 
