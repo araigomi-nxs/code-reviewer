@@ -1227,7 +1227,7 @@ async function getSubmissionForAdmin(challengeId, username = null) {
             console.warn('⚠️ No data returned from query');
             return null;
         }
-        
+
         console.log('✅ Submission found, all fields:', data);
         console.log('📋 Field breakdown:', {
             username: data.username,
