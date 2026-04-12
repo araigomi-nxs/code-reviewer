@@ -41,7 +41,7 @@ public class CodingReviewerApp {
                     runTopic("OOP Basics", "com.reviewer.topics.OOPBasics");
                     break;
                 case 7:
-                    runTopic("Math Challenge", "com.reviewer.topics.MathChallenge");
+                    runTopic("Maths Topic", "com.reviewer.topics.MathsTopic");
                     break;
                 case 8:
                     running = false;
@@ -65,7 +65,7 @@ public class CodingReviewerApp {
         System.out.println("4. 2D Arrays");
         System.out.println("5. ArrayList");
         System.out.println("6. OOP Basics");
-        System.out.println("7. Math Challenge (Hard)");
+        System.out.println("7. Maths Topic");
         System.out.println("8. Exit");
         System.out.print("Choose a topic: ");
     }
