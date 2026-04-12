@@ -2079,17 +2079,55 @@ function addCompletionIndicatorStyles() {
         }
 
         .file-input {
-            padding: 8px;
+            padding: 12px 16px;
             border: 2px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             min-width: 0;
             background: var(--bg-primary);
             color: var(--text-primary);
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
 
         .file-input:hover {
             border-color: var(--accent);
+            background: var(--bg-secondary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(213, 227, 57, 0.1);
+        }
+
+        body.dark-mode .file-input:focus {
+            box-shadow: 0 0 0 3px rgba(213, 227, 57, 0.2);
+        }
+
+        .file-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: var(--bg-tertiary);
+        }
+
+        .file-input::file-selector-button {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.8em;
+            margin-right: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .file-input::file-selector-button:hover {
+            background: var(--accent-hover);
         }
 
         .btn-submit {
